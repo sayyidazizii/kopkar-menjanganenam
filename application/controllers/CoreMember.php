@@ -7,6 +7,7 @@
 			$this->load->model('MainPage_model');
 			$this->load->model('CoreMember_model');
 			$this->load->model('AcctDebtPrint_model');
+			$this->load->model('AcctSavingsAccount_model');
 			$this->load->model('Library_model');
 			$this->load->helper('sistem');
 			$this->load->helper('url');
@@ -537,7 +538,7 @@
 				'company_id'						=> $this->input->post('company_id', true),
 				'member_job'						=> $this->input->post('member_job', true),
 				'member_identity'					=> $this->input->post('member_identity', true),
-				'member_place_of_birth'				=> $this->input->post('member_place_of_birth', true),
+				'member_place_of_birth'				=> $this->input->post('member_place_of_birth'),
 				'member_date_of_birth'				=> tgltodb($this->input->post('member_date_of_birth', true)),
 				'member_address'					=> $this->input->post('member_address', true),
 				'member_identity_no'				=> $this->input->post('member_identity_no', true), 
@@ -574,6 +575,7 @@
 				// 'member_principal_savings_last_balance'		=> $member_principal_savings,
 			);
 
+			
 			if($member_mandatory_savings <= 0){
 				$this->session->set_userdata('addcoremember',$data);
 				$msg = "<div class='alert alert-danger alert-dismissable'>
@@ -587,7 +589,7 @@
 			
 			$this->form_validation->set_rules('member_name', 'Nama', 'required');
 			$this->form_validation->set_rules('member_gender', 'Jenis Kelamin', 'required');
-			$this->form_validation->set_rules('member_place_of_birth', 'Tempat Lahir', 'required');
+			// $this->form_validation->set_rules('member_place_of_birth', 'Tempat Lahir', 'required');
 			$this->form_validation->set_rules('member_date_of_birth', 'Tanggal Lahir', 'required');
 			$this->form_validation->set_rules('province_id', 'Provinsi', 'required');
 			$this->form_validation->set_rules('city_id', 'Kabupaten', 'required');
@@ -603,7 +605,12 @@
 			if($this->form_validation->run()==true){
 				if($membertoken->num_rows() == 0){
 					if($this->CoreMember_model->insertCoreMember($data)){
+						
 						$member_id 		= $this->CoreMember_model->getMemberID($data['created_id']);
+						$username 		= $this->CoreMember_model->getUsername($data['created_id']);
+
+						
+						
 
 						$dataworking 	= array (
 							'member_id'						=> $member_id,
@@ -640,6 +647,28 @@
 
 						$this->CoreMember_model->insertCoreMemberWorking($dataworking);
 						$preferencecompany 			= $this->CoreMember_model->getPreferenceCompany();
+
+						//generate tabungan
+						$savingsaccount = array(
+							'member_id'									=> $member_id,
+							'savings_id'								=> 34,
+							'office_id'									=> 6,
+							'savings_account_date'						=> date('Y-m-d'),
+							'branch_id'									=> $auth['branch_id'],
+							'mutation_preference_id'					=> 1,
+							'savings_account_interest_rate'				=> 0.00,
+							'savings_account_first_deposit_amount'		=> 0.00,
+							'savings_account_last_balance'				=> 0.00,
+							'savings_account_adm_amount'				=> 0.00,
+							'savings_member_heir'						=> '',
+							'savings_member_heir_address'				=> '',
+							'savings_member_heir_relationship'			=> '',
+							'savings_account_token'						=> $this->input->post('savings_account_token', true),
+							'operated_name'								=> $username,
+							'created_id'								=> $auth['user_id'],
+							'created_on'								=> date('Y-m-d H:i:s'),
+						);
+						$this->AcctSavingsAccount_model->insertAcctSavingsAccount($savingsaccount);
 
 						//!komen dibawah untuk yg tambah anggota lgsg bayar simp pokok
 						// $data_detail = array (

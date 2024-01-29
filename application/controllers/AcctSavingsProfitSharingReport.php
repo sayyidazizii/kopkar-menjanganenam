@@ -100,12 +100,13 @@
 			<br>
 			<table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">
 			    <tr>
-			    	<td width=\"13%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">No</div></td>
+			    	<td width=\"5%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">No</div></td>
 			        <td width=\"10%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">No. Rek</div></td>
 			        <td width=\"20%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">Jenis Tabungan</div></td>
 			        <td width=\"25%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">Nama</div></td>
-			        <td width=\"16%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">Nominal</div></td>
-			        <td width=\"16%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">Saldo</div></td>
+			        <td width=\"10%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">Pajak</div></td>
+			        <td width=\"15%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">Bunga</div></td>
+			        <td width=\"15%\"><div style=\"text-align: center;border-bottom: 1px solid black;border-top: 1px solid black\">Saldo</div></td>
 			    </tr>
 			</table>";
 
@@ -115,12 +116,13 @@
 			foreach ($acctsavingsprofitsharing as $key => $val) {
 				$tbl3 .= "
 					<tr>
-				    	<td width=\"13%\"><div style=\"text-align: center;\">$no</div></td>
+				    	<td width=\"5%\"><div style=\"text-align: center;\">$no</div></td>
 				        <td width=\"10%\"><div style=\"text-align: left;\">".$val['savings_account_no']."</div></td>
 				        <td width=\"20%\"><div style=\"text-align: left;\">".$val['savings_name']."</div></td>
 				        <td width=\"25%\"><div style=\"text-align: left;\">".$val['member_name']."</div></td>
-				        <td width=\"16%\"><div style=\"text-align: right;\">".number_format($val['savings_profit_sharing_amount'], 2)."</div></td>
-				        <td width=\"16%\"><div style=\"text-align: right;\">".number_format($val['savings_account_last_balance'], 2)."</div></td>
+				        <td width=\"10%\"><div style=\"text-align: right;\">".number_format($val['savings_tax_amount'], 2)."</div></td>
+				        <td width=\"15%\"><div style=\"text-align: right;\">".number_format($val['savings_profit_sharing_amount'], 2)."</div></td>
+				        <td width=\"15%\"><div style=\"text-align: right;\">".number_format($val['savings_account_last_balance'], 2)."</div></td>
 				    </tr>
 				";
 

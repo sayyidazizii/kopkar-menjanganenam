@@ -1194,34 +1194,7 @@
             }
         });
 
-		$('#myform').on('submit', function(e){
-			e.preventDefault();
-			
-			member_name 			= $('#member_name').val();
-			member_place_of_birth 	= $('#member_place_of_birth').val();
-			member_date_of_birth 	= $('#member_date_of_birth').val();
-
-			$.ajax({
-				type : "POST",
-				dataType: 'json',
-				url  : "<?php echo base_url(); ?>member/check-name-placeofbirth",
-				data : {
-					'member_name' : member_name,
-					'member_place_of_birth' : member_place_of_birth,
-					'member_date_of_birth' : member_date_of_birth
-				},
-				success: function(data){
-					if(data.data != null){
-						if (confirm(`Ada data yang mirip ! | Nama : ${data.data.member_name} , Tanggal Lahir : ${data.data.member_date_of_birth} , Tempat Lahir : ${data.data.member_place_of_birth} ,  | Apakah anda yakin ingin menambahkan member in ? `)) {
-							processAddDataMember();
-						}else {
-						}
-					}else{
-						processAddDataMember();
-					}
-				}
-			});
-		});
+		
 
 		function processAddDataMember() {
 			$.ajax({
