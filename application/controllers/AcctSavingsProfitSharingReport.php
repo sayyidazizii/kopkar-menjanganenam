@@ -171,8 +171,8 @@
 
 			$this->load->library('Excel');
 
-			$this->excel->getProperties()->setCreator("KSU MANDIRI")
-								 ->setLastModifiedBy("KSU MANDIRI")
+			$this->excel->getProperties()->setCreator("KSU MENJANGAN ENAM")
+								 ->setLastModifiedBy("KSU MENJANGAN ENAM")
 								 ->setTitle("Laporan Bunga Tabungan Bulanan")
 								 ->setSubject("")
 								 ->setDescription("Laporan Bunga Tabungan Bulanan")
@@ -188,21 +188,24 @@
 			$this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(40);
 			$this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
 			$this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+			$this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
 
-			$this->excel->getActiveSheet()->mergeCells("B1:G1");
+
+			$this->excel->getActiveSheet()->mergeCells("B1:H1");
 			$this->excel->getActiveSheet()->getStyle('B1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			$this->excel->getActiveSheet()->getStyle('B1')->getFont()->setBold(true)->setSize(16);
-			$this->excel->getActiveSheet()->getStyle('B3:G3')->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-			$this->excel->getActiveSheet()->getStyle('B3:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-			$this->excel->getActiveSheet()->getStyle('B3:G3')->getFont()->setBold(true);
+			$this->excel->getActiveSheet()->getStyle('B3:H3')->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+			$this->excel->getActiveSheet()->getStyle('B3:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+			$this->excel->getActiveSheet()->getStyle('B3:H3')->getFont()->setBold(true);
 
 			$this->excel->getActiveSheet()->setCellValue('B1',"LAPORAN BUNGA TABUNGAN BULANAN");
 			$this->excel->getActiveSheet()->setCellValue('B3',"No");
 			$this->excel->getActiveSheet()->setCellValue('C3',"No. Rek");
 			$this->excel->getActiveSheet()->setCellValue('D3',"Jenis");
 			$this->excel->getActiveSheet()->setCellValue('E3',"Nama");
-			$this->excel->getActiveSheet()->setCellValue('F3',"Nominal");
-			$this->excel->getActiveSheet()->setCellValue('G3',"Saldo");
+			$this->excel->getActiveSheet()->setCellValue('F3',"Pajak");
+			$this->excel->getActiveSheet()->setCellValue('G3',"Nominal Bunga");
+			$this->excel->getActiveSheet()->setCellValue('H3',"Saldo Akhir");
 
 			$j				= 3;
 			$no				= 0;
@@ -214,36 +217,41 @@
 				$j++;
 
 				$this->excel->setActiveSheetIndex(0);
-				$this->excel->getActiveSheet()->getStyle('B'.$j.':G'.$j)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+				$this->excel->getActiveSheet()->getStyle('B'.$j.':H'.$j)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 				$this->excel->getActiveSheet()->getStyle('B'.$j)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('C'.$j)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 				$this->excel->getActiveSheet()->getStyle('D'.$j)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 				$this->excel->getActiveSheet()->getStyle('E'.$j)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
 				$this->excel->getActiveSheet()->getStyle('F'.$j)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 				$this->excel->getActiveSheet()->getStyle('G'.$j)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+				$this->excel->getActiveSheet()->getStyle('H'.$j)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
 				$this->excel->getActiveSheet()->setCellValue('B'.$j, $no);
 				$this->excel->getActiveSheet()->setCellValueExplicit('C'.$j, $val['savings_account_no']);
 				$this->excel->getActiveSheet()->setCellValueExplicit('D'.$j, $val['savings_name']);
 				$this->excel->getActiveSheet()->setCellValueExplicit('E'.$j, $val['member_name']);
-				$this->excel->getActiveSheet()->setCellValue('F'.$j, $val['savings_profit_sharing_amount']);
-				$this->excel->getActiveSheet()->setCellValue('G'.$j, $val['savings_account_last_balance']);
+				$this->excel->getActiveSheet()->setCellValueExplicit('F'.$j, $val['savings_tax_amount']);
+				$this->excel->getActiveSheet()->setCellValue('G'.$j, $val['savings_profit_sharing_amount']);
+				$this->excel->getActiveSheet()->setCellValue('H'.$j, $val['savings_account_last_balance']);
 
+				$total_pajak 	+= $val['savings_tax_amount'];
 				$total_nominal 	+= $val['savings_profit_sharing_amount'];
 				$total_saldo 	+= $val['savings_account_last_balance'];
 			}
 
 			$this->excel->getActiveSheet()->mergeCells('B'.($j+1).':E'.($j+1));
-			$this->excel->getActiveSheet()->getStyle('B'.($j+1).':G'.($j+1))->getFont()->setBold(true);
-			$this->excel->getActiveSheet()->getStyle('B'.($j+1).':G'.($j+1))->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+			$this->excel->getActiveSheet()->getStyle('B'.($j+1).':H'.($j+1))->getFont()->setBold(true);
+			$this->excel->getActiveSheet()->getStyle('B'.($j+1).':H'.($j+1))->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
 
 			$this->excel->getActiveSheet()->getStyle('B'.($j+1))->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 			$this->excel->getActiveSheet()->getStyle('F'.($j+1))->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 			$this->excel->getActiveSheet()->getStyle('G'.($j+1))->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+			$this->excel->getActiveSheet()->getStyle('H'.($j+1))->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
 			$this->excel->getActiveSheet()->setCellValue('B'.($j+1), 'TOTAL');
-			$this->excel->getActiveSheet()->setCellValue('F'.($j+1), $total_nominal);
-			$this->excel->getActiveSheet()->setCellValue('G'.($j+1), $total_saldo);
+			$this->excel->getActiveSheet()->setCellValue('F'.($j+1), $total_pajak);
+			$this->excel->getActiveSheet()->setCellValue('G'.($j+1), $total_nominal);
+			$this->excel->getActiveSheet()->setCellValue('H'.($j+1), $total_saldo);
 
 			$filename='Laporan Bunga Tabungan Bulanan.xls';
 			header('Content-Type: application/vnd.ms-excel');

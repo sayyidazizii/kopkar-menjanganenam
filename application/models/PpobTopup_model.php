@@ -122,7 +122,7 @@
 
 		
 
-		public function getPpobCompanyBalance($ppob_company_id){
+			public function getPpobCompanyBalance($ppob_company_id){
 			$this->db_cipta = $this->load->database('cipta', true);
 
 			$this->db_cipta->select('ppob_company.ppob_company_balance') ;

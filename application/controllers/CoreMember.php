@@ -94,11 +94,11 @@
 
 				$button_debt_print 			= '<a href="'.base_url().'member/print-debt/'.$customers->member_id.'" class="btn default btn-xs green-jungle", role="button"><i class="fa fa-money"></i> Slip Potong Gaji</a>';
 
-				$button_ppob_new					= '<a href="'.base_url().'CoreMember/createPasswordCoreMember/'.$customers->member_id.'" class="btn default btn-xs blue", onClick="javascript:return confirm(\'apakah yakin ingin buat password baru ?\')"><i class="fa fa-edit"></i> Buat Password</a>';
+				$button_ppob_new			= '<a href="'.base_url().'CoreMember/createPasswordCoreMember/'.$customers->member_id.'" class="btn default btn-xs blue", onClick="javascript:return confirm(\'apakah yakin ingin buat password baru ?\')"><i class="fa fa-edit"></i> Buat Password</a>';
 				
-				$button_ppob_reset					= '<a href="'.base_url().'CoreMember/resetPasswordCoreMember/'.$customers->member_no.'/'.$customers->member_id.'" class="btn default btn-xs purple-plum", onClick="javascript:return confirm(\'apakah yakin ingin reset password anggota ?\')"><i class="fa fa-edit"></i> Reset Password</a>';
+				$button_ppob_reset			= '<a href="'.base_url().'CoreMember/resetPasswordCoreMember/'.$customers->member_no.'/'.$customers->member_id.'" class="btn default btn-xs purple-plum", onClick="javascript:return confirm(\'apakah yakin ingin reset password anggota ?\')"><i class="fa fa-edit"></i> Reset Password</a>';
 				
-				$button_ppob_open					= '<a href="'.base_url().'CoreMember/openBlockCoreMember/'.$customers->member_id.'" class="btn default btn-xs purple-medium", onClick="javascript:return confirm(\'apakah yakin ingin buka block anggota ?\')" ><i class="fa fa-edit"></i> Buka Block</a>';
+				$button_ppob_open			= '<a href="'.base_url().'CoreMember/openBlockCoreMember/'.$customers->member_id.'" class="btn default btn-xs purple-medium", onClick="javascript:return confirm(\'apakah yakin ingin buka block anggota ?\')" ><i class="fa fa-edit"></i> Buka Block</a>';
 
 				$button ='';
 
