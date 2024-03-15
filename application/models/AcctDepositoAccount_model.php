@@ -161,6 +161,25 @@
 			return $this->db->get()->result_array();
 		}
 
+		public function getAcctDepositoAccountAll(){
+			$this->db->select('acct_deposito_account.deposito_account_id,
+			acct_deposito_account.deposito_id,
+			acct_deposito_account.member_id,
+			acct_deposito_account.branch_id,
+			acct_deposito_account.deposito_account_nisbah,
+			acct_deposito_account.deposito_account_date,
+			acct_deposito_account.deposito_account_amount,
+			acct_deposito_account.savings_account_id,
+			acct_deposito_account.created_on,
+			');
+		
+			$this->db->from('acct_deposito_account');
+			$this->db->join('core_member', 'acct_deposito_account.member_id = core_member.member_id');
+			$this->db->where('acct_deposito_account.deposito_account_status', 0);
+			$this->db->where('acct_deposito_account.data_state', 0);
+			return $this->db->get()->result_array();
+		}
+
 		public function getCoreMember_Detail($member_id){
 			$this->db->select('core_member.member_id, core_member.branch_id, core_branch.branch_name, core_member.member_no, core_member.member_name, core_member.member_gender, core_member.member_place_of_birth, core_member.member_date_of_birth, core_member.member_address, core_member.province_id, core_province.province_name, core_member.city_id, core_city.city_name, core_member.kecamatan_id, core_kecamatan.kecamatan_name, core_member.member_phone, core_member.member_job, core_member.member_identity, core_member.member_identity_no, core_member.member_postal_code, core_member.member_mother, core_member.member_heir, core_member.member_family_relationship, core_member.member_status, core_member.member_register_date, core_member.member_marital_status, core_member.member_active_status');
 			$this->db->from('core_member');
