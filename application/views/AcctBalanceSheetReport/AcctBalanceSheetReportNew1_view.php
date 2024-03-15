@@ -506,7 +506,7 @@
 																$shutahunberjalan 	= $this->AcctBalanceSheetReportNew1_model->getSHUTahunBerjalan($val['account_id2'], $data['branch_id'], $month, $year);
 																foreach($shutahunberjalan as $keyshu => $valshu){
 																		$last_balance210 = $last_balance210 + $valshu['mutation_in_amount'] - $valshu['mutation_out_amount'];
-																	// echo  "<p>".$last_balance210."</p>";
+																	// echo  "<p>".$val['account_name2'] .":" . $last_balance210."</p>";
 																}
 																
 																$account_amount210_top[$val['report_no']] = $last_balance210;
