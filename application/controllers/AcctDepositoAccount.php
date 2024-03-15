@@ -2623,8 +2623,33 @@
 			$this->session->set_userdata('addacctdepositoaccount-'.$unique['unique'],$sessions);
 		}	
 		
+
+		public function formGenerateAcctDepositoAccount(){
+			$auth 					= $this->session->userdata('auth'); 
+			$unique 				= $this->session->userdata('unique');
+			$deposito_account_id 	= $this->uri->segment(3);
+			$token 					= $this->session->userdata('acctdepositoaccount-'.$unique['unique']);
+
+			if(empty($token)){
+				$token = md5(date('Y-m-d H:i:s'));
+				$this->session->set_userdata('acctdepositoaccount-'.$unique['unique'], $token);
+			}
+
+			$data['main_view']['acctdepositoaccount']		= $this->AcctDepositoAccount_model->getAcctDepositoAccount_Detail($deposito_account_id);	
+			$data['main_view']['acctdeposito']				= create_double($this->AcctDepositoAccount_model->getAcctDeposito(),'deposito_id', 'deposito_name');
+			$data['main_view']['acctsavingsaccount']		= create_double($this->AcctDepositoAccount_model->getAcctSavingsAccount($auth['branch_id']),'savings_account_id', 'savings_account_no');
+			$data['main_view']['membergender']				=$this->configuration->MemberGender();
+			$data['main_view']['memberidentity'] 			= $this->configuration->MemberIdentity();
+
+			$data['main_view']['content']			= 'AcctDepositoAccount/FormGenerate';
+			$this->load->view('MainPage_view',$data);
+		}
+
+
 		public function generateAcctDepositoProfitSharing(){
 			$acctdeposito = $this->AcctDepositoAccount_model->getAcctDepositoAccountAll();
+			// echo json_encode($acctdeposito);
+			// exit;
 
 			foreach($acctdeposito as $key => $val){
 				
@@ -2678,6 +2703,13 @@
 
 				}
 			}
+
+			$msg = "<div class='alert alert-success alert-dismissable'>  
+							<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>					
+								Generate Profit Rekening Simpanan Berjangka Sukses
+							</div> ";
+				$this->session->set_userdata('message',$msg);
+				redirect('deposito-account/form-generate-profit');
 		}
 	}
 ?>
