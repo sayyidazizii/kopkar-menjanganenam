@@ -1185,7 +1185,7 @@ $route['member-mbayar/process-print-qrcode/(:num)']                 = 'CoreMembe
 $route['credits-migration-report']                                  = 'CreditsMigrationReport';
 
 
-//migrasi profit sharing deposito
+//process migrasi profit sharing deposito
 $route['deposito-account/form-generate-profit']                     = 'AcctDepositoAccount/formGenerateAcctDepositoAccount';
 $route['deposito-account/generate-profit']                          = 'AcctDepositoAccount/generateAcctDepositoProfitSharing';
 
