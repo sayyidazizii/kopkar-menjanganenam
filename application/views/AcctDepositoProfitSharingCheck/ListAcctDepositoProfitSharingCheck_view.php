@@ -172,7 +172,7 @@
 												echo "
 													<td>
 																	
-														<a href='".$this->config->item('base_url').'deposito-profit-sharing-check/add/'.$val['deposito_profit_sharing_id']."'class='btn default btn-xs blue'>
+														<a href='".$this->config->item('base_url').'deposito-profit-sharing-check/add/'.$val['deposito_profit_sharing_id']."/".$val['savings_account_id']."'class='btn default btn-xs blue'>
 															<i class='fa fa-plus'></i> Proses Bunga
 														</a>
 													</td>
