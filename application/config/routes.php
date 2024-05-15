@@ -303,6 +303,20 @@ $route['credit-account/rate4']                                      = 'AcctCredi
 $route['credit-account/addarrayimport']                             = 'AcctCreditAccount/addArrayAcctCreditsImport';
 $route['credit-account/add-import']                                 = 'AcctCreditAccount/addcreditaccountimport';
 
+//AcctCreditsAccountImport
+$route['credit-account-import']                                   = 'AcctCreditsAccountImport';
+$route['credit-account-import/get-list']                          = 'AcctCreditsAccountImport/getAcctCreditsAccountImportList';
+$route['credit-account-import/get-list-bank']                     = 'AcctCreditsAccountImport/getAcctCreditsAccountImportListBank';
+$route['credit-account-import/detail/(:num)']                     = 'AcctCreditsAccountImport/detailAcctCreditsAccountImport/$1';
+$route['credit-account-import/add']                               = 'AcctCreditsAccountImport/addAcctCreditsAccountImport';
+$route['credit-account-import/add-array']                         = 'AcctCreditsAccountImport/addArrayAcctCreditsAccountImport';
+$route['credit-account-import/process-add']                       = 'AcctCreditsAccountImport/processAddAcctCreditsAccountImport';
+$route['credit-account-import/filter']                            = 'AcctCreditsAccountImport/filter';
+$route['credit-account-import/reset-list']                        = 'AcctCreditsAccountImport/reset_list';
+$route['credit-account-import/elements-add']                      = 'AcctCreditsAccountImport/function_elements_add';
+$route['credit-account-import/print-note/(:num)']                 = 'AcctCreditsAccountImport/printNoteAcctCreditsAccountImport/$1';
+
+
 //ACCT DEPOSITO ACCOUNT 
 $route['deposito-account']                                          = 'AcctDepositoAccount';
 $route['deposito-account/get-master-data-list']                     = 'AcctDepositoAccount/getMasterDataAcctDepositoAccountList';
