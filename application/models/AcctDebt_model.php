@@ -9,7 +9,7 @@
 		} 
 		
 		public function getAcctDebt(){
-			$this->db->select('acct_debt.debt_date, acct_debt.debt_amount');
+			$this->db->select('*');
 			$this->db->from('acct_debt');
 			$this->db->where('acct_debt.data_state', 0);
 			$result = $this->db->get()->result_array();

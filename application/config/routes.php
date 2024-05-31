@@ -451,6 +451,7 @@ $route['savings-salary-mutation/process-void']                      = 'AcctSavin
 $route['savings-salary-mutation/filter']                            = 'AcctSavingsSalaryMutation/filter';
 $route['savings-salary-mutation/filter-list-saving-account']        = 'AcctSavingsSalaryMutation/filterListAcctSavingsAccount';
 $route['savings-salary-mutation/validation/(:num)']                 = 'AcctSavingsSalaryMutation/validationAcctSavingsSalaryMutation/$1';
+$route['savings-salary-mutation/print-all']                         = 'AcctSavingsSalaryMutation/printAcctSavingsSalaryMutation';
 
 //AcctSavingsImportMutation
 $route['savings-import-mutation']                                   = 'AcctSavingsImportMutation';

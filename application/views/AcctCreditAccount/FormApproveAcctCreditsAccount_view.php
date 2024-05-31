@@ -470,7 +470,7 @@ input:read-only {
 									<td width="35%">Jumlah Pinjaman</td>
 									<td width="5%"> : </td>
 									<td width="60%">
-										<input type="text" class="easyui-textbox" name="credits_account_amount_view" id="credits_account_amount_view" autocomplete="off" value="<?php echo number_format($acctcreditsaccount['credits_account_amount'], 2); ?>" style="width: 100%" readonly/>
+										<input type="text" class="easyui-textbox" name="credits_account_amount_view" id="credits_account_amount_view" autocomplete="off" value="<?php echo number_format($acctcreditsaccount['credits_account_amount'], 2); ?>" style="width: 100%" />
 										<input type="hidden" class="easyui-textbox" name="credits_account_amount" id="credits_account_amount" autocomplete="off" value="<?php echo $acctcreditsaccount['credits_account_amount']; ?>" />
 									</td>
 								</tr>
@@ -478,7 +478,7 @@ input:read-only {
 									<td width="35%">Prosentase Bunga </td>
 									<td width="5%"> : </td>
 									<td width="60%">
-										<input class="easyui-textbox" type="text" name="credits_account_interest_view" id="credits_account_interest_view" value="<?php echo number_format($acctcreditsaccount['credits_account_interest'], 2); ?>" style="width: 100%" readonly/>
+										<input class="easyui-textbox" type="text" name="credits_account_interest_view" id="credits_account_interest_view" value="<?php echo number_format($acctcreditsaccount['credits_account_interest'], 2); ?>" style="width: 100%" />
 										<input class="easyui-textbox" type="hidden" name="credits_account_interest" id="credits_account_interest" value="<?php echo $acctcreditsaccount['credits_account_interest']; ?>" style="width: 100%"/>
 									</td>
 								</tr>

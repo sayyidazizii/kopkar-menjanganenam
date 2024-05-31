@@ -21,6 +21,16 @@
 			$result = $this->db->get()->result_array();
 			return $result;
 		}
+
+		//** Get source name */
+		public function getAcctSourceFundName($source_fund_id){
+			$this->db->select('acct_source_fund.source_fund_name');
+			$this->db->from('acct_source_fund');
+			$this->db->where('acct_source_fund.source_fund_id', $source_fund_id);
+			$this->db->where('acct_source_fund.data_state', 0);
+			$result = $this->db->get()->row_array();
+			return $result['source_fund_name'];
+		}
 		
 	}
 ?>

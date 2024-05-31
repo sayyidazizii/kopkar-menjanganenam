@@ -30,6 +30,8 @@
 			$this->session->unset_userdata('acctdebttokenedit-'.$unique['unique']);
 
 			$data['main_view']['acctdebt']				= $this->AcctDebt_model->getAcctDebt();
+			// echo json_encode($data);
+			// exit;
 			$data['main_view']['content']				= 'AcctDebt/ListAcctDebt_view';
 			$this->load->view('MainPage_view',$data);
 		}
@@ -49,43 +51,43 @@
 			redirect('debt');
 		}
 		
-		public function getAcctDebtList(){
-			$auth 	= $this->session->userdata('auth');
-			$sesi	= $this->session->userdata('filter-acctdebt');
-			if(!is_array($sesi)){
-				$sesi['start_date']		= date('Y-m-d');
-				$sesi['end_date']		= date('Y-m-d');
-			}
+		// public function getAcctDebtList(){
+		// 	$auth 	= $this->session->userdata('auth');
+		// 	$sesi	= $this->session->userdata('filter-acctdebt');
+		// 	if(!is_array($sesi)){
+		// 		$sesi['start_date']		= date('Y-m-d');
+		// 		$sesi['end_date']		= date('Y-m-d');
+		// 	}
 
-			$list = $this->AcctDebt_model->get_datatables_master($sesi['start_date'], $sesi['end_date']);
+		// 	$list = $this->AcctDebt_model->get_datatables_master($sesi['start_date'], $sesi['end_date']);
 
-	        $data = array();
-	        $no = $_POST['start'];
-	        foreach ($list as $debt) {
-	            $no++;
-	            $row = array();
-	            $row[] = $no;
-	            $row[] = $debt->debt_no;
-	            $row[] = $this->AcctDebt_model->getAcctDebtCategoryName($debt->debt_category_id);
-	            $row[] = $this->AcctDebt_model->getCoreMemberNo($debt->member_id);
-	            $row[] = $this->AcctDebt_model->getCoreMemberName($debt->member_id);
-	            $row[] = date('d-m-Y', strtotime($debt->debt_date));
-	            $row[] = number_format($debt->debt_amount, 2);
-	            $row[] = $debt->debt_remark;
-				$row[] = '<a href="'.base_url().'debt/delete/'.$debt->debt_id.'" class="btn btn-xs red" role="button"><i class="fa fa-trash"></i> Hapus</a>';
+	    //     $data = array();
+	    //     $no = $_POST['start'];
+	    //     foreach ($list as $debt) {
+	    //         $no++;
+	    //         $row = array();
+	    //         $row[] = $no;
+	    //         $row[] = $debt->debt_no;
+	    //         $row[] = $this->AcctDebt_model->getAcctDebtCategoryName($debt->debt_category_id);
+	    //         $row[] = $this->AcctDebt_model->getCoreMemberNo($debt->member_id);
+	    //         $row[] = $this->AcctDebt_model->getCoreMemberName($debt->member_id);
+	    //         $row[] = date('d-m-Y', strtotime($debt->debt_date));
+	    //         $row[] = number_format($debt->debt_amount, 2);
+	    //         $row[] = $debt->debt_remark;
+		// 		$row[] = '<a href="'.base_url().'debt/delete/'.$debt->debt_id.'" class="btn btn-xs red" role="button"><i class="fa fa-trash"></i> Hapus</a>';
 	            
-	            $data[] = $row;
-	        }
+	    //         $data[] = $row;
+	    //     }
 
-	        $output = array(
-				"draw" => $_POST['draw'],
-				"recordsTotal" => $this->AcctDebt_model->count_all_master($sesi['start_date'], $sesi['end_date']),
-				"recordsFiltered" => $this->AcctDebt_model->count_filtered_master($sesi['start_date'], $sesi['end_date']),
-				"data" => $data,
-			);
+	    //     $output = array(
+		// 		"draw" => $_POST['draw'],
+		// 		"recordsTotal" => $this->AcctDebt_model->count_all_master($sesi['start_date'], $sesi['end_date']),
+		// 		"recordsFiltered" => $this->AcctDebt_model->count_filtered_master($sesi['start_date'], $sesi['end_date']),
+		// 		"data" => $data,
+		// 	);
 
-	        echo json_encode($output);
-		}
+	    //     echo json_encode($output);
+		// }
 
 		public function detailAcctDebt(){
 			$auth 		= $this->session->userdata('auth');
@@ -387,7 +389,7 @@
 					$rowData 			= $sheet->rangeToArray('A'.$row.':'.$highestColumn.$row, NULL, TRUE, FALSE);
 
 					$member_id 			= $this->AcctDebt_model->getCoreMemberID($rowData[0][0]);
-					$debt_category_id 	= $this->AcctDebt_model->getAcctDebtCategoryID($rowData[0][1]);
+					$debt_category_id 	= $rowData[0][1];
 
 					$data	= array (
 						'member_id'				=> $member_id,

@@ -190,34 +190,34 @@ class AcctCreditsAccountImport extends CI_Controller
         $this->load->view('MainPage_view', $data);
     }
 
-    //** Add Array Excel To Db*/
+    //** Add Array Escel To Db*/
     public function addArrayAcctCreditsAccountImport()
     {
         $auth = $this->session->userdata('auth');
 
-        $this->AcctCreditAccount_Import_model->truncateAcctCreditsAccountImport();
+    $this->AcctCreditAccount_Import_model->truncateAcctCreditsAccountImport();
 
-        $fileName = $_FILES['excel_file']['name'];
-        $fileSize = $_FILES['excel_file']['size'];
-        $fileError = $_FILES['excel_file']['error'];
-        $fileType = $_FILES['excel_file']['type'];
+    $fileName = $_FILES['excel_file']['name'];
+    $fileSize = $_FILES['excel_file']['size'];
+    $fileError = $_FILES['excel_file']['error'];
+    $fileType = $_FILES['excel_file']['type'];
 
-        $config['upload_path'] = './assets/';
-        $config['file_name'] = $fileName;
-        $config['allowed_types'] = 'xls|xlsx';
-        $config['max_size'] = 10000;
+    $config['upload_path'] = './assets/';
+    $config['file_name'] = $fileName;
+    $config['allowed_types'] = 'xls|xlsx';
+    $config['max_size'] = 10000;
 
-        $this->load->library('upload');
-        $this->upload->initialize($config);
+    $this->load->library('upload');
+    $this->upload->initialize($config);
 
-        if (!$this->upload->do_upload('excel_file')) {
-            $msg =
-                "<div class='alert alert-danger alert-dismissable'>
-                    " . $this->upload->display_errors('', '') . "
-                </div> ";
-            $this->session->set_userdata('message', $msg);
-            redirect('credit-account-import/add');
-        } else {
+    if (!$this->upload->do_upload('excel_file')) {
+        $msg =
+            "<div class='alert alert-danger alert-dismissable'>
+                " . $this->upload->display_errors('', '') . "
+            </div> ";
+        $this->session->set_userdata('message', $msg);
+        redirect('credit-account-import/add');
+    } else {
         $media = $this->upload->data('excel_file');
         $inputFileName = './assets/' . $config['file_name'];
 
@@ -236,8 +236,6 @@ class AcctCreditsAccountImport extends CI_Controller
         for ($row = 2; $row <= $highestRow; $row++) {
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, null, true, false);
 
-            $member_id = $this->AcctCreditAccount_Import_model->getCoreMemberID($rowData[0][0]);
-
             // Ambil nilai dari Excel
             $angsuran = $this->input->post('payment_period', true);
             $date2 = tgltodb($this->input->post('credit_account_date', true));
@@ -247,19 +245,20 @@ class AcctCreditsAccountImport extends CI_Controller
             if ($angsuran == 1) {
                 $due_date = date('Y-m-d', strtotime($date2 . ' +' . $period . ' months'));
                 $payment_to_date = date('Y-m-d', strtotime($date2 . ' +1 months'));
-
-            // Perhitungan tambahan untuk jenis angsuran
-                $pinjaman = $rowData[0][4];
-                $bunga = $rowData[0][5];
-                $angsuran_pokok = $pinjaman / $period;
-                $angsuran_bunga = $pinjaman * ($bunga / 100);
-                $jumlah_angsuran = ($pinjaman / $period) + ($pinjaman * ($bunga / 100));
-                $terima = $pinjaman - $rowData[0][7] - $rowData[0][8] - $rowData[0][9]; //pemotongan
-
             } else {
                 $due_date = date('Y-m-d', strtotime($date2 . ' +' . $period * 7 . ' days'));
                 $payment_to_date = date('Y-m-d', strtotime($date2 . ' +7 days'));
+            }
 
+            // Perhitungan tambahan untuk jenis angsuran
+            if ($angsuran == 1) { // Flat
+                $pinjaman = $rowData[0][4];
+                $bunga = $rowData[0][5];
+                $jumlah_angsuran = $pinjaman + ($pinjaman * ($bunga / 100) * $period);
+                $angsuran_pokok = $pinjaman / $period;
+                $angsuran_bunga = $pinjaman * ($bunga / 100);
+                $terima = $pinjaman;
+            } else { // Annuitas
                 // Hitung angsuran berdasarkan rumus angsuran annuitas
                 $pinjaman = $rowData[0][4];
                 $bunga = $rowData[0][5];
@@ -270,9 +269,8 @@ class AcctCreditsAccountImport extends CI_Controller
                 $jumlah_angsuran = $angsuran_pokok_annuitas + $angsuran_bunga_annuitas; // Total angsuran annuitas
                 $angsuran_pokok = $angsuran_pokok_annuitas;
                 $angsuran_bunga = $angsuran_bunga_annuitas;
-                $terima = $pinjaman - $rowData[0][7] - $rowData[0][8] - $rowData[0][9]; //pemotongan
+                $terima = $pinjaman;
             }
-
 
             $this->form_validation->set_rules('credit_id', 'jenis Pinjaman', 'required');
             $this->form_validation->set_rules('payment_type_id', 'Jenis Angsuran', 'required');
@@ -299,7 +297,7 @@ class AcctCreditsAccountImport extends CI_Controller
                         //import
                         'member_id' => $member_id,
                         'savings_account_id' => $rowData[0][1],
-                        // 'credits_account_serial' => $rowData[0][2],
+                        'credits_account_serial' => $rowData[0][2],
                         'credits_account_period' => $rowData[0][3],
                         'credits_account_amount' => $rowData[0][4],
                         'credits_account_interest' => $rowData[0][5],
@@ -311,17 +309,14 @@ class AcctCreditsAccountImport extends CI_Controller
                         'credits_account_bank_name' => $rowData[0][11],
                         'credits_account_bank_account' => $rowData[0][12],
                         'credits_account_bank_owner' => $rowData[0][13],
-
-                        // 'credits_account_amount_received' => $rowData[0][14],
-                        // 'credits_account_principal_amount' => $rowData[0][15],
-                        // 'credits_account_interest_amount' => $rowData[0][16],
-                        // 'credits_account_payment_amount' => $rowData[0][17],
-
-                        'credits_account_amount_received' => $terima,
-                        'credits_account_principal_amount' =>  $angsuran_pokok,
-                        'credits_account_interest_amount' => $angsuran_bunga,
-                        'credits_account_payment_amount' => $jumlah_angsuran,
-
+                        'credits_account_amount_received' => $rowData[0][14],
+                        'credits_account_principal_amount' => $rowData[0][15],
+                        'credits_account_interest_amount' => $rowData[0][16],
+                        'credits_account_payment_amount' => $rowData[0][17],
+                        // 'credits_account_amount_received' => $terima,
+                        // 'credits_account_principal_amount' =>  $angsuran_pokok,
+                        // 'credits_account_interest_amount' => $angsuran_bunga,
+                        // 'credits_account_payment_amount' => $jumlah_angsuran,
                         'credits_account_last_balance' => $rowData[0][18],
                         'credits_account_token' => $this->input->post('credits_account_token', true) . $val['member_id'],
                         'data_state' => 0,
@@ -361,7 +356,7 @@ class AcctCreditsAccountImport extends CI_Controller
         foreach ($acctcreditsaccountimport as $key => $val) {
             $dataApprove = [
                 // 'credits_account_id'				=> $this->input->post('credits_account_id', true),
-                // 'credits_approve_status' => 1,
+                'credits_approve_status' => 1,
                 'import_status' => 1,
             ];
 
@@ -375,7 +370,7 @@ class AcctCreditsAccountImport extends CI_Controller
                 'credits_account_payment_to' => $val['credits_account_payment_to'],
                 'member_id' => $val['member_id'],
                 'savings_account_id' => $val['savings_account_id'],
-                // 'credits_account_serial' => $val['credits_account_serial'],
+                'credits_account_serial' => $val['credits_account_serial'],
                 'credits_account_period' => $val['credits_account_period'],
                 'credits_account_remark' => $val['credits_account_remark'],
                 'credits_account_bank_name' => $val['credits_account_bank_name'],
@@ -417,178 +412,178 @@ class AcctCreditsAccountImport extends CI_Controller
             $this->AcctCreditAccount_model->updateApprove($dataApprove);
 
             // $val = $this->AcctCreditAccount_model->getAcctCreditsAccountImportDetail();
-            // $auth = $this->session->userdata('auth');
+            $auth = $this->session->userdata('auth');
 
-            // $data_journal = [
-            //     'branch_id' => $auth['branch_id'],
-            //     'journal_voucher_period' => $journal_voucher_period,
-            //     'journal_voucher_date' => date('Y-m-d'),
-            //     'journal_voucher_title' => 'PEMBIAYAAN ' . $val['credits_name'] . ' ' . $val['member_name'],
-            //     'journal_voucher_description' => 'PEMBIAYAAN ' . $val['credits_name'] . ' ' . $val['member_name'],
-            //     'journal_voucher_token' => $val['credits_account_token'],
-            //     'transaction_module_id' => $transaction_module_id,
-            //     'transaction_module_code' => $transaction_module_code,
-            //     'transaction_journal_id' => $val['credits_account_id'],
-            //     'transaction_journal_no' => $val['credits_account_serial'],
-            //     'created_id' => $auth['user_id'],
-            //     'created_on' => date('Y-m-d H:i:s'),
-            // ];
-            // $this->AcctCreditAccount_model->insertAcctJournalVoucher($data_journal);
+            $data_journal = [
+                'branch_id' => $auth['branch_id'],
+                'journal_voucher_period' => $journal_voucher_period,
+                'journal_voucher_date' => date('Y-m-d'),
+                'journal_voucher_title' => 'PEMBIAYAAN ' . $val['credits_name'] . ' ' . $val['member_name'],
+                'journal_voucher_description' => 'PEMBIAYAAN ' . $val['credits_name'] . ' ' . $val['member_name'],
+                'journal_voucher_token' => $val['credits_account_token'],
+                'transaction_module_id' => $transaction_module_id,
+                'transaction_module_code' => $transaction_module_code,
+                'transaction_journal_id' => $val['credits_account_id'],
+                'transaction_journal_no' => $val['credits_account_serial'],
+                'created_id' => $auth['user_id'],
+                'created_on' => date('Y-m-d H:i:s'),
+            ];
+            $this->AcctCreditAccount_model->insertAcctJournalVoucher($data_journal);
 
-            // $journal_voucher_id = $this->AcctCreditAccount_model->getJournalVoucherID($data_journal['created_id']);
+            $journal_voucher_id = $this->AcctCreditAccount_model->getJournalVoucherID($data_journal['created_id']);
 
-            // $receivable_account_id = $this->AcctCreditAccount_model->getReceivableAccountID($data['credits_id']);
+            $receivable_account_id = $this->AcctCreditAccount_model->getReceivableAccountID($data['credits_id']);
 
-            // $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($receivable_account_id);
+            $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($receivable_account_id);
 
-            // $data_debet = [
-            //     'journal_voucher_id' => $journal_voucher_id,
-            //     'account_id' => $receivable_account_id,
-            //     'journal_voucher_description' => $data_journal['journal_voucher_title'],
-            //     'journal_voucher_amount' => $val['credits_account_amount'],
-            //     'journal_voucher_debit_amount' => $val['credits_account_amount'],
-            //     'account_id_default_status' => $account_id_default_status,
-            //     'account_id_status' => 0,
-            //     'journal_voucher_item_token' => $val['credits_account_token'] . $receivable_account_id,
-            //     'created_id' => $auth['user_id'],
-            // ];
-            // $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_debet);
+            $data_debet = [
+                'journal_voucher_id' => $journal_voucher_id,
+                'account_id' => $receivable_account_id,
+                'journal_voucher_description' => $data_journal['journal_voucher_title'],
+                'journal_voucher_amount' => $val['credits_account_amount'],
+                'journal_voucher_debit_amount' => $val['credits_account_amount'],
+                'account_id_default_status' => $account_id_default_status,
+                'account_id_status' => 0,
+                'journal_voucher_item_token' => $val['credits_account_token'] . $receivable_account_id,
+                'created_id' => $auth['user_id'],
+            ];
+            $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_debet);
 
-            // $preferencecompany = $this->AcctCreditAccount_model->getPreferenceCompany();
-            // $preferenceinventory = $this->AcctCreditAccount_model->getPreferenceInventory();
+            $preferencecompany = $this->AcctCreditAccount_model->getPreferenceCompany();
+            $preferenceinventory = $this->AcctCreditAccount_model->getPreferenceInventory();
 
-            // if ($val['credits_account_insurance'] != '' && $val['credits_account_insurance'] > 0) {
-            //     $insurance_amount = $val['credits_account_insurance'];
-            // } else {
-            //     $insurance_amount = 0;
-            // }
-            // if ($val['credits_account_adm_cost'] != '' && $val['credits_account_adm_cost'] > 0) {
-            //     $adm_amount = $val['credits_account_adm_cost'];
-            // } else {
-            //     $adm_amount = 0;
-            // }
-            // if ($val['credits_id'] == 20) {
-            //     $discount_amount = $val['credits_account_discount'];
-            // } else {
-            //     $discount_amount = 0;
-            // }
+            if ($val['credits_account_insurance'] != '' && $val['credits_account_insurance'] > 0) {
+                $insurance_amount = $val['credits_account_insurance'];
+            } else {
+                $insurance_amount = 0;
+            }
+            if ($val['credits_account_adm_cost'] != '' && $val['credits_account_adm_cost'] > 0) {
+                $adm_amount = $val['credits_account_adm_cost'];
+            } else {
+                $adm_amount = 0;
+            }
+            if ($val['credits_id'] == 20) {
+                $discount_amount = $val['credits_account_discount'];
+            } else {
+                $discount_amount = 0;
+            }
 
-            // $cash_amount = $val['credits_account_amount'] - $insurance_amount - $adm_amount - $discount_amount;
+            $cash_amount = $val['credits_account_amount'] - $insurance_amount - $adm_amount - $discount_amount;
 
-            // if ($val['method_id'] == 1) {
-            //     $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($preferencecompany['account_cash_id']);
+            if ($val['method_id'] == 1) {
+                $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($preferencecompany['account_cash_id']);
 
-            //     $data_credit = [
-            //         'journal_voucher_id' => $journal_voucher_id,
-            //         'account_id' => $preferencecompany['account_cash_id'],
-            //         'journal_voucher_description' => $data_journal['journal_voucher_title'],
-            //         'journal_voucher_amount' => $cash_amount,
-            //         'journal_voucher_credit_amount' => $cash_amount,
-            //         'account_id_default_status' => $account_id_default_status,
-            //         'account_id_status' => 1,
-            //         'journal_voucher_item_token' => $val['credits_account_token'] . $preferencecompany['account_cash_id'],
-            //         'created_id' => $auth['user_id'],
-            //     ];
-            // } elseif ($val['method_id'] == 2) {
-            //     $account_id = $this->AcctCreditAccount_model->getAccountBank($val['bank_account_id']);
-            //     $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($account_id);
+                $data_credit = [
+                    'journal_voucher_id' => $journal_voucher_id,
+                    'account_id' => $preferencecompany['account_cash_id'],
+                    'journal_voucher_description' => $data_journal['journal_voucher_title'],
+                    'journal_voucher_amount' => $cash_amount,
+                    'journal_voucher_credit_amount' => $cash_amount,
+                    'account_id_default_status' => $account_id_default_status,
+                    'account_id_status' => 1,
+                    'journal_voucher_item_token' => $val['credits_account_token'] . $preferencecompany['account_cash_id'],
+                    'created_id' => $auth['user_id'],
+                ];
+            } elseif ($val['method_id'] == 2) {
+                $account_id = $this->AcctCreditAccount_model->getAccountBank($val['bank_account_id']);
+                $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($account_id);
 
-            //     $data_credit = [
-            //         'journal_voucher_id' => $journal_voucher_id,
-            //         'account_id' => $account_id,
-            //         'journal_voucher_description' => $data_journal['journal_voucher_title'],
-            //         'journal_voucher_amount' => $cash_amount,
-            //         'journal_voucher_credit_amount' => $cash_amount,
-            //         'account_id_default_status' => $account_id_default_status,
-            //         'account_id_status' => 1,
-            //         'journal_voucher_item_token' => $val['credits_account_token'] . $account_id,
-            //         'created_id' => $auth['user_id'],
-            //     ];
-            // } else {
-            //     $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
+                $data_credit = [
+                    'journal_voucher_id' => $journal_voucher_id,
+                    'account_id' => $account_id,
+                    'journal_voucher_description' => $data_journal['journal_voucher_title'],
+                    'journal_voucher_amount' => $cash_amount,
+                    'journal_voucher_credit_amount' => $cash_amount,
+                    'account_id_default_status' => $account_id_default_status,
+                    'account_id_status' => 1,
+                    'journal_voucher_item_token' => $val['credits_account_token'] . $account_id,
+                    'created_id' => $auth['user_id'],
+                ];
+            } else {
+                $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
 
-            //     $data_credit = [
-            //         'journal_voucher_id' => $journal_voucher_id,
-            //         'account_id' => $preferencecompany['account_salary_payment_id'],
-            //         'journal_voucher_description' => $data_journal['journal_voucher_title'],
-            //         'journal_voucher_amount' => $cash_amount,
-            //         'journal_voucher_credit_amount' => $cash_amount,
-            //         'account_id_default_status' => $account_id_default_status,
-            //         'account_id_status' => 1,
-            //         'journal_voucher_item_token' => $val['credits_account_token'] . $preferencecompany['account_salary_payment_id'],
-            //         'created_id' => $auth['user_id'],
-            //     ];
-            // }
-            // $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+                $data_credit = [
+                    'journal_voucher_id' => $journal_voucher_id,
+                    'account_id' => $preferencecompany['account_salary_payment_id'],
+                    'journal_voucher_description' => $data_journal['journal_voucher_title'],
+                    'journal_voucher_amount' => $cash_amount,
+                    'journal_voucher_credit_amount' => $cash_amount,
+                    'account_id_default_status' => $account_id_default_status,
+                    'account_id_status' => 1,
+                    'journal_voucher_item_token' => $val['credits_account_token'] . $preferencecompany['account_salary_payment_id'],
+                    'created_id' => $auth['user_id'],
+                ];
+            }
+            $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
 
-            // if ($val['credits_account_insurance'] != '' && $val['credits_account_insurance'] > 0) {
-            //     $preferencecompany = $this->AcctCreditAccount_model->getPreferenceCompany();
+            if ($val['credits_account_insurance'] != '' && $val['credits_account_insurance'] > 0) {
+                $preferencecompany = $this->AcctCreditAccount_model->getPreferenceCompany();
 
-            //     $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($preferencecompany['account_insurance_cost_id']);
+                $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($preferencecompany['account_insurance_cost_id']);
 
-            //     $data_credit = [
-            //         'journal_voucher_id' => $journal_voucher_id,
-            //         'account_id' => $preferencecompany['account_insurance_cost_id'],
-            //         'journal_voucher_description' => $data_journal['journal_voucher_title'],
-            //         'journal_voucher_amount' => $val['credits_account_insurance'],
-            //         'journal_voucher_credit_amount' => $val['credits_account_insurance'],
-            //         'account_id_default_status' => $account_id_default_status,
-            //         'account_id_status' => 1,
-            //         'journal_voucher_item_token' => $val['credits_account_token'] . 'INS' . $preferencecompany['account_insurance_cost_id'],
-            //         'created_id' => $auth['user_id'],
-            //     ];
-            //     $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
-            // }
+                $data_credit = [
+                    'journal_voucher_id' => $journal_voucher_id,
+                    'account_id' => $preferencecompany['account_insurance_cost_id'],
+                    'journal_voucher_description' => $data_journal['journal_voucher_title'],
+                    'journal_voucher_amount' => $val['credits_account_insurance'],
+                    'journal_voucher_credit_amount' => $val['credits_account_insurance'],
+                    'account_id_default_status' => $account_id_default_status,
+                    'account_id_status' => 1,
+                    'journal_voucher_item_token' => $val['credits_account_token'] . 'INS' . $preferencecompany['account_insurance_cost_id'],
+                    'created_id' => $auth['user_id'],
+                ];
+                $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+            }
 
-            // if ($val['credits_account_adm_cost'] != '' && $val['credits_account_adm_cost'] > 0) {
-            //     $preferencecompany = $this->AcctCreditAccount_model->getPreferenceCompany();
-            //     $preferenceinventory = $this->AcctCreditAccount_model->getPreferenceInventory();
+            if ($val['credits_account_adm_cost'] != '' && $val['credits_account_adm_cost'] > 0) {
+                $preferencecompany = $this->AcctCreditAccount_model->getPreferenceCompany();
+                $preferenceinventory = $this->AcctCreditAccount_model->getPreferenceInventory();
 
-            //     if ($val['credits_id'] == 3) {
-            //         $adm_account_id = 318;
-            //     } else {
-            //         $adm_account_id = $preferenceinventory['inventory_adm_id'];
-            //     }
+                if ($val['credits_id'] == 3) {
+                    $adm_account_id = 318;
+                } else {
+                    $adm_account_id = $preferenceinventory['inventory_adm_id'];
+                }
 
-            //     $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($adm_account_id);
+                $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($adm_account_id);
 
-            //     $data_credit = [
-            //         'journal_voucher_id' => $journal_voucher_id,
-            //         'account_id' => $adm_account_id,
-            //         'journal_voucher_description' => $data_journal['journal_voucher_title'],
-            //         'journal_voucher_amount' => $val['credits_account_adm_cost'],
-            //         'journal_voucher_credit_amount' => $val['credits_account_adm_cost'],
-            //         'account_id_default_status' => $account_id_default_status,
-            //         'account_id_status' => 1,
-            //         'journal_voucher_item_token' => $val['credits_account_token'] . 'ADM' . $adm_account_id,
-            //         'created_id' => $auth['user_id'],
-            //     ];
+                $data_credit = [
+                    'journal_voucher_id' => $journal_voucher_id,
+                    'account_id' => $adm_account_id,
+                    'journal_voucher_description' => $data_journal['journal_voucher_title'],
+                    'journal_voucher_amount' => $val['credits_account_adm_cost'],
+                    'journal_voucher_credit_amount' => $val['credits_account_adm_cost'],
+                    'account_id_default_status' => $account_id_default_status,
+                    'account_id_status' => 1,
+                    'journal_voucher_item_token' => $val['credits_account_token'] . 'ADM' . $adm_account_id,
+                    'created_id' => $auth['user_id'],
+                ];
 
-            //     $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
-            // }
+                $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+            }
 
-            // if ($val['credits_id'] == 20 && $val['credits_account_discount'] != '' && $val['credits_account_discount'] > 0) {
-            //     $preferencecompany = $this->AcctCreditAccount_model->getPreferenceCompany();
-            //     $preferenceinventory = $this->AcctCreditAccount_model->getPreferenceInventory();
+            if ($val['credits_id'] == 20 && $val['credits_account_discount'] != '' && $val['credits_account_discount'] > 0) {
+                $preferencecompany = $this->AcctCreditAccount_model->getPreferenceCompany();
+                $preferenceinventory = $this->AcctCreditAccount_model->getPreferenceInventory();
 
-            //     $discount_account_id = $preferenceinventory['inventory_discount_id'];
+                $discount_account_id = $preferenceinventory['inventory_discount_id'];
 
-            //     $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($discount_account_id);
+                $account_id_default_status = $this->AcctCreditAccount_model->getAccountIDDefaultStatus($discount_account_id);
 
-            //     $data_credit = [
-            //         'journal_voucher_id' => $journal_voucher_id,
-            //         'account_id' => $discount_account_id,
-            //         'journal_voucher_description' => $data_journal['journal_voucher_title'],
-            //         'journal_voucher_amount' => $val['credits_account_discount'],
-            //         'journal_voucher_credit_amount' => $val['credits_account_discount'],
-            //         'account_id_default_status' => $account_id_default_status,
-            //         'account_id_status' => 1,
-            //         'journal_voucher_item_token' => $val['credits_account_token'] . 'ADM' . $discount_account_id,
-            //         'created_id' => $auth['user_id'],
-            //     ];
+                $data_credit = [
+                    'journal_voucher_id' => $journal_voucher_id,
+                    'account_id' => $discount_account_id,
+                    'journal_voucher_description' => $data_journal['journal_voucher_title'],
+                    'journal_voucher_amount' => $val['credits_account_discount'],
+                    'journal_voucher_credit_amount' => $val['credits_account_discount'],
+                    'account_id_default_status' => $account_id_default_status,
+                    'account_id_status' => 1,
+                    'journal_voucher_item_token' => $val['credits_account_token'] . 'ADM' . $discount_account_id,
+                    'created_id' => $auth['user_id'],
+                ];
 
-            //     $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
-            // }
+                $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+            }
             
         }
         // endforeach

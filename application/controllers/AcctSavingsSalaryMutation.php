@@ -138,6 +138,99 @@
 			$this->load->view('MainPage_view',$data);
 		}
 
+		//print all mutation to report
+		public function printAcctSavingsSalaryMutation(){
+			$auth 				= $this->session->userdata('auth'); 
+			$preferencecompany 	= $this->AcctSavingsSalaryMutation_model->getPreferenceCompany();
+			$data 				= array();
+			$acctsavingsaccount = $this->AcctSavingsSalaryMutation_model->getAcctSavingsAccountSalaryMutation();
+			
+
+			require_once('tcpdf/config/tcpdf_config.php');
+			require_once('tcpdf/tcpdf.php');
+
+			$pdf = new tcpdf('L', PDF_UNIT, 'A4', true, 'UTF-8', false);
+
+			$pdf->SetPrintHeader(false);
+			$pdf->SetPrintFooter(false);
+
+			$pdf->SetMargins(7, 7, 7, 7); 
+			$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+			if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+			    require_once(dirname(__FILE__).'/lang/eng.php');
+			    $pdf->setLanguageArray($l);
+			}
+
+			$pdf->SetFont('helvetica', 'B', 20);
+			$pdf->AddPage();
+			$pdf->SetFont('helvetica', '', 9);
+
+			$base_url = base_url();
+			$img = "<img src=\"".$base_url."assets/layouts/layout/img/".$preferencecompany['logo_koperasi']."\" alt=\"\" width=\"800%\" height=\"800%\"/>";
+			
+			$tbl = "
+			<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\">
+			    <tr>
+			    	<td rowspan=\"2\" width=\"10%\">" .$img."</td>
+			    </tr>
+			    <tr>
+			    </tr>
+			</table>
+			<br/>
+			<br/>
+			<table cellspacing=\"0\" cellpadding=\"1\" border=\"0\">
+			    <tr>
+			        <td width=\"100%\"><div style=\"text-align: center; font-size:14px; font-weight:bold\">Daftar Mutasi Tabungan Potong Gaji</div></td>
+			    </tr>
+				<tr>
+					<td width=\"100%\"><div style=\"text-align: center; font-size:12px;\">ALL REKAP</div></td>
+				</tr>
+			</table>
+			<br>
+			<br>
+			<br>
+			";
+
+			$tbl .= "
+			<table cellspacing=\"0\" cellpadding=\"3\" border=\"1\">
+				<tr>
+					<td width=\"5%\" style=\"font-size:13px; font-weight:bold; text-align: center;\">No</td>
+					<td width=\"15%\" style=\"font-size:13px; font-weight:bold; text-align: center;\">No Rek</td>
+					<td width=\"15%\" style=\"font-size:13px; font-weight:bold; text-align: center;\">Jenis Simpanan</td>
+					<td width=\"10%\" style=\"font-size:13px; font-weight:bold; text-align: center;\">No Agt</td>
+					<td width=\"20%\" style=\"font-size:13px; font-weight:bold; text-align: center;\">Nama</td>
+					<td width=\"15%\" style=\"font-size:13px; font-weight:bold; text-align: center;\">Divisi</td>
+					<td width=\"20%\" style=\"font-size:13px; font-weight:bold; text-align: center;\">Total</td>
+				</tr>
+			</table>
+			";
+			$no=1;
+			$savings_amount_total = 0;
+			foreach($acctsavingsaccount as $key => $val){
+				$tbl .= "
+				<table cellspacing=\"0\" cellpadding=\"3\" border=\"1\">
+					<tr>
+						<td width=\"5%\" style=\"font-size:13px; text-align: center;\">".$no."</td>
+						<td width=\"15%\" style=\"font-size:13px; text-align: center;\">".$val['savings_account_no']."</td>
+						<td width=\"15%\" style=\"font-size:13px; text-align: center;\">".$val['savings_name']."</td>
+						<td width=\"10%\" style=\"font-size:13px; text-align: center;\">".$val['member_no']."</td>
+						<td width=\"20%\" style=\"font-size:13px; text-align: left;\">".$val['member_name']."</td>
+						<td width=\"15%\" style=\"font-size:13px; text-align: left;\">".$val['division_name']."</td>
+						<td width=\"20%\" style=\"font-size:13px; text-align: right;\">".number_format($val['savings_account_deposit_amount'], 2)."</td>
+					</tr>
+				</table>";
+				$no++;
+				$savings_amount_total += $val['savings_account_deposit_amount'];
+			}
+			
+			$pdf->writeHTML($tbl, true, false, false, '');
+
+			ob_clean();
+			$filename = 'Laporan Potong Gaji Rekap.pdf';
+			$pdf->Output($filename, 'I');
+		}
+
 		public function getMutationFunction(){
 			$mutation_id 	= $this->input->post('mutation_id');
 

@@ -8,15 +8,6 @@
 			$this->CI = get_instance();
 		} 
 		
-		// public function getAcctCreditsAccountImport(){
-		// 	$this->db->select('acct_credits_account.*');
-		// 	$this->db->from('acct_credits_account');
-		// 	$this->db->where('acct_credits_account.data_state', 0);
-		// 	$this->db->where('acct_credits_account.import_status', 1);
-		// 	$result = $this->db->get()->result_array();
-		// 	return $result;
-		// }
-		
 		public function getAcctSavingsImportMutation_Detail($debt_repayment_id){
 			$this->db->select('*');
 			$this->db->from('acct_debt_repayment');
@@ -67,6 +58,24 @@
 		public function getAcctCreditsAccountImport(){
 			$this->db->select('*');
 			$this->db->from('acct_credits_account_import');
+			$result = $this->db->get()->result_array();
+			return $result;
+		}
+
+		//** get data import array */
+		public function getAcctCreditsAccountImportDetail(){
+			$this->db->select('acct_credits_account_import.*, core_member.member_name, core_member.member_no, core_member.member_address, core_member.province_id, core_province.province_name,core_member.member_mother, core_member.city_id, core_city.city_name, core_member.kecamatan_id, core_kecamatan.kecamatan_name, core_member.member_active_status, acct_credits.credits_id,core_member.member_identity, core_member.member_identity_no, acct_credits.credits_name, core_branch.branch_name, core_member.member_phone, core_member_working.member_company_name, core_member_working.member_company_job_title, core_member.member_mandatory_savings_last_balance, core_member.member_special_savings_last_balance, core_member.member_principal_savings_last_balance, core_division.division_name');
+			$this->db->from('acct_credits_account_import');
+			$this->db->join('core_branch', 'acct_credits_account_import.branch_id = core_branch.branch_id');
+			$this->db->join('acct_credits', 'acct_credits_account_import.credits_id = acct_credits.credits_id');
+			$this->db->join('core_member', 'acct_credits_account_import.member_id = core_member.member_id');
+			$this->db->join('core_member_working', 'acct_credits_account_import.member_id = core_member_working.member_id');
+			$this->db->join('core_division', 'core_member_working.division_id = core_division.division_id');
+			$this->db->join('core_province', 'core_member.province_id = core_province.province_id');
+			$this->db->join('core_city', 'core_member.city_id = core_city.city_id');
+			$this->db->join('core_kecamatan', 'core_member.kecamatan_id = core_kecamatan.kecamatan_id');
+			$this->db->where('acct_credits_account_import.data_state', 0);
+			// $this->db->where('acct_credits_account.credits_account_id', $credits_account_id);
 			$result = $this->db->get()->result_array();
 			return $result;
 		}
@@ -138,6 +147,16 @@
 			$this->db->where('acct_savings_account.data_state', 0);
 			$result = $this->db->get()->row_array();
 			return $result['savings_account_no'];
+		}
+
+		//** Get credit name */
+		public function getAcctCreditsName($credits_id){
+			$this->db->select('acct_credits.credits_name');
+			$this->db->from('acct_credits');
+			$this->db->where('acct_credits.credits_id', $credits_id);
+			$this->db->where('acct_credits.data_state', 0);
+			$result = $this->db->get()->row_array();
+			return $result['credits_name'];
 		}
 
 		public function getTransactionModuleID($transaction_module_code){

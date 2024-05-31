@@ -899,11 +899,14 @@ if(count($memberacctcreditsaccount)!=0){
 										?>
 									</td>
 								</tr>
-								<tr>
+								<tr hidden>
 									<td>Tanggal Angsuran I</td>
 									<td>:</td>
 									<td><input type="text" class="easyui-textbox" name="credit_account_payment_to" id="credit_account_payment_to" autocomplete="off" data-options="formatter:myformatter,parser:myparser" value="<?php echo tgltoview($data['credit_account_payment_to']); ?>" readonly />
 									</td>
+									<td>Jatuh Tempo</td>
+									<td>:</td>
+									<td><input type="text" class="easyui-textbox" name="credit_account_due_date" id="credit_account_due_date" autocomplete="off" data-options="formatter:myformatter,parser:myparser" value="<?php echo tgltoview($data['credit_account_due_date']); ?>" readonly /></td>
 								</tr>
 								<tr>
 									<td>Business Office (BO) <span class="required" style="color : red">*</span></td>
@@ -941,7 +944,7 @@ if(count($memberacctcreditsaccount)!=0){
 	</div>
 </div>
 <?php echo form_close(); ?>
-<?php echo form_open_multipart('savings-import-mutation/process-add',array('id' => 'myform', 'class' => 'horizontal-form')); ?>
+<?php echo form_open_multipart('credit-account-import/process-add',array('id' => 'myform', 'class' => 'horizontal-form')); ?>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet"> 
@@ -951,49 +954,77 @@ if(count($memberacctcreditsaccount)!=0){
 						Daftar File Excel
 					</div>
 				</div>
-				<div class="portlet-body  table-responsive">
+				<div class="portlet-body">
 					<div class="form-body">
 						<div class="row">
 						<table class="table table-striped table-bordered table-hover table-full-width" id="myDataTable">
 							<thead>
 								<tr>
 								    <th width="5%">No</th>
-									<th width="12%">Nomor Perjanjian Pinjaman</th>
+									<!-- <th width="12%">Nomor Perjanjian Pinjaman</th> -->
 									<th width="10%">Nomor Anggota</th>
 									<th width="15%">Nama Anggota</th>
 									<th width="15%">Jenis Pinjaman</th>
 									<th width="15%">Jenis Angsuran</th>
 									<th width="12%">Jenis Sumber Dana</th>
 									<th width="10%">Tanggal Pinjaman</th>
+									<th width="10%">Tanggal Angsuran 1</th>
+									<th width="10%">Jatuh Tempo</th>
 									<th width="10%">Jumlah Pinjaman</th>
-									<th width="10%">Status Pinjaman</th>
-									<th width="10%">Tindak Lanjut</th>
-									<th width="10%">Action</th>
+									<th width="10%">Jangka Waktu</th>
+									<th width="10%">Bunga(%)</th>
+									<th width="10%">admin</th>
+									<th width="10%">asuransi</th>
+									<th width="10%">Keterangan</th>
+									<th width="10%">Nama Bank</th>
+									<th width="10%">No. Rek</th>
+									<th width="10%">Atas Nama</th>
+									<th width="10%">Terima</th>
+									<th width="10%">Ags Pokok</th>
+									<th width="10%">Ags Bunga</th>
+									<th width="10%">Ags Total</th>
+									<th width="10%">Plafon</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php 
 								$no = 1;
-								if(empty($acctsavingsimportmutation)){
-									echo "
-										<tr>
-											<td colspan='12' align='center'>Data Kosong</td>
-										</tr>
-									";
-								} else {
-									foreach($acctsavingsimportmutation as $key => $val){
+								
+									foreach($acctcreditsaccountimport as $key => $val){
+										// Panggil fungsi PaymentType untuk mendapatkan daftar jenis pembayaran
+										$paymentTypes = $this->configuration->PaymentType();
+										// Ambil nama jenis pembayaran berdasarkan ID yang tersedia di $val['payment_type_id']
+										$paymentTypeName = isset($paymentTypes[$val['payment_type_id']]) ? $paymentTypes[$val['payment_type_id']] : '-';
 								?>
 										<tr>
 											<td width="5%" style="text-align: center;"><?php echo $no; ?></td>
-											<td width="20%" style="text-align: left;"><?php echo $this->AcctSavingsImportMutation_model->getCoreMemberNo($val['member_id'])?></td>	
-											<td width="25%" style="text-align: left;"><?php echo $this->AcctSavingsImportMutation_model->getCoreMemberName($val['member_id'])?></td>
-											<td width="25%" style="text-align: left;"><?php echo $this->AcctSavingsImportMutation_model->getAcctSavingsAccountNo($val['savings_account_id'])?></td>
-											<td width="25%" style="text-align: right;"><?php echo number_format($val['savings_import_mutation_amount'], 2) ?></td>
+											
+											<td width="20%" style="text-align: left;"><?php echo $this->AcctCreditAccount_Import_model->getCoreMemberNo($val['member_id'])?></td>	
+											<td width="25%" style="text-align: left;"><?php echo $this->AcctCreditAccount_Import_model->getCoreMemberName($val['member_id'])?></td>
+											<td width="25%" style="text-align: left;"><?php echo $this->AcctCreditAccount_Import_model->getAcctCreditsName($val['credits_id'])?></td>
+											<td width="25%" style="text-align: left;"><?php echo $paymentTypeName; ?></td> <!-- Tampilkan nama jenis pembayaran -->
+											<td width="25%" style="text-align: left;"><?php echo  $this->Core_source_fund_model->getAcctSourceFundName($val['source_fund_id'])?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_date']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_payment_to']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_due_date']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_amount']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_period']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_interest']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_adm_cost']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_insurance']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_remark']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_bank_name']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_bank_account']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_bank_owner']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_amount_received']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_principal_amount']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_interest_amount']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_payment_amount']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['credits_account_last_balance']?></td>
 										</tr>
 								<?php 
 										$no++;
 									}
-							 	} 
 								?>
 							</tbody>
 						</table>
@@ -1012,21 +1043,9 @@ if(count($memberacctcreditsaccount)!=0){
 </div>
 
 <script type="text/javascript">
-	var table;
-
 	$(document).ready(function() {
-		table = $('#myDataTable2').DataTable({
-			"processing": true,
-			"serverSide": true,
-			"pageLength": 5,
-			"order": [],
-			
-			"columnDefs": [{
-				"targets": [0],
-				"orderable": false,
-			}, ],
-		});
-	});
+        $('#myDataTable').DataTable(); // Inisialisasi DataTables
+    });
 </script>
 <script type="text/javascript">
 	function myformatter(date) {

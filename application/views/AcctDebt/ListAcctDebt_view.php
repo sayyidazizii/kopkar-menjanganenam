@@ -151,7 +151,25 @@
 							<th width="10%">Aksi</th>
 						</tr>
 					</thead>
-					<tbody></tbody>
+					<tbody>
+						<?php 
+						   $no = 0;
+						foreach($acctdebt as $val){ 
+							$no++
+							?>
+						<tr>
+							<td><?=$no?></td>
+							<td><?= $val['debt_no']?></td>
+							<td><?= $this->AcctDebt_model->getAcctDebtCategoryName($val['debt_category_id'])?></td>
+							<td><?= $this->AcctDebt_model->getCoreMemberNo($val['member_id'])?></td>
+							<td><?= $this->AcctDebt_model->getCoreMemberName($val['member_id'])?></td>
+							<td><?= $val['debt_date']?></td>
+							<td><?= $val['debt_amount']?></td>
+							<td><?= $val['debt_remark']?></td>
+							<td><a href="<?=base_url().'debt/delete/'.$val['debt_id']?>" class="btn btn-xs red" role="button"><i class="fa fa-trash"></i> Hapus</a></td>
+						</tr>
+						<?php } ?>
+					</tbody>
 					</table>
 				</div>
 			</div>
@@ -162,31 +180,7 @@
 <script type="text/javascript">
 var table;
 $(document).ready(function() {
-    table = $('#myDataTable').DataTable({ 
-        "processing": true,
-        "serverSide": true,
-        "pageLength": 5,
-        "order": [],
-        "ajax": {
-            "url": "<?php echo site_url('debt/get-list')?>",
-            "type": "POST"
-        },
-        "columnDefs": [
-			{ 	
-				"targets": [0, 5, 8],
-				"orderable": false,
-				"className" : "text-center",
-			},
-			{ 
-				targets: [1, 2, 3, 4, 7], 
-				className: "text-left",
-			},
-			{ 
-				targets: [6], 
-				className: "text-right",
-			},
-        ],
-    });
+    table = $('#myDataTable').DataTable();
 });
 </script>
 <?php echo form_close(); ?>

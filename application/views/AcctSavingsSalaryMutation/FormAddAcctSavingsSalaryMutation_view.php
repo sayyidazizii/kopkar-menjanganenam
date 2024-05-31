@@ -145,7 +145,9 @@ $token 	= $this->session->userdata('acctsavingscashmutationtoken-'.$unique['uniq
 										<td width="35%"></td>
 										<td width="5%"></td>
 										<td width="60%" align="right">
-											<button type="submit" class="btn green-jungle"><i class="fa fa-check"></i> Simpan</button>
+											<a href="<?php echo base_url()?>savings-salary-mutation/print-all" class="btn btn-primary">Cetak Pdf</a>
+											<button type="button" class="btn green-jungle" data-toggle="modal" data-target="#myModal2">Simpan</button>
+											<!-- <button type="submit" class="btn green-jungle"><i class="fa fa-check"></i> Simpan</button> -->
 										</td>
 									</tr>
 								</table>
@@ -156,5 +158,27 @@ $token 	= $this->session->userdata('acctsavingscashmutationtoken-'.$unique['uniq
 			</div>
 		</div>
 	</div>
+</div>
+
+
+
+<div id ="myModal2" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <!-- Modal Content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Notifikasi</h4>
+            </div>
+            <div class="modal-body">
+               <p class="text-dark"> Apakah Ingin Menyimpan Data ini ?</p> <p class="text-danger"> 
+					Setelah disimpan akan membuat jurnal otomatis. </p>
+            </div>
+            <div class="modal-footer">
+                 <button type="submit" class="btn green-jungle" >Ya</button>
+                 <button type="reset" class="btn btn-default" data-dismiss="modal">Batal</button>
+            </div>
+        </div>
+    </div>
 </div>
 <?php echo form_close(); ?>
