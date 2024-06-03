@@ -84,18 +84,19 @@
 				$total 				= 0;
 
 				$month 				= date('m');
-				$year 				= date('Y');
+				$year 				= date('Y');		
 				$start_date 		= date('Y-m-d', strtotime($year.'-'.$month.'-01'));
 				$end_date 			= date('Y-m-d', strtotime(date('t').'-'.$month.'-'.$year));
 				$sesi 				= array();
 				$sesi['start_date'] = $start_date;
 				$sesi['end_date'] 	= $end_date;
 
-				$debtcategory 		= $this->AcctDebtPrint_model->getMemberDebtCategory($sesi, $val['member_id']);
-				$debtsavings 		= $this->AcctDebtPrint_model->getMemberDebtSavings($sesi, $val['member_id']);
-				$debtcredits 		= $this->AcctDebtPrint_model->getMemberDebtCredits($sesi, $val['member_id']);
-				$debtstore	 		= $this->AcctDebtPrint_model->getMemberDebtStore($sesi, $val['member_id']);
-				$debtmembersavings	= $this->AcctDebtPrint_model->getMemberDebtMemberSavings($sesi, $val['member_id']);
+				$debtcategory 		 = $this->AcctDebtPrint_model->getMemberDebtCategory($sesi, $val['member_id']);
+				$debtsavings 		 = $this->AcctDebtPrint_model->getMemberDebtSavings($sesi, $val['member_id']);
+				$debtsavingssicantik = $this->AcctDebtPrint_model->getMemberDebtSavingsSicantik($sesi, $val['member_id']);
+				$debtcredits 		 = $this->AcctDebtPrint_model->getMemberDebtCredits($sesi, $val['member_id']);
+				$debtstore	 		 = $this->AcctDebtPrint_model->getMemberDebtStore($sesi, $val['member_id']);
+				$debtmembersavings	 = $this->AcctDebtPrint_model->getMemberDebtMemberSavings($sesi, $val['member_id']);
 
 				if($debtcategory){
 					foreach($debtcategory as $keyy => $vall){
@@ -116,6 +117,20 @@
 
 				if($debtsavings){
 					foreach($debtsavings as $keyy => $vall){
+						$simpanan_sukarela 	+= $vall['savings_cash_mutation_amount'];
+						$total 		+= $vall['savings_cash_mutation_amount'];
+					}
+				}
+
+				if($debtsavings){
+					foreach($debtsavings as $keyy => $vall){
+						$simpanan_sukarela 	+= $vall['savings_cash_mutation_amount'];
+						$total 		+= $vall['savings_cash_mutation_amount'];
+					}
+				}
+
+				if($debtsavingssicantik){
+					foreach($debtsavingssicantik as $keyy => $vall){
 						$sicantik 	+= $vall['savings_cash_mutation_amount'];
 						$total 		+= $vall['savings_cash_mutation_amount'];
 					}

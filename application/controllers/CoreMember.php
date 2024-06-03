@@ -1084,7 +1084,8 @@
 			
 			if($this->form_validation->run()==true){
 				if($member_token_edit->num_rows() == 0){
-					if($this->CoreMember_model->updateCoreMember($data)){
+					//temp
+					if($this->CoreMember_model->updateCoreMemberTemp($data)){
 						if($data['member_principal_savings'] <> 0 || $data['member_principal_savings'] <> ''){
 
 							$data_detail = array (
@@ -1098,7 +1099,8 @@
 								'salary_status'					=> 1,
 							);
 
-							if($this->CoreMember_model->insertAcctSavingsMemberDetail($data_detail)){
+							//ubah ke temp
+							if($this->CoreMember_model->insertAcctSavingsMemberDetailTemp($data_detail)){
 								$transaction_module_code 	= "AGT";
 
 								$transaction_module_id 		= $this->CoreMember_model->getTransactionModuleID($transaction_module_code);
@@ -1124,7 +1126,7 @@
 									'created_on' 					=> date('Y-m-d H:i:s'),
 								);
 								
-								$this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang);
+								// $this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang);
 
 								$journal_voucher_id 			= $this->CoreMember_model->getJournalVoucherID($auth['user_id']);
 
@@ -1144,7 +1146,7 @@
 									'journal_voucher_item_token'	=> $data['member_token_edit'].$preferencecompany['account_salary_payment_id'],
 								);
 
-								$this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
+								// $this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
 
 								if($data['member_principal_savings'] <> 0 || $data['member_principal_savings'] <> ''){
 									$account_id = $this->CoreMember_model->getAccountID($preferencecompany['principal_savings_id']);
@@ -1163,7 +1165,7 @@
 										'journal_voucher_item_token'	=> $data['member_token_edit'].$account_id,
 									);
 
-									$this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);	
+									// $this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);	
 								}
 							}
 						}
@@ -1177,7 +1179,7 @@
 							"member_account_receivable_amount" 	=> $member_account_receivable_amount,
 							"member_account_principal_debt" 	=> $member_account_principal_debt,
 						);
-						$this->CoreMember_model->updateCoreMember($data_member);
+						$this->CoreMember_model->updateCoreMemberTemp($data_member);
 
 						$auth = $this->session->userdata('auth');
 						$this->fungsi->set_log($auth['user_id'], $auth['username'],'1005','Application.CoreMember.processEditCoreMemberSavings',$auth['user_id'],'Edit  Member Savings');
@@ -1215,7 +1217,7 @@
 						$savings_member_detail_token = $this->CoreMember_model->getSavingsMemberDetailToken($data['member_token_edit']);
 
 						if($savings_member_detail_token->num_rows() == 0){
-							$this->CoreMember_model->insertAcctSavingsMemberDetail($data_detail);
+							$this->CoreMember_model->insertAcctSavingsMemberDetailTemp($data_detail);
 						}
 						
 						$transaction_module_code = "AGT";
@@ -1245,7 +1247,7 @@
 						$journal_voucher_token = $this->CoreMember_model->getJournalVoucherToken($data_journal_cabang['journal_voucher_token']);
 						
 						if($journal_voucher_token->num_rows() == 0){
-							$this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang);
+							// $this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang);
 						}
 
 						$journal_voucher_id 		= $this->CoreMember_model->getJournalVoucherID($auth['user_id']);
@@ -1267,7 +1269,7 @@
 						$journal_voucher_item_token = $this->CoreMember_model->getJournalVoucherItemToken($data_debet['journal_voucher_item_token']);
 
 						if($journal_voucher_item_token->num_rows() == 0){
-							$this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
+							// $this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
 						}						
 
 						if($data['member_principal_savings'] <> 0 || $data['member_principal_savings'] <> ''){
@@ -1289,7 +1291,7 @@
 							$journal_voucher_item_token = $this->CoreMember_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
 
 							if($journal_voucher_item_token->num_rows()==0){
-								$this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);
+								// $this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);
 							}	
 						}
 					}
@@ -1303,7 +1305,7 @@
 						"member_account_receivable_amount" 	=> $member_account_receivable_amount,
 						"member_account_principal_debt" 	=> $member_account_principal_debt,
 					);
-					$this->CoreMember_model->updateCoreMember($data_member);
+					$this->CoreMember_model->updateCoreMemberTemp($data_member);
 
 					$auth = $this->session->userdata('auth');
 					$this->fungsi->set_log($auth['user_id'], $auth['username'],'1005','Application.CoreMember.processAddSalaryPrincipal',$auth['user_id'],'Edit  Member Savings');
