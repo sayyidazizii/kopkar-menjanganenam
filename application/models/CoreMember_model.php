@@ -341,6 +341,22 @@ class CoreMember_model extends CI_Model
 		$this->db->where('acct_savings_member_detail_temp.salary_status', 1);
 		$this->db->where('core_member_temp.member_active_status', 0);
 		$this->db->where('core_member_temp.member_debet_preference', 3);
+		$this->db->where('acct_savings_member_detail_temp.salary_cut_type', 1);
+		$this->db->where('acct_savings_member_detail_temp.data_state', 0);
+		return $this->db->get()->result_array();
+	}
+
+	public function getMemberMandatorySavingsTemp()
+	{
+		$this->db->select('acct_savings_member_detail_temp.*,core_member_temp.*, core_division.division_name');
+		$this->db->from('core_member_temp');
+		$this->db->join('acct_savings_member_detail_temp', 'core_member_temp.member_id = acct_savings_member_detail_temp.member_id');
+		$this->db->join('core_member_working', 'core_member_temp.member_id = core_member_working.member_id');
+		$this->db->join('core_division', 'core_member_working.division_id = core_division.division_id');
+		$this->db->where('acct_savings_member_detail_temp.salary_status', 1);
+		$this->db->where('core_member_temp.member_active_status', 0);
+		$this->db->where('core_member_temp.member_debet_preference', 3);
+		$this->db->where('acct_savings_member_detail_temp.salary_cut_type', 2);
 		$this->db->where('acct_savings_member_detail_temp.data_state', 0);
 		return $this->db->get()->result_array();
 	}

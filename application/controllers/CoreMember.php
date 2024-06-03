@@ -1097,6 +1097,7 @@
 								'operated_name'					=> $auth['username'],
 								'savings_member_detail_token'	=> $data['member_token_edit'],
 								'salary_status'					=> 1,
+								'salary_cut_type'				=> 1,
 							);
 
 							//ubah ke temp
@@ -1212,6 +1213,7 @@
 							'operated_name'					=> $auth['username'],
 							'savings_member_detail_token'	=> $data['member_token_edit'],
 							'salary_status'					=> 1,
+							'salary_cut_type'				=> 1,
 						);
 
 						$savings_member_detail_token = $this->CoreMember_model->getSavingsMemberDetailToken($data['member_token_edit']);
@@ -1382,7 +1384,8 @@
 				$member_token_edit = $this->CoreMember_model->getMemberTokenEdit($data['member_token_edit']);
 				
 				if($member_token_edit->num_rows() == 0){
-					if($this->CoreMember_model->updateCoreMember($data)){
+					//ubah ke temp
+					if($this->CoreMember_model->updateCoreMemberTemp($data)){
 						if($data['member_mandatory_savings'] <> 0 || $data['member_mandatory_savings'] <> ''){
 							$data_detail = array (
 								'branch_id'						=> $auth['branch_id'],
@@ -1394,9 +1397,11 @@
 								'savings_member_detail_remark'	=> $this->input->post('savings_member_detail_remark', true),
 								'savings_member_detail_token'	=> $data['member_token_edit'],
 								'salary_status'					=> 1,
-							);
+								'salary_cut_type'				=> 2,
 
-							$this->CoreMember_model->insertAcctSavingsMemberDetail($data_detail);
+							);
+							//Temp
+							$this->CoreMember_model->insertAcctSavingsMemberDetailTemp($data_detail);
 						}
 					}else{
 					}
@@ -1413,12 +1418,14 @@
 							'savings_member_detail_remark'	=> $this->input->post('savings_member_detail_remark', true),
 							'savings_member_detail_token'	=> $data['member_token_edit'],
 							'salary_status'					=> 1,
+							'salary_cut_type'				=> 2,
+
 						);
 
 						$savings_member_detail_token = $this->CoreMember_model->getSavingsMemberDetailToken($data['member_token_edit']);
 
 						if($savings_member_detail_token->num_rows() == 0){
-							$this->CoreMember_model->insertAcctSavingsMemberDetail($data_detail);
+							$this->CoreMember_model->insertAcctSavingsMemberDetailTemp($data_detail);
 						}
 					}
 				}
@@ -1452,44 +1459,44 @@
 					'created_on' 					=> date('Y-m-d H:i:s'),
 				);
 
-				if($this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang)){
-					$journal_voucher_id 		= $this->CoreMember_model->getJournalVoucherID($auth['user_id']);
-					$preferencecompany 			= $this->CoreMember_model->getPreferenceCompany();
-					$account_id_default_status 	= $this->CoreMember_model->getAccountIDDefaultStatus($account_salary_id);
+				// if($this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang)){
+				// 	$journal_voucher_id 		= $this->CoreMember_model->getJournalVoucherID($auth['user_id']);
+				// 	$preferencecompany 			= $this->CoreMember_model->getPreferenceCompany();
+				// 	$account_id_default_status 	= $this->CoreMember_model->getAccountIDDefaultStatus($account_salary_id);
 
-					$data_debet = array (
-						'journal_voucher_id'			=> $journal_voucher_id,
-						'account_id'					=> $account_salary_id,
-						'journal_voucher_description'	=> 'SETORAN POTONG GAJI ',
-						'journal_voucher_amount'		=> $mandatory_savings_total,
-						'journal_voucher_debit_amount'	=> $mandatory_savings_total,
-						'account_id_default_status'		=> $account_id_default_status,
-						'account_id_status'				=> 0,
-						'created_id' 					=> $auth['user_id'],
-						'journal_voucher_item_token'	=> $data['member_token_edit'].$account_salary_id,
-					);
+				// 	$data_debet = array (
+				// 		'journal_voucher_id'			=> $journal_voucher_id,
+				// 		'account_id'					=> $account_salary_id,
+				// 		'journal_voucher_description'	=> 'SETORAN POTONG GAJI ',
+				// 		'journal_voucher_amount'		=> $mandatory_savings_total,
+				// 		'journal_voucher_debit_amount'	=> $mandatory_savings_total,
+				// 		'account_id_default_status'		=> $account_id_default_status,
+				// 		'account_id_status'				=> 0,
+				// 		'created_id' 					=> $auth['user_id'],
+				// 		'journal_voucher_item_token'	=> $data['member_token_edit'].$account_salary_id,
+				// 	);
 
-					$this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
+				// 	// $this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
 
-					if($mandatory_savings_total <> 0 || $mandatory_savings_total <> ''){
-						$account_id = $this->CoreMember_model->getAccountID($preferencecompany['mandatory_savings_id']);
+				// 	if($mandatory_savings_total <> 0 || $mandatory_savings_total <> ''){
+				// 		$account_id = $this->CoreMember_model->getAccountID($preferencecompany['mandatory_savings_id']);
 
-						$account_id_default_status = $this->CoreMember_model->getAccountIDDefaultStatus($account_id);
+				// 		$account_id_default_status = $this->CoreMember_model->getAccountIDDefaultStatus($account_id);
 
-						$data_credit =array(
-							'journal_voucher_id'			=> $journal_voucher_id,
-							'account_id'					=> $account_id,
-							'journal_voucher_description'	=> 'SETORAN POTONG GAJI ',
-							'journal_voucher_amount'		=> $mandatory_savings_total,
-							'journal_voucher_credit_amount'	=> $mandatory_savings_total,
-							'account_id_default_status'		=> $account_id_default_status,
-							'account_id_status'				=> 1,
-							'created_id' 					=> $auth['user_id'],
-							'journal_voucher_item_token'	=> $data['member_token_edit'].$account_id,
-						);
-						$this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);	
-					}
-				}
+				// 		$data_credit =array(
+				// 			'journal_voucher_id'			=> $journal_voucher_id,
+				// 			'account_id'					=> $account_id,
+				// 			'journal_voucher_description'	=> 'SETORAN POTONG GAJI ',
+				// 			'journal_voucher_amount'		=> $mandatory_savings_total,
+				// 			'journal_voucher_credit_amount'	=> $mandatory_savings_total,
+				// 			'account_id_default_status'		=> $account_id_default_status,
+				// 			'account_id_status'				=> 1,
+				// 			'created_id' 					=> $auth['user_id'],
+				// 			'journal_voucher_item_token'	=> $data['member_token_edit'].$account_id,
+				// 		);
+				// 		// $this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);	
+				// 	}
+				// }
 
 				$auth = $this->session->userdata('auth');
 				$this->fungsi->set_log($auth['user_id'], $auth['username'],'1005','Application.CoreMember.processEditCoreMemberSavings',$auth['user_id'],'Edit  Member Savings');

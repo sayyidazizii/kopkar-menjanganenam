@@ -18,6 +18,18 @@
     }
 </style>
 <script type="text/javascript">
+    // $(document).ready(function() {
+    //     // Inisialisasi DataTable untuk sample_1
+    //     $('#sample_1').DataTable();
+    //     // Inisialisasi DataTable untuk sample_2
+    //     $('#sample_2').DataTable();
+    //     // Inisialisasi DataTable untuk sample_3
+    //     $('#sample_3').DataTable();
+    //     // Inisialisasi DataTable untuk sample_4
+    //     $('#sample_4').DataTable();
+    //     // Inisialisasi DataTable untuk sample_5
+    //     $('#sample_5').DataTable();
+    // });
     base_url = '<?php echo base_url(); ?>';
 
     function showTab(tabId) {
@@ -32,6 +44,10 @@
         if (selectedTab) {
             selectedTab.classList.add('active');
         }
+    }
+
+    function confirmDelete() {
+        return confirm('Apakah Anda yakin ingin menghapus potongan ini?');
     }
 </script>
 <div class="row-fluid">
@@ -222,14 +238,15 @@
 
                             <!-- <form role="form" action="#"> -->
                             <table class="table table-striped table-bordered table-hover table-full-width"
-                                id="sample_3">
+                                id="sample_1">
                                 <thead>
                                     <tr>
-                                        <th style="text-align:center" width="5%">No</th>
                                         <th style="text-align:center" width="25%">No Anggota</th>
                                         <th style="text-align:center" width="25%">Nama Anggota</th>
                                         <th style="text-align:center" width="20%">Bagian</th>
+                                        <th style="text-align:center" width="20%">Tgl Transaksi</th>
                                         <th style="text-align:center" width="25%">Potongan Simpanan Pokok</th>
+                                        <th style="text-align:center" width="25%">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -242,15 +259,16 @@
                                         foreach ($principal_savings as $key => $val) {
                                             echo "
 													<tr>
-														<td style='text-align:center'>" . $no . "</td>
 														<td>" . $val['member_no'] . "</td>
 														<td>" . $val['member_name'] . "</td>
 														<td>" . $val['division_name'] . "</td>
-														<td style='text-align:right'>" . number_format($val['member_principal_savings'], 2) . "</td>
+														<td>" . $val['transaction_date'] . "</td>
+														<td style='text-align:right'>" . number_format($val['principal_savings_amount'], 2) . "</td>
+							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
 													</tr>
 												";
                                             $no++;
-                                            $principal_savings_total_amount += $val['member_principal_savings'];
+                                            $principal_savings_total_amount += $val['principal_savings_amount'];
                                         }
                                     } ?>
                                 </tbody>
@@ -266,21 +284,128 @@
 
                         <!-- Simpanan Wajib Potong gaji TAB -->
                         <div class="tab-pane" id="tab_1_2">
+                        <table class="table table-striped table-bordered table-hover table-full-width"
+                                id="sample_2">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center" width="25%">No Anggota</th>
+                                        <th style="text-align:center" width="25%">Nama Anggota</th>
+                                        <th style="text-align:center" width="20%">Bagian</th>
+                                        <th style="text-align:center" width="20%">Tgl Transaksi</th>
+                                        <th style="text-align:center" width="25%">Potongan Simpanan Wajib</th>
+                                        <th style="text-align:center" width="25%">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $i = 1;
+                                    $mandatory_savings_total_amount = 0;
+                                    if (empty($mandatory_savings)) {
+                                        echo "<tr><td align='center' colspan='5'> Data Kosong !</td></tr>";
+                                    } else {
+                                        foreach ($mandatory_savings as $key => $val) {
+                                            echo "
+													<tr>
+														<td>" . $val['member_no'] . "</td>
+														<td>" . $val['member_name'] . "</td>
+														<td>" . $val['division_name'] . "</td>
+														<td>" . $val['transaction_date'] . "</td>
+														<td style='text-align:right'>" . number_format($val['mandatory_savings_amount'], 2) . "</td>
+							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
+													</tr>
+												";
+                                            $i++;
+                                            $mandatory_savings_total_amount += $val['mandatory_savings_amount'];
+                                        }
+                                    } ?>
+                                </tbody>
+                            </table>
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">No. Perkiraan<span class="required"> *</span></label>
+                                    <div class="col-md-6">
+                                        <!-- Dropdown untuk No. Perkiraan -->
+											<?php echo form_dropdown('account_id', $acctaccount,set_value('account_id',$data['account_id']),'id="account_id" class="form-control select2me"');?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Sandi</label>
+                                    <div class="col-md-6">
+                                        <!-- Dropdown untuk Sandi -->
+											<?php echo form_dropdown('mutation_id', $acctmutation, set_value('mutation_id', 14),'id="mutation_id" class="form-control select2me" readonly');?>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="mutation_function" id="mutation_function" value="+" readonly/>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Total Simpanan Wajib</label>
+                                    <div class="col-md-6">
+                                        <!-- Input untuk Total Simpanan Wajib -->
+                                        <input type="text" class="form-control" name="member_mandatory_savings_view" id="member_mandatory_savings_view" value="<?php echo number_format($mandatory_savings_total_amount, 2) ?>" readonly/>
+                                        <input type="hidden" class="form-control" name="member_mandatory_savings" id="member_mandatory_savings" value="<?php echo $mandatory_savings_total_amount ?>" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Keterangan</label>
+                                    <div class="col-md-6">
+                                        <!-- Textarea untuk Keterangan -->
+                                        <textarea rows="3" name="savings_member_detail_remark" id="savings_member_detail_remark" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                           
 
-                            <div class="margin-top-10">
-                                <a href="javascript:;" class="btn green"> Submit </a>
+								<input type="hidden" class="form-control" name="member_token_edit" id="member_token_edit" placeholder="id" value="<?php echo $token;?>"/>
+                                <div class="margiv-top-10">
+                                <button type="submit" class="btn green" id="view" name="view"
+                                    value="submit_mandatory"><i class="fa fa-check"></i>Submit</button>
                                 <a href="javascript:;" class="btn default"> Cancel </a>
                             </div>
-                            </form>
                         </div>
                         <!-- END TAB -->
 
                         <!-- Tabungan Potong gaji TAB -->
                         <div class="tab-pane" id="tab_1_3">
                             <form action="#">
-
+                            <table class="table table-striped table-bordered table-hover table-full-width"
+                                id="sample_3">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center" width="5%">No</th>
+                                        <th style="text-align:center" width="25%">No Anggota</th>
+                                        <th style="text-align:center" width="25%">Nama Anggota</th>
+                                        <th style="text-align:center" width="20%">Bagian</th>
+                                        <th style="text-align:center" width="20%">Tgl Transaksi</th>
+                                        <th style="text-align:center" width="25%">Potongan Simpanan Wajib</th>
+                                        <th style="text-align:center" width="25%">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $no = 1;
+                                    $mandatory_savings_total_amount = 0;
+                                    if (empty($mandatory_savings)) {
+                                        echo "<tr><td align='center' colspan='5'> Data Kosong !</td></tr>";
+                                    } else {
+                                        foreach ($mandatory_savings as $key => $val) {
+                                            echo "
+													<tr>
+														<td style='text-align:center'>" . $no . "</td>
+														<td>" . $val['member_no'] . "</td>
+														<td>" . $val['member_name'] . "</td>
+														<td>" . $val['division_name'] . "</td>
+														<td>" . $val['transaction_date'] . "</td>
+														<td style='text-align:right'>" . number_format($val['mandatory_savings_amount'], 2) . "</td>
+							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
+													</tr>
+												";
+                                            $no++;
+                                            $mandatory_savings_total_amount += $val['mandatory_savings_amount'];
+                                        }
+                                    } ?>
+                                </tbody>
+                            </table>
                                 <div class="margin-top-10">
-                                    <a href="javascript:;" class="btn green"> Change Password </a>
+                                    <a href="javascript:;" class="btn green"> Submit </a>
                                     <a href="javascript:;" class="btn default"> Cancel </a>
                                 </div>
                             </form>
@@ -290,7 +415,44 @@
                         <!-- Angsuran potong gaji TAB -->
                         <div class="tab-pane" id="tab_1_4">
                             <form action="#">
-
+                            <table class="table table-striped table-bordered table-hover table-full-width"
+                                id="sample_4">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center" width="5%">No</th>
+                                        <th style="text-align:center" width="25%">No Anggota</th>
+                                        <th style="text-align:center" width="25%">Nama Anggota</th>
+                                        <th style="text-align:center" width="20%">Bagian</th>
+                                        <th style="text-align:center" width="20%">Tgl Transaksi</th>
+                                        <th style="text-align:center" width="25%">Potongan Simpanan Wajib</th>
+                                        <th style="text-align:center" width="25%">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $no = 1;
+                                    $mandatory_savings_total_amount = 0;
+                                    if (empty($mandatory_savings)) {
+                                        echo "<tr><td align='center' colspan='5'> Data Kosong !</td></tr>";
+                                    } else {
+                                        foreach ($mandatory_savings as $key => $val) {
+                                            echo "
+													<tr>
+														<td style='text-align:center'>" . $no . "</td>
+														<td>" . $val['member_no'] . "</td>
+														<td>" . $val['member_name'] . "</td>
+														<td>" . $val['division_name'] . "</td>
+														<td>" . $val['transaction_date'] . "</td>
+														<td style='text-align:right'>" . number_format($val['mandatory_savings_amount'], 2) . "</td>
+							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
+													</tr>
+												";
+                                            $no++;
+                                            $mandatory_savings_total_amount += $val['mandatory_savings_amount'];
+                                        }
+                                    } ?>
+                                </tbody>
+                            </table>
                                 <!--end profile-settings-->
                                 <div class="margin-top-10">
                                     <a href="javascript:;" class="btn red"> Save Changes </a>
@@ -303,7 +465,44 @@
                         <!-- Potong gaji Baru TAB -->
                         <div class="tab-pane" id="tab_1_5">
                             <form action="#">
-
+                            <table class="table table-striped table-bordered table-hover table-full-width"
+                                id="sample_5">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center" width="5%">No</th>
+                                        <th style="text-align:center" width="25%">No Anggota</th>
+                                        <th style="text-align:center" width="25%">Nama Anggota</th>
+                                        <th style="text-align:center" width="20%">Bagian</th>
+                                        <th style="text-align:center" width="20%">Tgl Transaksi</th>
+                                        <th style="text-align:center" width="25%">Potongan Simpanan Wajib</th>
+                                        <th style="text-align:center" width="25%">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $no = 1;
+                                    $mandatory_savings_total_amount = 0;
+                                    if (empty($mandatory_savings)) {
+                                        echo "<tr><td align='center' colspan='5'> Data Kosong !</td></tr>";
+                                    } else {
+                                        foreach ($mandatory_savings as $key => $val) {
+                                            echo "
+													<tr>
+														<td style='text-align:center'>" . $no . "</td>
+														<td>" . $val['member_no'] . "</td>
+														<td>" . $val['member_name'] . "</td>
+														<td>" . $val['division_name'] . "</td>
+														<td>" . $val['transaction_date'] . "</td>
+														<td style='text-align:right'>" . number_format($val['mandatory_savings_amount'], 2) . "</td>
+							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
+													</tr>
+												";
+                                            $no++;
+                                            $mandatory_savings_total_amount += $val['mandatory_savings_amount'];
+                                        }
+                                    } ?>
+                                </tbody>
+                            </table>
                                 <!--end profile-settings-->
                                 <div class="margin-top-10">
                                     <a href="javascript:;" class="btn red"> Save Changes </a>
