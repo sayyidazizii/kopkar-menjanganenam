@@ -271,7 +271,7 @@
 				$journal_voucher_period 		= date("Ym", strtotime($data['savings_cash_mutation_date']));
 				
 				if($savings_cash_mutation_token->num_rows()==0){
-					if($this->AcctSavingsSalaryMutation_model->insertAcctSavingsSalaryMutation($data)){
+					if($this->AcctSavingsSalaryMutation_model->insertAcctSavingsSalaryMutationTemp($data)){
 						$acctsavingscash_last 			= $this->AcctSavingsSalaryMutation_model->getAcctSavingsSalaryMutation_Last($data['created_id']);
 
 						$data_journal = array(
@@ -289,7 +289,7 @@
 							'created_on' 						=> $data['created_on'],
 						);
 						
-						$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucher($data_journal);
+						// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucher($data_journal);
 
 						$journal_voucher_id 					= $this->AcctSavingsSalaryMutation_model->getJournalVoucherID($data['created_id']);
 
@@ -312,7 +312,7 @@
 								'created_id' 					=> $auth['user_id']
 							);
 
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debet);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debet);
 
 							$account_id 						= $this->AcctSavingsSalaryMutation_model->getAccountID($data['savings_id']);
 
@@ -330,7 +330,7 @@
 								'created_id' 					=> $auth['user_id']
 							);
 
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
 							if($data['savings_cash_mutation_amount_adm'] > 0){
 								$data_debet = array (
 									'journal_voucher_id'			=> $journal_voucher_id,
@@ -344,7 +344,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
 
 								$preferencecompany = $this->AcctSavingsAccount_model->getPreferenceCompany();
 
@@ -361,7 +361,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
 							}
 						} else if($data['mutation_id'] == 2){
 							$account_id 						= $this->AcctSavingsSalaryMutation_model->getAccountID($data['savings_id']);
@@ -380,7 +380,7 @@
 								'created_id' 					=> $auth['user_id']
 							);
 
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debit);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debit);
 
 							$account_id_default_status 			= $this->AcctSavingsSalaryMutation_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
 
@@ -396,7 +396,7 @@
 								'created_id' 					=> $auth['user_id']
 							);
 
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
 
 							if($data['savings_cash_mutation_amount_adm'] > 0){
 								$data_debet = array (
@@ -411,7 +411,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
 
 								$preferencecompany = $this->AcctSavingsAccount_model->getPreferenceCompany();
 
@@ -428,7 +428,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
 							}
 
 						} else if($data['mutation_id'] == 3){
@@ -446,7 +446,7 @@
 								'created_id' 					=> $auth['user_id']
 							);
 
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debet);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debet);
 
 							$account_id 						= $this->AcctSavingsSalaryMutation_model->getAccountID($data['savings_id']);
 
@@ -464,7 +464,7 @@
 								'created_id' 					=> $auth['user_id']
 							);
 
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
 
 							if($data['savings_cash_mutation_amount_adm'] > 0){
 								$data_debet = array (
@@ -479,7 +479,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
 
 								$preferencecompany = $this->AcctSavingsAccount_model->getPreferenceCompany();
 
@@ -496,7 +496,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
 							}
 
 						} else if($data['mutation_id'] == 4){
@@ -516,7 +516,7 @@
 								'created_id' 					=> $auth['user_id']
 							);
 
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debit);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debit);
 
 							$account_id_default_status 			= $this->AcctSavingsSalaryMutation_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
 
@@ -532,7 +532,7 @@
 								'created_id' 					=> $auth['user_id']
 							);
 
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
 
 							if($data['savings_cash_mutation_amount_adm'] > 0){
 								$data_debet = array (
@@ -547,7 +547,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
 
 								$preferencecompany = $this->AcctSavingsAccount_model->getPreferenceCompany();
 
@@ -564,7 +564,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
 							}
 						} else {
 							if($this->AcctSavingsSalaryMutation_model->closedAcctSavingsAccount($data['savings_account_id'])){
@@ -584,7 +584,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debit);
+								// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debit);
 
 								$account_id_default_status 			= $this->AcctSavingsSalaryMutation_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
 
@@ -600,7 +600,7 @@
 									'created_id' 					=> $auth['user_id']
 								);
 
-								$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
+								// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
 
 								if($data['savings_cash_mutation_amount_adm'] > 0){
 									$data_debet = array (
@@ -615,7 +615,7 @@
 										'created_id' 					=> $auth['user_id']
 									);
 
-									$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
+									// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
 
 									$preferencecompany = $this->AcctSavingsAccount_model->getPreferenceCompany();
 
@@ -632,7 +632,7 @@
 										'created_id' 					=> $auth['user_id']
 									);
 
-									$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
+									// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
 								}
 							}
 							
@@ -650,7 +650,7 @@
 							"member_account_savings_debt" 		=> $member_account_savings_debt,
 						);
 
-						$this->AcctSavingsSalaryMutation_model->updateCoreMember($data_member);
+						// $this->AcctSavingsSalaryMutation_model->updateCoreMember($data_member);
 						
 					}else{
 					}
@@ -675,7 +675,7 @@
 					$journal_voucher_token 	= $this->AcctSavingsSalaryMutation_model->getJournalVoucherToken($data_journal['journal_voucher_token']);
 
 					if($journal_voucher_token->num_rows()== 0){
-						$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucher($data_journal);
+						// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucher($data_journal);
 					}
 
 					$journal_voucher_id 	= $this->AcctSavingsSalaryMutation_model->getJournalVoucherID($data['created_id']);
@@ -700,7 +700,7 @@
 						$journal_voucher_item_token 		= $this->AcctSavingsSalaryMutation_model->getJournalVoucherItemToken($data_debet['journal_voucher_item_token']);
 
 						if($journal_voucher_item_token->num_rows()==0){
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debet);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debet);
 						}
 
 						$account_id 						= $this->AcctSavingsSalaryMutation_model->getAccountID($data['savings_id']);
@@ -722,7 +722,7 @@
 						$journal_voucher_item_token 		= $this->AcctSavingsSalaryMutation_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
 
 						if($journal_voucher_item_token->num_rows()==0){
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
 						}
 
 						if($data['savings_cash_mutation_amount_adm'] > 0){
@@ -742,7 +742,7 @@
 							$journal_voucher_item_token 		= $this->AcctSavingsSalaryMutation_model->getJournalVoucherItemToken($data_debet['journal_voucher_item_token']);
 
 							if($journal_voucher_item_token->num_rows()==0){
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
 							}
 
 							$preferencecompany = $this->AcctSavingsAccount_model->getPreferenceCompany();
@@ -763,7 +763,7 @@
 							$journal_voucher_item_token 		= $this->AcctSavingsSalaryMutation_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
 
 							if($journal_voucher_item_token->num_rows()==0){
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
 							}
 						}
 
@@ -787,7 +787,7 @@
 						$journal_voucher_item_token 		= $this->AcctSavingsSalaryMutation_model->getJournalVoucherItemToken($data_debit['journal_voucher_item_token']);
 
 						if($journal_voucher_item_token->num_rows()==0){
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debit);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_debit);
 						}
 
 						$account_id_default_status 			= $this->AcctSavingsSalaryMutation_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
@@ -807,7 +807,7 @@
 						$journal_voucher_item_token 		= $this->AcctSavingsSalaryMutation_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
 
 						if($journal_voucher_item_token->num_rows()==0){
-							$this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
+							// $this->AcctSavingsSalaryMutation_model->insertAcctJournalVoucherItem($data_credit);
 						}
 
 						if($data['savings_cash_mutation_amount_adm'] > 0){
@@ -827,7 +827,7 @@
 							$journal_voucher_item_token 		= $this->AcctSavingsSalaryMutation_model->getJournalVoucherItemToken($data_debet['journal_voucher_item_token']);
 
 							if($journal_voucher_item_token->num_rows()==0){
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_debet);
 							}
 
 							$preferencecompany = $this->AcctSavingsAccount_model->getPreferenceCompany();
@@ -848,7 +848,7 @@
 							$journal_voucher_item_token 		= $this->AcctSavingsSalaryMutation_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
 
 							if($journal_voucher_item_token->num_rows()==0){
-								$this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
+								// $this->AcctSavingsAccount_model->insertAcctJournalVoucherItem($data_credit);
 							}
 						}
 					}
@@ -866,7 +866,7 @@
 						"member_account_savings_debt" 		=> $member_account_savings_debt,
 					);
 
-					$this->AcctSavingsSalaryMutation_model->updateCoreMember($data_member);
+					// $this->AcctSavingsSalaryMutation_model->updateCoreMember($data_member);
 
 				}
 			}

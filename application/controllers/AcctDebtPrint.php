@@ -29,6 +29,8 @@ class AcctDebtPrint extends CI_Controller
 		//temp
 		$data['main_view']['principal_savings'] = $this->CoreMember_model->getMemberPrincipalSavingsTemp();
 		$data['main_view']['mandatory_savings'] = $this->CoreMember_model->getMemberMandatorySavingsTemp();
+		$data['main_view']['savings_salary_mutation'] = $this->CoreMember_model->getSavingsSalaryMutationTemp();
+		
 		// echo json_encode($data);
 		$data['main_view']['content'] = 'AcctDebtPrint/ListAcctDebtPrint_view';
 		$this->load->view('MainPage_view', $data);
@@ -81,6 +83,9 @@ class AcctDebtPrint extends CI_Controller
 		}
 		else if ($sesi['view'] == 'submit_principal') {
 			$this->submitSalaryPrincipalSavings();
+		}
+		else if ($sesi['view'] == 'submit_mandatory') {
+			$this->submitSalaryMandatorySavings();
 		}
 	}
 
@@ -2335,7 +2340,7 @@ class AcctDebtPrint extends CI_Controller
 			$total = 0;
 
 			$debtcategory = $this->AcctDebtPrint_model->getMemberDebtCategory($sesi, $val['member_id']);
-			$debtsavings = $this->AcctDebtPrint_model->getMemberDebtSavings($sesi, $val['member_id']);
+			$debtsavings = $this->AcctDebtPrint_model->getMemberDebtSavingsTemp($sesi, $val['member_id']);
 			$debtcredits = $this->AcctDebtPrint_model->getMemberDebtCredits($sesi, $val['member_id']);
 			$debtstore = $this->AcctDebtPrint_model->getMemberDebtStore($sesi, $val['member_id']);
 			$debtmembersavings = $this->AcctDebtPrint_model->getMemberDebtMemberSavingsTemp($sesi, $val['member_id']);
@@ -2682,7 +2687,7 @@ class AcctDebtPrint extends CI_Controller
 			
 			 // Pastikan loop berjalan dengan benar
 			// echo "<pre>";
-			// echo json_encode($val);
+			// echo print_r($val);
 			// echo "</pre>";
 
 			$username = $this->CoreMember_model->getUserName($auth['user_id']);
@@ -2698,7 +2703,7 @@ class AcctDebtPrint extends CI_Controller
 				'kelurahan_id'							=> $val['kelurahan_id'],
 				'member_character'						=> $val['member_character'],
 				'member_principal_savings'				=> $val['member_principal_savings'],
-				'member_principal_savings_last_balance'	=> $val['member_principal_savings_last_balance'],
+				'last_balance' 							=> $val['last_balance'],
 				'member_account_receivable_amount'		=> $val['member_account_receivable_amount'],
 				'member_account_principal_debt'			=> $val['member_account_principal_debt'],
 				'member_token_edit'						=> $val['member_token_edit'],
@@ -2707,37 +2712,34 @@ class AcctDebtPrint extends CI_Controller
 			$data_member_update = array(
 				'member_id'								=> $val['member_id'],
 				'member_principal_savings'				=> $val['member_principal_savings'],
-				'member_principal_savings_last_balance'	=> $val['member_principal_savings_last_balance'],
+				'member_principal_savings_last_balance'	=> $val['last_balance'],
 				'member_account_receivable_amount'		=> $val['member_account_receivable_amount'],
 				'member_account_principal_debt'			=> $val['member_account_principal_debt'],
 				'member_token_edit'						=> $val['member_token_edit'],
 			);
 
-			$total_cash_amount = $val['member_principal_savings'];
+			$total_cash_amount = $val['principal_savings_amount'];
 
 			$member_token_edit = $this->CoreMember_model->getMemberTokenEdit($val['member_token_edit']);
 
 			$this->CoreMember_model->updateCoreMember($data_member_update);
-			
-				// if($member_token_edit->num_rows() == 0){
-					//temp
-					// if($this->CoreMember_model->updateCoreMember($data)){
-						if($data['member_principal_savings'] <> 0 || $data['member_principal_savings'] <> ''){
 
 							$data_detail = array (
 								'branch_id'						=> $auth['branch_id'],
-								'member_id'						=> $data['member_id'],
-								'mutation_id'					=> $data['mutation_id'],
+								'member_id'						=> $val['member_id'],
+								'mutation_id'					=> $val['mutation_id'],
 								'transaction_date'				=> date('Y-m-d'),
-								'principal_savings_amount'		=> $data['member_principal_savings'],
+								'principal_savings_amount'		=> $val['principal_savings_amount'],
 								'operated_name'					=> $auth['username'],
-								'savings_member_detail_token'	=> $data['member_token_edit'],
+								'savings_member_detail_token'	=> $val['member_token_edit'],
 								'savings_member_detail_remark'	=> 'SETORAN SIMP POKOK POTONG GAJI ',
 								'salary_status'					=> 1,
-							);
+							); 
+
+							// echo json_encode($data_detail);
+							// exit;
 							$this->CoreMember_model->insertAcctSavingsMemberDetail($data_detail);
 							//ubah ke REAL
-							// if($this->CoreMember_model->insertAcctSavingsMemberDetail($data_detail)){
 								$transaction_module_code 	= "AGT";
 
 								$transaction_module_id 		= $this->CoreMember_model->getTransactionModuleID($transaction_module_code);
@@ -2775,8 +2777,8 @@ class AcctDebtPrint extends CI_Controller
 									'journal_voucher_id'			=> $journal_voucher_id,
 									'account_id'					=> $preferencecompany['account_salary_payment_id'],
 									'journal_voucher_description'	=> 'SETORAN SIMP POKOK POTONG GAJI '.$val['member_name'],
-									'journal_voucher_amount'		=> $total_cash_amount,
-									'journal_voucher_debit_amount'	=> $total_cash_amount,
+									'journal_voucher_amount'		=> $val['principal_savings_amount'],
+									'journal_voucher_debit_amount'	=> $val['principal_savings_amount'],
 									'account_id_default_status'		=> $account_id_default_status,
 									'account_id_status'				=> 0,
 									'created_id' 					=> $auth['user_id'],
@@ -2785,7 +2787,6 @@ class AcctDebtPrint extends CI_Controller
 
 								$this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
 
-								if($data['member_principal_savings'] <> 0 || $val['member_principal_savings'] <> ''){
 									$account_id = $this->CoreMember_model->getAccountID($preferencecompany['principal_savings_id']);
 
 									$account_id_default_status = $this->CoreMember_model->getAccountIDDefaultStatus($account_id);
@@ -2794,8 +2795,8 @@ class AcctDebtPrint extends CI_Controller
 										'journal_voucher_id'			=> $journal_voucher_id,
 										'account_id'					=> $account_id,
 										'journal_voucher_description'	=> 'SETORAN SIMP POKOK POTONG GAJI '.$val['member_name'],
-										'journal_voucher_amount'		=> $val['member_principal_savings'],
-										'journal_voucher_credit_amount'	=> $val['member_principal_savings'],
+										'journal_voucher_amount'		=> $val['principal_savings_amount'],
+										'journal_voucher_credit_amount'	=> $val['principal_savings_amount'],
 										'account_id_default_status'		=> $account_id_default_status,
 										'account_id_status'				=> 1,
 										'created_id' 					=> $auth['user_id'],
@@ -2803,25 +2804,16 @@ class AcctDebtPrint extends CI_Controller
 									);
 
 									$this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);	
-								}
-							// }
-						}
-
-						// $memberaccountdebt 					= $this->CoreMember_model->getCoreMemberAccountReceivableAmount($val['member_id']);
-						// $member_account_receivable_amount 	= $memberaccountdebt['member_account_receivable_amount'] + $val['member_principal_savings'];
-						// $member_account_principal_debt 		= $memberaccountdebt['member_account_principal_debt'] + $val['member_principal_savings'];
 
 						$data_member = array(
 							"member_id" 						=> $val['member_id'],
 							"data_state" 						=> 1,
 						);
-						// $this->CoreMember_model->updateCoreMember($data_member);
 						$this->CoreMember_model->updateDebtMemberSavingsTemp($data_member);
 					
 			
 		}
 		// endforeach
-
 
 						$auth = $this->session->userdata('auth');
 						$this->fungsi->set_log($auth['user_id'], $auth['username'],'1005','Application.CoreMember.processEditCoreMemberSavings',$auth['user_id'],'Edit  Member Savings');
@@ -2835,22 +2827,12 @@ class AcctDebtPrint extends CI_Controller
 						$this->session->set_userdata('message',$msg);
 						redirect('debt-print');
 
-
-					// 	}else{
-					// 	$msg = "<div class='alert alert-danger alert-dismissable'> 
-					// 			<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
-					// 				Tambah Simp Pokok Potong Gaji Tidak Berhasil
-					// 			</div> ";
-					// 	$this->session->set_userdata('message',$msg);
-					// 	redirect('debt-print');
-					// }
-
 	}
 
 	public function submitSalaryMandatorySavings(){
 		$auth 						= $this->session->userdata('auth');
 		$username 					= $this->CoreMember_model->getUserName($auth['user_id']);
-		$coremember 				= $this->CoreMember_model->getCoreMemberMandatorySavings();
+		$coremember 				= $this->CoreMember_model->getMemberMandatorySavingsTemp();
 		$account_salary_id 			= $this->input->post('account_id', true);
 		$mandatory_savings_total 	= 0;
 
@@ -2875,7 +2857,7 @@ class AcctDebtPrint extends CI_Controller
 				'kelurahan_id'							=> $val['kelurahan_id'],
 				'member_character'						=> $val['member_character'],
 				'member_mandatory_savings'				=> $val['member_mandatory_savings'],
-				'member_mandatory_savings_last_balance'	=> $val['member_mandatory_savings_last_balance']+$val['member_mandatory_savings'],
+				'member_mandatory_savings_last_balance'	=> $val['member_mandatory_savings_last_balance'],
 				'member_token_edit'						=> $this->input->post('member_token_edit', true).$val['member_id'],
 			);
 			
@@ -2884,24 +2866,24 @@ class AcctDebtPrint extends CI_Controller
 			$member_token_edit = $this->CoreMember_model->getMemberTokenEdit($data['member_token_edit']);
 			
 			if($member_token_edit->num_rows() == 0){
-				//ubah ke temp
-				if($this->CoreMember_model->updateCoreMemberTemp($data)){
+				//ubah ke real
+				if($this->CoreMember_model->updateCoreMember($data)){
 					if($data['member_mandatory_savings'] <> 0 || $data['member_mandatory_savings'] <> ''){
 						$data_detail = array (
 							'branch_id'						=> $auth['branch_id'],
-							'member_id'						=> $data['member_id'],
+							'member_id'						=> $val['member_id'],
 							'mutation_id'					=> $this->input->post('mutation_id', true),
 							'transaction_date'				=> date('Y-m-d'),
-							'mandatory_savings_amount'		=> $data['member_mandatory_savings'],
+							'mandatory_savings_amount'		=> $val['member_mandatory_savings'],
 							'operated_name'					=> $auth['username'],
 							'savings_member_detail_remark'	=> $this->input->post('savings_member_detail_remark', true),
-							'savings_member_detail_token'	=> $data['member_token_edit'],
+							'savings_member_detail_token'	=> $val['member_token_edit'],
 							'salary_status'					=> 1,
-							'salary_cut_type'				=> 2,
+							// 'salary_cut_type'				=> 2,
 
 						);
-						//Temp
-						$this->CoreMember_model->insertAcctSavingsMemberDetailTemp($data_detail);
+						//real
+						$this->CoreMember_model->insertAcctSavingsMemberDetail($data_detail);
 					}
 				}else{
 				}
@@ -2910,22 +2892,22 @@ class AcctDebtPrint extends CI_Controller
 					
 					$data_detail = array (
 						'branch_id'						=> $auth['branch_id'],
-						'member_id'						=> $data['member_id'],
+						'member_id'						=> $val['member_id'],
 						'mutation_id'					=> $this->input->post('mutation_id', true),
 						'transaction_date'				=> date('Y-m-d'),
-						'mandatory_savings_amount'		=> $data['member_mandatory_savings'],
+						'mandatory_savings_amount'		=> $val['member_mandatory_savings'],
 						'operated_name'					=> $auth['username'],
 						'savings_member_detail_remark'	=> $this->input->post('savings_member_detail_remark', true),
-						'savings_member_detail_token'	=> $data['member_token_edit'],
+						'savings_member_detail_token'	=> $val['member_token_edit'],
 						'salary_status'					=> 1,
-						'salary_cut_type'				=> 2,
+						// 'salary_cut_type'				=> 2,
 
 					);
 
 					$savings_member_detail_token = $this->CoreMember_model->getSavingsMemberDetailToken($data['member_token_edit']);
 
 					if($savings_member_detail_token->num_rows() == 0){
-						$this->CoreMember_model->insertAcctSavingsMemberDetailTemp($data_detail);
+						$this->CoreMember_model->insertAcctSavingsMemberDetail($data_detail);
 					}
 				}
 			}
@@ -2959,44 +2941,44 @@ class AcctDebtPrint extends CI_Controller
 				'created_on' 					=> date('Y-m-d H:i:s'),
 			);
 
-			// if($this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang)){
-			// 	$journal_voucher_id 		= $this->CoreMember_model->getJournalVoucherID($auth['user_id']);
-			// 	$preferencecompany 			= $this->CoreMember_model->getPreferenceCompany();
-			// 	$account_id_default_status 	= $this->CoreMember_model->getAccountIDDefaultStatus($account_salary_id);
+			if($this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang)){
+				$journal_voucher_id 		= $this->CoreMember_model->getJournalVoucherID($auth['user_id']);
+				$preferencecompany 			= $this->CoreMember_model->getPreferenceCompany();
+				$account_id_default_status 	= $this->CoreMember_model->getAccountIDDefaultStatus($account_salary_id);
 
-			// 	$data_debet = array (
-			// 		'journal_voucher_id'			=> $journal_voucher_id,
-			// 		'account_id'					=> $account_salary_id,
-			// 		'journal_voucher_description'	=> 'SETORAN POTONG GAJI ',
-			// 		'journal_voucher_amount'		=> $mandatory_savings_total,
-			// 		'journal_voucher_debit_amount'	=> $mandatory_savings_total,
-			// 		'account_id_default_status'		=> $account_id_default_status,
-			// 		'account_id_status'				=> 0,
-			// 		'created_id' 					=> $auth['user_id'],
-			// 		'journal_voucher_item_token'	=> $data['member_token_edit'].$account_salary_id,
-			// 	);
+				$data_debet = array (
+					'journal_voucher_id'			=> $journal_voucher_id,
+					'account_id'					=> $account_salary_id,
+					'journal_voucher_description'	=> 'SETORAN SIMP WAJIB POTONG GAJI ',
+					'journal_voucher_amount'		=> $mandatory_savings_total,
+					'journal_voucher_debit_amount'	=> $mandatory_savings_total,
+					'account_id_default_status'		=> $account_id_default_status,
+					'account_id_status'				=> 0,
+					'created_id' 					=> $auth['user_id'],
+					'journal_voucher_item_token'	=> $data['member_token_edit'].$account_salary_id,
+				);
 
-			// 	// $this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
+				$this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
 
-			// 	if($mandatory_savings_total <> 0 || $mandatory_savings_total <> ''){
-			// 		$account_id = $this->CoreMember_model->getAccountID($preferencecompany['mandatory_savings_id']);
+				if($mandatory_savings_total <> 0 || $mandatory_savings_total <> ''){
+					$account_id = $this->CoreMember_model->getAccountID($preferencecompany['mandatory_savings_id']);
 
-			// 		$account_id_default_status = $this->CoreMember_model->getAccountIDDefaultStatus($account_id);
+					$account_id_default_status = $this->CoreMember_model->getAccountIDDefaultStatus($account_id);
 
-			// 		$data_credit =array(
-			// 			'journal_voucher_id'			=> $journal_voucher_id,
-			// 			'account_id'					=> $account_id,
-			// 			'journal_voucher_description'	=> 'SETORAN POTONG GAJI ',
-			// 			'journal_voucher_amount'		=> $mandatory_savings_total,
-			// 			'journal_voucher_credit_amount'	=> $mandatory_savings_total,
-			// 			'account_id_default_status'		=> $account_id_default_status,
-			// 			'account_id_status'				=> 1,
-			// 			'created_id' 					=> $auth['user_id'],
-			// 			'journal_voucher_item_token'	=> $data['member_token_edit'].$account_id,
-			// 		);
-			// 		// $this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);	
-			// 	}
-			// }
+					$data_credit =array(
+						'journal_voucher_id'			=> $journal_voucher_id,
+						'account_id'					=> $account_id,
+						'journal_voucher_description'	=> 'SETORAN POTONG GAJI ',
+						'journal_voucher_amount'		=> $mandatory_savings_total,
+						'journal_voucher_credit_amount'	=> $mandatory_savings_total,
+						'account_id_default_status'		=> $account_id_default_status,
+						'account_id_status'				=> 1,
+						'created_id' 					=> $auth['user_id'],
+						'journal_voucher_item_token'	=> $data['member_token_edit'].$account_id,
+					);
+					$this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);	
+				}
+			}
 
 			$auth = $this->session->userdata('auth');
 			$this->fungsi->set_log($auth['user_id'], $auth['username'],'1005','Application.CoreMember.processEditCoreMemberSavings',$auth['user_id'],'Edit  Member Savings');
@@ -3008,14 +2990,14 @@ class AcctDebtPrint extends CI_Controller
 			$unique = $this->session->userdata('unique');
 			$this->session->unset_userdata('coremembertokensalarymandatory-'.$unique['unique']);
 			$this->session->set_userdata('message',$msg);
-			redirect('member');
+			redirect('debt-print');
 		}else{
 			$msg = "<div class='alert alert-danger alert-dismissable'> 
 					<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
 						Tambah Simp Wajib Potong Gaji Tidak Berhasil
 					</div> ";
 			$this->session->set_userdata('message',$msg);
-			redirect('member/salary-mandatory-savings');
+			redirect('debt-print');
 		}
 	}
 }

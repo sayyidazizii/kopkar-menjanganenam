@@ -216,6 +216,9 @@
 		public function insertAcctSavingsSalaryMutation($data){
 			return $query = $this->db->insert('acct_savings_cash_mutation',$data);
 		}
+		public function insertAcctSavingsSalaryMutationTemp($data){
+			return $query = $this->db->insert('acct_savings_cash_mutation_temp',$data);
+		}
 
 		public function getSavingsCashMutationToken($savings_cash_mutation_token){
 			$this->db->select('savings_cash_mutation_token');

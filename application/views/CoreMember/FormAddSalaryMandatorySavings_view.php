@@ -119,13 +119,12 @@ $token 	= $this->session->userdata('coremembertokensalarymandatory-'.$unique['un
 								</table>
 								<hr>
 								<table width="40%" align="right">
-									<tr>
+									<!-- <tr>
 										<td width="35%">No. Perkiraan<span class="required"> *</span></td>
 										<td width="5%">:</td>
 										<td width="60%">
-											<?php echo form_dropdown('account_id', $acctaccount,set_value('account_id',$data['account_id']),'id="account_id" class="easyui-combobox" style="width:100%"');?>
 										</td>
-									</tr>
+									</tr> -->
 									<tr>
 										<td width="35%">Sandi</td>
 										<td width="2%"></td>

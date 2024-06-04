@@ -243,6 +243,22 @@ class AcctDebtPrint_model extends CI_Model
 		return $result;
 	}
 
+	//sukarela temp
+	public function getMemberDebtSavingsTemp($sesi, $member_id)
+	{
+		$this->db->select('acct_savings_cash_mutation_temp.savings_cash_mutation_amount, acct_savings_cash_mutation_temp.savings_cash_mutation_date, acct_savings_account.savings_account_no');
+		$this->db->from('acct_savings_cash_mutation_temp');
+		$this->db->join('acct_savings_account', 'acct_savings_account.savings_account_id = acct_savings_cash_mutation_temp.savings_account_id');
+		$this->db->where('savings_cash_mutation_date >=', $sesi['start_date']);
+		$this->db->where('savings_cash_mutation_date <=', $sesi['end_date']);
+		$this->db->where('acct_savings_cash_mutation_temp.member_id', $member_id);
+		$this->db->where('acct_savings_cash_mutation_temp.savings_id', 34);
+		$this->db->where('acct_savings_cash_mutation_temp.salary_payment_status', 1);
+		$this->db->where('acct_savings_cash_mutation_temp.data_state', 0);
+		$result = $this->db->get()->result_array();
+		return $result;
+	}
+
 	public function getMemberDebtSavingsSicantik($sesi, $member_id)
 	{
 		$this->db->select('acct_savings_cash_mutation.savings_cash_mutation_amount, acct_savings_cash_mutation.savings_cash_mutation_date, acct_savings_account.savings_account_no');

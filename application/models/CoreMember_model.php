@@ -333,14 +333,14 @@ class CoreMember_model extends CI_Model
 
 	public function getMemberPrincipalSavingsTemp()
 	{
-		$this->db->select('acct_savings_member_detail_temp.*,core_member_temp.*, core_division.division_name');
-		$this->db->from('core_member_temp');
-		$this->db->join('acct_savings_member_detail_temp', 'core_member_temp.member_id = acct_savings_member_detail_temp.member_id');
-		$this->db->join('core_member_working', 'core_member_temp.member_id = core_member_working.member_id');
+		$this->db->select('acct_savings_member_detail_temp.*,core_member.*, core_division.division_name');
+		$this->db->from('core_member');
+		$this->db->join('acct_savings_member_detail_temp', 'core_member.member_id = acct_savings_member_detail_temp.member_id');
+		$this->db->join('core_member_working', 'core_member.member_id = core_member_working.member_id');
 		$this->db->join('core_division', 'core_member_working.division_id = core_division.division_id');
 		$this->db->where('acct_savings_member_detail_temp.salary_status', 1);
-		$this->db->where('core_member_temp.member_active_status', 0);
-		$this->db->where('core_member_temp.member_debet_preference', 3);
+		$this->db->where('core_member.member_active_status', 0);
+		$this->db->where('core_member.member_debet_preference', 3);
 		$this->db->where('acct_savings_member_detail_temp.salary_cut_type', 1);
 		$this->db->where('acct_savings_member_detail_temp.data_state', 0);
 		return $this->db->get()->result_array();
@@ -348,16 +348,30 @@ class CoreMember_model extends CI_Model
 
 	public function getMemberMandatorySavingsTemp()
 	{
-		$this->db->select('acct_savings_member_detail_temp.*,core_member_temp.*, core_division.division_name');
-		$this->db->from('core_member_temp');
-		$this->db->join('acct_savings_member_detail_temp', 'core_member_temp.member_id = acct_savings_member_detail_temp.member_id');
-		$this->db->join('core_member_working', 'core_member_temp.member_id = core_member_working.member_id');
+		$this->db->select('acct_savings_member_detail_temp.*,core_member.*, core_division.division_name');
+		$this->db->from('core_member');
+		$this->db->join('acct_savings_member_detail_temp', 'core_member.member_id = acct_savings_member_detail_temp.member_id');
+		$this->db->join('core_member_working', 'core_member.member_id = core_member_working.member_id');
 		$this->db->join('core_division', 'core_member_working.division_id = core_division.division_id');
 		$this->db->where('acct_savings_member_detail_temp.salary_status', 1);
-		$this->db->where('core_member_temp.member_active_status', 0);
-		$this->db->where('core_member_temp.member_debet_preference', 3);
+		$this->db->where('core_member.member_active_status', 0);
+		$this->db->where('core_member.member_debet_preference', 3);
 		$this->db->where('acct_savings_member_detail_temp.salary_cut_type', 2);
 		$this->db->where('acct_savings_member_detail_temp.data_state', 0);
+		return $this->db->get()->result_array();
+	}
+
+	public function getSavingsSalaryMutationTemp()
+	{
+		$this->db->select('acct_savings_cash_mutation_temp.*, core_member.member_name, core_member.member_no, acct_savings.savings_name, core_division.division_name,acct_savings_account.savings_account_no');
+		$this->db->from('acct_savings_cash_mutation_temp');
+		$this->db->join('acct_savings_account', 'acct_savings_cash_mutation_temp.savings_account_id = acct_savings_account.savings_account_id');
+		$this->db->join('core_member', 'acct_savings_cash_mutation_temp.member_id = core_member.member_id');
+		$this->db->join('core_member_working', 'core_member.member_id = core_member_working.member_id');
+		$this->db->join('core_division', 'core_member_working.division_id = core_division.division_id');
+		$this->db->join('acct_savings', 'acct_savings_cash_mutation_temp.savings_id = acct_savings.savings_id');
+		$this->db->where('acct_savings_cash_mutation_temp.data_state', 0);
+		$this->db->where('acct_savings_cash_mutation_temp.mutation_id', 14);
 		return $this->db->get()->result_array();
 	}
 
@@ -462,7 +476,12 @@ class CoreMember_model extends CI_Model
 
 	public function insertAcctSavingsMemberDetail($data)
 	{
-		return $this->db->insert('acct_savings_member_detail', $data);
+		$query = $this->db->insert('acct_savings_member_detail', $data);
+		if ($query) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	//temp

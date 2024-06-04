@@ -1085,7 +1085,7 @@
 			if($this->form_validation->run()==true){
 				if($member_token_edit->num_rows() == 0){
 					//temp
-					if($this->CoreMember_model->updateCoreMemberTemp($data)){
+					// if($this->CoreMember_model->updateCoreMemberTemp($data)){
 						if($data['member_principal_savings'] <> 0 || $data['member_principal_savings'] <> ''){
 
 							$data_detail = array (
@@ -1093,7 +1093,9 @@
 								'member_id'						=> $data['member_id'],
 								'mutation_id'					=> $this->input->post('mutation_id', true),
 								'transaction_date'				=> date('Y-m-d'),
+								'opening_balance'				=> $data['member_principal_savings_last_balance'] - $data['member_principal_savings'],
 								'principal_savings_amount'		=> $data['member_principal_savings'],
+								'last_balance'					=> $data['member_principal_savings_last_balance'],
 								'operated_name'					=> $auth['username'],
 								'savings_member_detail_token'	=> $data['member_token_edit'],
 								'salary_status'					=> 1,
@@ -1175,12 +1177,12 @@
 						$member_account_receivable_amount 	= $memberaccountdebt['member_account_receivable_amount'] + $data['member_principal_savings'];
 						$member_account_principal_debt 		= $memberaccountdebt['member_account_principal_debt'] + $data['member_principal_savings'];
 
-						$data_member = array(
-							"member_id" 						=> $data['member_id'],
-							"member_account_receivable_amount" 	=> $member_account_receivable_amount,
-							"member_account_principal_debt" 	=> $member_account_principal_debt,
-						);
-						$this->CoreMember_model->updateCoreMemberTemp($data_member);
+						// $data_member = array(
+						// 	"member_id" 						=> $data['member_id'],
+						// 	"member_account_receivable_amount" 	=> $member_account_receivable_amount,
+						// 	"member_account_principal_debt" 	=> $member_account_principal_debt,
+						// );
+						// $this->CoreMember_model->updateCoreMemberTemp($data_member);
 
 						$auth = $this->session->userdata('auth');
 						$this->fungsi->set_log($auth['user_id'], $auth['username'],'1005','Application.CoreMember.processEditCoreMemberSavings',$auth['user_id'],'Edit  Member Savings');
@@ -1201,127 +1203,127 @@
 						$this->session->set_userdata('message',$msg);
 						redirect('member/salary-principal-savings/'.$data['member_id']);
 					}
-				} else {
-					if($data['member_principal_savings'] <> 0 || $data['member_principal_savings'] <> ''){
+				// } else {
+				// 	if($data['member_principal_savings'] <> 0 || $data['member_principal_savings'] <> ''){
 						
-						$data_detail = array (
-							'branch_id'						=> $auth['branch_id'],
-							'member_id'						=> $data['member_id'],
-							'mutation_id'					=> $this->input->post('mutation_id', true),
-							'transaction_date'				=> date('Y-m-d'),
-							'principal_savings_amount'		=> $data['member_principal_savings'],
-							'operated_name'					=> $auth['username'],
-							'savings_member_detail_token'	=> $data['member_token_edit'],
-							'salary_status'					=> 1,
-							'salary_cut_type'				=> 1,
-						);
+				// 		$data_detail = array (
+				// 			'branch_id'						=> $auth['branch_id'],
+				// 			'member_id'						=> $data['member_id'],
+				// 			'mutation_id'					=> $this->input->post('mutation_id', true),
+				// 			'transaction_date'				=> date('Y-m-d'),
+				// 			'principal_savings_amount'		=> $data['member_principal_savings'],
+				// 			'operated_name'					=> $auth['username'],
+				// 			'savings_member_detail_token'	=> $data['member_token_edit'],
+				// 			'salary_status'					=> 1,
+				// 			'salary_cut_type'				=> 1,
+				// 		);
 
-						$savings_member_detail_token = $this->CoreMember_model->getSavingsMemberDetailToken($data['member_token_edit']);
+				// 		$savings_member_detail_token = $this->CoreMember_model->getSavingsMemberDetailToken($data['member_token_edit']);
 
-						if($savings_member_detail_token->num_rows() == 0){
-							$this->CoreMember_model->insertAcctSavingsMemberDetailTemp($data_detail);
-						}
+				// 		if($savings_member_detail_token->num_rows() == 0){
+				// 			$this->CoreMember_model->insertAcctSavingsMemberDetailTemp($data_detail);
+				// 		}
 						
-						$transaction_module_code = "AGT";
+				// 		$transaction_module_code = "AGT";
 
-						$transaction_module_id 	= $this->CoreMember_model->getTransactionModuleID($transaction_module_code);
-						$coremember 			= $this->CoreMember_model->getCoreMember_Detail($data['member_id']);
+				// 		$transaction_module_id 	= $this->CoreMember_model->getTransactionModuleID($transaction_module_code);
+				// 		$coremember 			= $this->CoreMember_model->getCoreMember_Detail($data['member_id']);
 							
-						$journal_voucher_period = date("Ym", strtotime($coremember['member_register_date']));
+				// 		$journal_voucher_period = date("Ym", strtotime($coremember['member_register_date']));
 						
-						//-------------------------Jurnal Cabang----------------------------------------------------
+				// 		//-------------------------Jurnal Cabang----------------------------------------------------
 							
-						$data_journal_cabang = array(
-							'branch_id'						=> $auth['branch_id'],
-							'journal_voucher_period' 		=> $journal_voucher_period,
-							'journal_voucher_date'			=> date('Y-m-d'),
-							'journal_voucher_title'			=> 'SETORAN POTONG GAJI '.$coremember['member_name'],
-							'journal_voucher_description'	=> 'SETORAN POTONG GAJI '.$coremember['member_name'],
-							'journal_voucher_token'			=> $data['member_token_edit'].$auth['branch_id'],
-							'transaction_module_id'			=> $transaction_module_id,
-							'transaction_module_code'		=> $transaction_module_code,
-							'transaction_journal_id' 		=> $coremember['member_id'],
-							'transaction_journal_no' 		=> $coremember['member_no'],
-							'created_id' 					=> $auth['user_id'],
-							'created_on' 					=> date('Y-m-d H:i:s'),
-						);
+				// 		$data_journal_cabang = array(
+				// 			'branch_id'						=> $auth['branch_id'],
+				// 			'journal_voucher_period' 		=> $journal_voucher_period,
+				// 			'journal_voucher_date'			=> date('Y-m-d'),
+				// 			'journal_voucher_title'			=> 'SETORAN POTONG GAJI '.$coremember['member_name'],
+				// 			'journal_voucher_description'	=> 'SETORAN POTONG GAJI '.$coremember['member_name'],
+				// 			'journal_voucher_token'			=> $data['member_token_edit'].$auth['branch_id'],
+				// 			'transaction_module_id'			=> $transaction_module_id,
+				// 			'transaction_module_code'		=> $transaction_module_code,
+				// 			'transaction_journal_id' 		=> $coremember['member_id'],
+				// 			'transaction_journal_no' 		=> $coremember['member_no'],
+				// 			'created_id' 					=> $auth['user_id'],
+				// 			'created_on' 					=> date('Y-m-d H:i:s'),
+				// 		);
 
-						$journal_voucher_token = $this->CoreMember_model->getJournalVoucherToken($data_journal_cabang['journal_voucher_token']);
+				// 		$journal_voucher_token = $this->CoreMember_model->getJournalVoucherToken($data_journal_cabang['journal_voucher_token']);
 						
-						if($journal_voucher_token->num_rows() == 0){
-							// $this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang);
-						}
+				// 		if($journal_voucher_token->num_rows() == 0){
+				// 			// $this->CoreMember_model->insertAcctJournalVoucher($data_journal_cabang);
+				// 		}
 
-						$journal_voucher_id 		= $this->CoreMember_model->getJournalVoucherID($auth['user_id']);
-						$preferencecompany 			= $this->CoreMember_model->getPreferenceCompany();
-						$account_id_default_status 	= $this->CoreMember_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
+				// 		$journal_voucher_id 		= $this->CoreMember_model->getJournalVoucherID($auth['user_id']);
+				// 		$preferencecompany 			= $this->CoreMember_model->getPreferenceCompany();
+				// 		$account_id_default_status 	= $this->CoreMember_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
 
-						$data_debet = array (
-							'journal_voucher_id'			=> $journal_voucher_id,
-							'account_id'					=> $preferencecompany['account_salary_payment_id'],
-							'journal_voucher_description'	=> 'SETORAN POTONG GAJI '.$coremember['member_name'],
-							'journal_voucher_amount'		=> $total_cash_amount,
-							'journal_voucher_debit_amount'	=> $total_cash_amount,
-							'account_id_default_status'		=> $account_id_default_status,
-							'account_id_status'				=> 0,
-							'created_id' 					=> $auth['user_id'],
-							'journal_voucher_item_token'	=> $data['member_token_edit'].$preferencecompany['account_salary_payment_id'],
-						);
+				// 		$data_debet = array (
+				// 			'journal_voucher_id'			=> $journal_voucher_id,
+				// 			'account_id'					=> $preferencecompany['account_salary_payment_id'],
+				// 			'journal_voucher_description'	=> 'SETORAN POTONG GAJI '.$coremember['member_name'],
+				// 			'journal_voucher_amount'		=> $total_cash_amount,
+				// 			'journal_voucher_debit_amount'	=> $total_cash_amount,
+				// 			'account_id_default_status'		=> $account_id_default_status,
+				// 			'account_id_status'				=> 0,
+				// 			'created_id' 					=> $auth['user_id'],
+				// 			'journal_voucher_item_token'	=> $data['member_token_edit'].$preferencecompany['account_salary_payment_id'],
+				// 		);
 
-						$journal_voucher_item_token = $this->CoreMember_model->getJournalVoucherItemToken($data_debet['journal_voucher_item_token']);
+				// 		$journal_voucher_item_token = $this->CoreMember_model->getJournalVoucherItemToken($data_debet['journal_voucher_item_token']);
 
-						if($journal_voucher_item_token->num_rows() == 0){
-							// $this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
-						}						
+				// 		if($journal_voucher_item_token->num_rows() == 0){
+				// 			// $this->CoreMember_model->insertAcctJournalVoucherItem($data_debet);
+				// 		}						
 
-						if($data['member_principal_savings'] <> 0 || $data['member_principal_savings'] <> ''){
-							$account_id 				= $this->CoreMember_model->getAccountID($preferencecompany['principal_savings_id']);
-							$account_id_default_status 	= $this->CoreMember_model->getAccountIDDefaultStatus($account_id);
+				// 		if($data['member_principal_savings'] <> 0 || $data['member_principal_savings'] <> ''){
+				// 			$account_id 				= $this->CoreMember_model->getAccountID($preferencecompany['principal_savings_id']);
+				// 			$account_id_default_status 	= $this->CoreMember_model->getAccountIDDefaultStatus($account_id);
 
-							$data_credit =array(
-								'journal_voucher_id'			=> $journal_voucher_id,
-								'account_id'					=> $account_id,
-								'journal_voucher_description'	=> 'SETORAN POTONG GAJI '.$coremember['member_name'],
-								'journal_voucher_amount'		=> $data['member_principal_savings'],
-								'journal_voucher_credit_amount'	=> $data['member_principal_savings'],
-								'account_id_default_status'		=> $account_id_default_status,
-								'account_id_status'				=> 1,
-								'created_id' 					=> $auth['user_id'],
-								'journal_voucher_item_token'	=> $data['member_token_edit'].$account_id,
-							);
+				// 			$data_credit =array(
+				// 				'journal_voucher_id'			=> $journal_voucher_id,
+				// 				'account_id'					=> $account_id,
+				// 				'journal_voucher_description'	=> 'SETORAN POTONG GAJI '.$coremember['member_name'],
+				// 				'journal_voucher_amount'		=> $data['member_principal_savings'],
+				// 				'journal_voucher_credit_amount'	=> $data['member_principal_savings'],
+				// 				'account_id_default_status'		=> $account_id_default_status,
+				// 				'account_id_status'				=> 1,
+				// 				'created_id' 					=> $auth['user_id'],
+				// 				'journal_voucher_item_token'	=> $data['member_token_edit'].$account_id,
+				// 			);
 
-							$journal_voucher_item_token = $this->CoreMember_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
+				// 			$journal_voucher_item_token = $this->CoreMember_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
 
-							if($journal_voucher_item_token->num_rows()==0){
-								// $this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);
-							}	
-						}
-					}
+				// 			if($journal_voucher_item_token->num_rows()==0){
+				// 				// $this->CoreMember_model->insertAcctJournalVoucherItem($data_credit);
+				// 			}	
+				// 		}
+				// 	}
 
-					$memberaccountdebt 					= $this->CoreMember_model->getCoreMemberAccountReceivableAmount($data['member_id']);
-					$member_account_receivable_amount 	= $memberaccountdebt['member_account_receivable_amount'] + $data['member_principal_savings'];
-					$member_account_principal_debt 		= $memberaccountdebt['member_account_principal_debt'] + $data['member_principal_savings'];
+				// 	$memberaccountdebt 					= $this->CoreMember_model->getCoreMemberAccountReceivableAmount($data['member_id']);
+				// 	$member_account_receivable_amount 	= $memberaccountdebt['member_account_receivable_amount'] + $data['member_principal_savings'];
+				// 	$member_account_principal_debt 		= $memberaccountdebt['member_account_principal_debt'] + $data['member_principal_savings'];
 
-					$data_member = array(
-						"member_id" 						=> $data['member_id'],
-						"member_account_receivable_amount" 	=> $member_account_receivable_amount,
-						"member_account_principal_debt" 	=> $member_account_principal_debt,
-					);
-					$this->CoreMember_model->updateCoreMemberTemp($data_member);
+				// 	// $data_member = array(
+				// 	// 	"member_id" 						=> $data['member_id'],
+				// 	// 	"member_account_receivable_amount" 	=> $member_account_receivable_amount,
+				// 	// 	"member_account_principal_debt" 	=> $member_account_principal_debt,
+				// 	// );
+				// 	// $this->CoreMember_model->updateCoreMemberTemp($data_member);
 
-					$auth = $this->session->userdata('auth');
-					$this->fungsi->set_log($auth['user_id'], $auth['username'],'1005','Application.CoreMember.processAddSalaryPrincipal',$auth['user_id'],'Edit  Member Savings');
-					$msg = "
-					<div class='alert alert-success alert-dismissable'>  
-						<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
-						Tambah Simp Pokok Potong Gaji Sukses
-					</div> ";
+				// 	$auth = $this->session->userdata('auth');
+				// 	$this->fungsi->set_log($auth['user_id'], $auth['username'],'1005','Application.CoreMember.processAddSalaryPrincipal',$auth['user_id'],'Edit  Member Savings');
+				// 	$msg = "
+				// 	<div class='alert alert-success alert-dismissable'>  
+				// 		<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+				// 		Tambah Simp Pokok Potong Gaji Sukses
+				// 	</div> ";
 
-					$unique = $this->session->userdata('unique');
-					$this->session->unset_userdata('coremembertokensalaryprincipal-'.$unique['unique']);
-					$this->session->set_userdata('message',$msg);
-					redirect('member/process-printing/'.$data['member_id']);
-				}
+				// 	$unique = $this->session->userdata('unique');
+				// 	$this->session->unset_userdata('coremembertokensalaryprincipal-'.$unique['unique']);
+				// 	$this->session->set_userdata('message',$msg);
+				// 	redirect('member/process-printing/'.$data['member_id']);
+				// }
 			}else{
 				$this->session->set_userdata('editmachine',$data);
 				$msg = validation_errors("<div class='alert alert-danger alert-dismissable'>", '</div>');
@@ -1351,18 +1353,18 @@
 			$auth 						= $this->session->userdata('auth');
 			$username 					= $this->CoreMember_model->getUserName($auth['user_id']);
 			$coremember 				= $this->CoreMember_model->getCoreMemberMandatorySavings();
-			$account_salary_id 			= $this->input->post('account_id', true);
+			// $account_salary_id 			= $this->input->post('account_id', true);
 			$mandatory_savings_total 	= 0;
 
-			if(!$account_salary_id){
-				$msg = "<div class='alert alert-danger alert-dismissable'> 
-				<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
-					No. Perkiraan Harus Diisi !
-				</div> ";
-				$this->session->set_userdata('message',$msg);
-				redirect('member/salary-mandatory-savings');
-				exit();
-			}
+			// if(!$account_salary_id){
+			// 	$msg = "<div class='alert alert-danger alert-dismissable'> 
+			// 	<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+			// 		No. Perkiraan Harus Diisi !
+			// 	</div> ";
+			// 	$this->session->set_userdata('message',$msg);
+			// 	redirect('member/salary-mandatory-savings');
+			// 	exit();
+			// }
 
 			foreach($coremember as $key => $val){
 				$data = array(
@@ -1385,40 +1387,42 @@
 				
 				if($member_token_edit->num_rows() == 0){
 					//ubah ke temp
-					if($this->CoreMember_model->updateCoreMemberTemp($data)){
+					// if($this->CoreMember_model->updateCoreMemberTemp($data)){
 						if($data['member_mandatory_savings'] <> 0 || $data['member_mandatory_savings'] <> ''){
 							$data_detail = array (
-								'branch_id'						=> $auth['branch_id'],
-								'member_id'						=> $data['member_id'],
-								'mutation_id'					=> $this->input->post('mutation_id', true),
-								'transaction_date'				=> date('Y-m-d'),
-								'mandatory_savings_amount'		=> $data['member_mandatory_savings'],
-								'operated_name'					=> $auth['username'],
-								'savings_member_detail_remark'	=> $this->input->post('savings_member_detail_remark', true),
-								'savings_member_detail_token'	=> $data['member_token_edit'],
-								'salary_status'					=> 1,
-								'salary_cut_type'				=> 2,
+								'branch_id'									=> $auth['branch_id'],
+								'member_id'									=> $data['member_id'],
+								'mutation_id'								=> $this->input->post('mutation_id', true),
+								'transaction_date'							=> date('Y-m-d'),
+								'mandatory_savings_amount'					=> $data['member_mandatory_savings'],
+								'last_balance'								=> $val['member_mandatory_savings_last_balance']+$val['member_mandatory_savings'],
+								'operated_name'								=> $auth['username'],
+								'savings_member_detail_remark'				=> $this->input->post('savings_member_detail_remark', true),
+								'savings_member_detail_token'				=> $data['member_token_edit'],
+								'salary_status'								=> 1,
+								'salary_cut_type'							=> 2,
 
 							);
 							//Temp
 							$this->CoreMember_model->insertAcctSavingsMemberDetailTemp($data_detail);
 						}
-					}else{
-					}
+					// }else{
+					// }
 				} else {
 					if($data['member_mandatory_savings'] <> 0 || $data['member_mandatory_savings'] <> ''){
 						
 						$data_detail = array (
-							'branch_id'						=> $auth['branch_id'],
-							'member_id'						=> $data['member_id'],
-							'mutation_id'					=> $this->input->post('mutation_id', true),
-							'transaction_date'				=> date('Y-m-d'),
-							'mandatory_savings_amount'		=> $data['member_mandatory_savings'],
-							'operated_name'					=> $auth['username'],
-							'savings_member_detail_remark'	=> $this->input->post('savings_member_detail_remark', true),
-							'savings_member_detail_token'	=> $data['member_token_edit'],
-							'salary_status'					=> 1,
-							'salary_cut_type'				=> 2,
+							'branch_id'									=> $auth['branch_id'],
+							'member_id'									=> $data['member_id'],
+							'mutation_id'								=> $this->input->post('mutation_id', true),
+							'transaction_date'							=> date('Y-m-d'),
+							'mandatory_savings_amount'					=> $data['member_mandatory_savings'],
+							'last_balance'								=> $val['member_mandatory_savings_last_balance']+$val['member_mandatory_savings'],
+							'operated_name'								=> $auth['username'],
+							'savings_member_detail_remark'				=> $this->input->post('savings_member_detail_remark', true),
+							'savings_member_detail_token'				=> $data['member_token_edit'],
+							'salary_status'								=> 1,
+							'salary_cut_type'							=> 2,
 
 						);
 
@@ -1508,7 +1512,7 @@
 				$unique = $this->session->userdata('unique');
 				$this->session->unset_userdata('coremembertokensalarymandatory-'.$unique['unique']);
 				$this->session->set_userdata('message',$msg);
-				redirect('member');
+				redirect('member/salary-mandatory-savings');
 			}else{
 				$msg = "<div class='alert alert-danger alert-dismissable'> 
 						<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>

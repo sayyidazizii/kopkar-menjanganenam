@@ -18,18 +18,6 @@
     }
 </style>
 <script type="text/javascript">
-    // $(document).ready(function() {
-    //     // Inisialisasi DataTable untuk sample_1
-    //     $('#sample_1').DataTable();
-    //     // Inisialisasi DataTable untuk sample_2
-    //     $('#sample_2').DataTable();
-    //     // Inisialisasi DataTable untuk sample_3
-    //     $('#sample_3').DataTable();
-    //     // Inisialisasi DataTable untuk sample_4
-    //     $('#sample_4').DataTable();
-    //     // Inisialisasi DataTable untuk sample_5
-    //     $('#sample_5').DataTable();
-    // });
     base_url = '<?php echo base_url(); ?>';
 
     function showTab(tabId) {
@@ -348,7 +336,7 @@
                                     <label class="col-md-3 control-label">Keterangan</label>
                                     <div class="col-md-6">
                                         <!-- Textarea untuk Keterangan -->
-                                        <textarea rows="3" name="savings_member_detail_remark" id="savings_member_detail_remark" class="form-control"></textarea>
+                                        <textarea rows="3" name="savings_member_detail_remark" id="savings_member_detail_remark" class="form-control"><?php echo 'SETORAN SIMP WAJIB POTONG GAJI '; ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -366,44 +354,45 @@
                         <!-- Tabungan Potong gaji TAB -->
                         <div class="tab-pane" id="tab_1_3">
                             <form action="#">
-                            <table class="table table-striped table-bordered table-hover table-full-width"
-                                id="sample_3">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align:center" width="5%">No</th>
-                                        <th style="text-align:center" width="25%">No Anggota</th>
-                                        <th style="text-align:center" width="25%">Nama Anggota</th>
-                                        <th style="text-align:center" width="20%">Bagian</th>
-                                        <th style="text-align:center" width="20%">Tgl Transaksi</th>
-                                        <th style="text-align:center" width="25%">Potongan Simpanan Wajib</th>
-                                        <th style="text-align:center" width="25%">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $no = 1;
-                                    $mandatory_savings_total_amount = 0;
-                                    if (empty($mandatory_savings)) {
-                                        echo "<tr><td align='center' colspan='5'> Data Kosong !</td></tr>";
-                                    } else {
-                                        foreach ($mandatory_savings as $key => $val) {
-                                            echo "
+                            <table class="table table-striped table-bordered table-hover table-full-width" id="sample_3">
+									<thead>
+										<tr>
+											<th style="text-align:center" width="5%">No</th>
+											<th style="text-align:center" width="10%">No Rek Tabungan</th>
+											<th style="text-align:center" width="15%">Jenis Tabungan</th>
+											<th style="text-align:center" width="10%">No Anggota</th>
+											<th style="text-align:center" width="20%">Nama Anggota</th>
+											<th style="text-align:center" width="20%">Bagian</th>
+											<th style="text-align:center" width="15%">Mutasi Tabungan</th>
+											<th style="text-align:center" width="15%">Aksi</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php 
+										$no=1;
+										$savings_amount_total = 0;
+										if(empty($savings_salary_mutation)){
+											echo "<tr><td align='center' colspan='5'> Data Kosong !</td></tr>";
+										} else {
+											foreach ($savings_salary_mutation as $key=>$val){ 
+												echo"
 													<tr>
-														<td style='text-align:center'>" . $no . "</td>
-														<td>" . $val['member_no'] . "</td>
-														<td>" . $val['member_name'] . "</td>
-														<td>" . $val['division_name'] . "</td>
-														<td>" . $val['transaction_date'] . "</td>
-														<td style='text-align:right'>" . number_format($val['mandatory_savings_amount'], 2) . "</td>
+														<td style='text-align:center'>".$no."</td>
+														<td>".$val['savings_account_no']."</td>
+														<td>".$val['savings_name']."</td>
+														<td>".$val['member_no']."</td>
+														<td>".$val['member_name']."</td>
+														<td>".$val['division_name']."</td>
+														<td style='text-align:right'>".number_format($val['savings_cash_mutation_amount'], 2)."</td>
 							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
-													</tr>
+                                                    </tr>
 												";
-                                            $no++;
-                                            $mandatory_savings_total_amount += $val['mandatory_savings_amount'];
-                                        }
-                                    } ?>
-                                </tbody>
-                            </table>
+												$no++;
+												$savings_amount_total += $val['savings_cash_mutation_amount'];
+											}
+										} ?>
+									</tbody>
+								</table>
                                 <div class="margin-top-10">
                                     <a href="javascript:;" class="btn green"> Submit </a>
                                     <a href="javascript:;" class="btn default"> Cancel </a>

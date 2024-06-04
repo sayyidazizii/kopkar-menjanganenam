@@ -145,9 +145,8 @@ $token 	= $this->session->userdata('acctsavingscashmutationtoken-'.$unique['uniq
 										<td width="35%"></td>
 										<td width="5%"></td>
 										<td width="60%" align="right">
-											<a href="<?php echo base_url()?>savings-salary-mutation/print-all" class="btn btn-primary">Cetak Pdf</a>
-											<button type="button" class="btn green-jungle" data-toggle="modal" data-target="#myModal2">Simpan</button>
-											<!-- <button type="submit" class="btn green-jungle"><i class="fa fa-check"></i> Simpan</button> -->
+											<!-- <button type="button" class="btn green-jungle" data-toggle="modal" data-target="#myModal2">Simpan</button> -->
+											<button type="submit" class="btn green-jungle"><i class="fa fa-check"></i> Simpan</button>
 										</td>
 									</tr>
 								</table>
