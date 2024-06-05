@@ -140,6 +140,10 @@
 			return $query = $this->db->insert('acct_credits_payment',$data);
 		}
 
+		public function insertTemp($data){
+			return $query = $this->db->insert('acct_credits_payment_temp',$data);
+		}
+
 		public function insertAcctSavingsMemberDetail($data){
 			$query = $this->db->insert('acct_savings_member_detail',$data);
 			if($query){

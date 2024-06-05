@@ -1081,6 +1081,11 @@ $route['debt-repayment/export-debt']                                = 'AcctDebtR
 $route['debt-print']                                                = 'AcctDebtPrint';
 $route['debt-print/viewreport']                                     = 'AcctDebtPrint/viewreport';
 
+$route['debt-print/delete/salary-principal/(:num)']                 = 'AcctDebtPrint/deleteSalaryPrincipal/$1';
+$route['debt-print/delete/salary-mandatory/(:num)']                 = 'AcctDebtPrint/deleteSalaryMandatory/$1';
+$route['debt-print/delete/savings-salary-mutation/(:num)']          = 'AcctDebtPrint/deleteAcctSavingsSalaryMutation/$1';
+
+
 //AcctDebtMemberPrint
 $route['debt-member-print']                                         = 'AcctDebtMemberPrint';
 $route['debt-member-print/viewreport']                              = 'AcctDebtMemberPrint/processPrintDebt';

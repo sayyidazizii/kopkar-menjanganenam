@@ -361,20 +361,6 @@ class CoreMember_model extends CI_Model
 		return $this->db->get()->result_array();
 	}
 
-	public function getSavingsSalaryMutationTemp()
-	{
-		$this->db->select('acct_savings_cash_mutation_temp.*, core_member.member_name, core_member.member_no, acct_savings.savings_name, core_division.division_name,acct_savings_account.savings_account_no');
-		$this->db->from('acct_savings_cash_mutation_temp');
-		$this->db->join('acct_savings_account', 'acct_savings_cash_mutation_temp.savings_account_id = acct_savings_account.savings_account_id');
-		$this->db->join('core_member', 'acct_savings_cash_mutation_temp.member_id = core_member.member_id');
-		$this->db->join('core_member_working', 'core_member.member_id = core_member_working.member_id');
-		$this->db->join('core_division', 'core_member_working.division_id = core_division.division_id');
-		$this->db->join('acct_savings', 'acct_savings_cash_mutation_temp.savings_id = acct_savings.savings_id');
-		$this->db->where('acct_savings_cash_mutation_temp.data_state', 0);
-		$this->db->where('acct_savings_cash_mutation_temp.mutation_id', 14);
-		return $this->db->get()->result_array();
-	}
-
 	public function getCorememberEditMandatorySavings()
 	{
 		$this->db->select('core_member.member_id, core_member.member_mandatory_savings');
@@ -439,8 +425,20 @@ class CoreMember_model extends CI_Model
 
 	public function updateDebtMemberSavingsTemp($data)
 	{
-		$this->db->where("member_id", $data['member_id']);
+		$this->db->where("acct_savings_member_detail_id", $data['acct_savings_member_detail_id']);
 		$query = $this->db->update('acct_savings_member_detail_temp', $data);
+		if ($query) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+
+	public function deleteDebtMemberSavingsTemp($id,$data)
+	{
+		$this->db->where("savings_member_detail_id", $id);
+		return $this->db->update('acct_savings_member_detail_temp', $data);
 		if ($query) {
 			return true;
 		} else {

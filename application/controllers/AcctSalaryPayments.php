@@ -455,7 +455,7 @@
 //!PEMBATAS------------------------------------------------------------------------------------------------------------------------------------
 
 				if($credits_payment_token->num_rows() == 0){
-					if($this->AcctSalaryPayment_model->insert($data)){
+					if($this->AcctSalaryPayment_model->insertTemp($data)){
 						$updatedata = array(
 							"credits_account_last_balance" 					=> $data['credits_principal_last_balance'],
 							"credits_account_last_payment_date"				=> $data['credits_payment_date'],
@@ -466,8 +466,8 @@
 							"credits_account_accumulated_fines"				=> 0,
 
 						);
-
-						$this->AcctCreditAccount_model->updatedata($updatedata,$data['credits_account_id']);
+						//skip (temporary)
+						// $this->AcctCreditAccount_model->updatedata($updatedata,$data['credits_account_id']);
 
 						$AcctSalaryPayment_last 							= $this->AcctSalaryPayment_model->AcctSalaryPaymentLast($data['created_id']);
 						
@@ -486,7 +486,7 @@
 								'created_id' 					=> $data['created_id'],
 								'created_on' 					=> $data['created_on'],
 							);
-							$this->AcctCreditAccount_model->insertAcctJournalVoucher($data_journal);
+							// $this->AcctCreditAccount_model->insertAcctJournalVoucher($data_journal);
 
 							$journal_voucher_id 				= $this->AcctCreditAccount_model->getJournalVoucherID($data['created_id']);
 
@@ -504,7 +504,7 @@
 								'created_id' 					=> $auth['user_id'],
 							);
 
-							$this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_debet);
+							// $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_debet);
 
 							$receivable_account_id 				= $this->AcctCreditAccount_model->getReceivableAccountID($data['credits_id']);
 
@@ -522,7 +522,7 @@
 								'created_id' 					=> $auth['user_id'],
 							);
 
-							$this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+							// $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
 
 							$account_id_default_status 			= $this->AcctCreditAccount_model->getAccountIDDefaultStatus($preferencecompany['account_interest_id']);
 
@@ -538,7 +538,7 @@
 								'created_id' 					=> $auth['user_id'],
 							);
 
-							$this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+							// $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
 
 							if($data['credits_payment_fine'] > 0){
 
@@ -556,7 +556,7 @@
 									'created_id' 					=> $auth['user_id'],
 								);
 
-								$this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+								// $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
 							}
 						}else{
 							$data_journal = array(
@@ -572,7 +572,7 @@
 								'updated_id'                    => $data['created_id'],
 								'created_id'                    => $data['created_id']
 							);
-							$this->AcctCreditAccount_model->insertAcctJournalVoucherMinimarket($data_journal);
+							// $this->AcctCreditAccount_model->insertAcctJournalVoucherMinimarket($data_journal);
 
 							$journal_voucher_id 				= $this->AcctCreditAccount_model->getJournalVoucherIDMinimarket($data['created_id']);
 
@@ -590,7 +590,7 @@
 								'updated_id'                    => $auth['user_id'],
 								'created_id'                    => $auth['user_id']
 							);
-							$this->AcctCreditAccount_model->insertAcctJournalVoucherItemMinimarket($data_debet);
+							// $this->AcctCreditAccount_model->insertAcctJournalVoucherItemMinimarket($data_debet);
 
 							$receivable_account_id 				= $this->AcctCreditAccount_model->getReceivableAccountID($data['credits_id']);
 
@@ -607,7 +607,7 @@
 								'updated_id'                    => $auth['user_id'],
 								'created_id'                    => $auth['user_id']
 							);
-							$this->AcctCreditAccount_model->insertAcctJournalVoucherItemMinimarket($data_credit);
+							// $this->AcctCreditAccount_model->insertAcctJournalVoucherItemMinimarket($data_credit);
 
 							$account_interest_id				= $preferencecompany['account_interest_id'];
 							$account_id_default_status 			= $this->AcctCreditAccount_model->getAccountIDDefaultStatusMinimarket($account_interest_id);
@@ -623,7 +623,7 @@
 								'updated_id'                    => $auth['user_id'],
 								'created_id'                    => $auth['user_id']
 							);
-							$this->AcctCreditAccount_model->insertAcctJournalVoucherItemMinimarket($data_credit);
+							// $this->AcctCreditAccount_model->insertAcctJournalVoucherItemMinimarket($data_credit);
 
 							if($data['credits_payment_fine'] > 0){
 								$account_credits_payment_fine		= $preferencecompany['account_credits_payment_fine'];
@@ -640,7 +640,7 @@
 									'updated_id'                    => $auth['user_id'],
 									'created_id'                    => $auth['user_id']
 								);
-								$this->AcctCreditAccount_model->insertAcctJournalVoucherItemMinimarket($data_credit);
+								// $this->AcctCreditAccount_model->insertAcctJournalVoucherItemMinimarket($data_credit);
 							}
 						}
 						
@@ -662,7 +662,7 @@
 							"member_account_credits_debt" 		=> $member_account_credits_debt,
 							"member_account_credits_store_debt" => $member_account_credits_store_debt,
 						);
-						$this->AcctSalaryPayment_model->updateCoreMember($data_member);
+						// $this->AcctSalaryPayment_model->updateCoreMember($data_member);
 					}else{
 						$this->session->set_userdata('addAcctSalaryPayment-'.$unique['unique'],$data);
 						$msg = "<div class='alert alert-danger alert-dismissable'>
@@ -693,7 +693,7 @@
 					$journal_voucher_token 				= $this->AcctCreditAccount_model->getJournalVoucherToken($data_journal['journal_voucher_token']);
 
 					if($journal_voucher_token->num_rows()==0){
-						$this->AcctCreditAccount_model->insertAcctJournalVoucher($data_journal);
+						// $this->AcctCreditAccount_model->insertAcctJournalVoucher($data_journal);
 					}
 
 					$journal_voucher_id 				= $this->AcctCreditAccount_model->getJournalVoucherID($data['created_id']);
@@ -715,7 +715,7 @@
 					$journal_voucher_item_token 		= $this->AcctCreditAccount_model->getJournalVoucherItemToken($data_debet['journal_voucher_item_token']);
 
 					if($journal_voucher_item_token->num_rows()==0){
-						$this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_debet);
+						// $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_debet);
 					}
 
 					$receivable_account_id 				= $this->AcctCreditAccount_model->getReceivableAccountID($data['credits_id']);
@@ -737,7 +737,7 @@
 					$journal_voucher_item_token 		= $this->AcctCreditAccount_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
 
 					if($journal_voucher_item_token->num_rows()==0){
-						$this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+						// $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
 					}
 
 					$account_id_default_status 			= $this->AcctCreditAccount_model->getAccountIDDefaultStatus($preferencecompany['account_interest_id']);
@@ -757,7 +757,7 @@
 					$journal_voucher_item_token 		= $this->AcctCreditAccount_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
 
 					if($journal_voucher_item_token->num_rows()==0){
-						$this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+						// $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
 					}
 
 					if($data['credits_payment_fine'] > 0){
@@ -778,7 +778,7 @@
 						$journal_voucher_item_token 		= $this->AcctCreditAccount_model->getJournalVoucherItemToken($data_credit['journal_voucher_item_token']);
 
 						if($journal_voucher_item_token->num_rows()==0){
-							$this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
+							// $this->AcctCreditAccount_model->insertAcctJournalVoucherItem($data_credit);
 						}
 					}
 
@@ -801,7 +801,7 @@
 						"member_account_credits_store_debt" => $member_account_credits_store_debt,
 					);
 
-					$this->AcctSalaryPayment_model->updateCoreMember($data_member);
+					// $this->AcctSalaryPayment_model->updateCoreMember($data_member);
 				}
 			}
 

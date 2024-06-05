@@ -252,7 +252,7 @@
 														<td>" . $val['division_name'] . "</td>
 														<td>" . $val['transaction_date'] . "</td>
 														<td style='text-align:right'>" . number_format($val['principal_savings_amount'], 2) . "</td>
-							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
+							                            <td><a href='".base_url().'debt-print/delete/salary-principal/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
 													</tr>
 												";
                                             $no++;
@@ -299,7 +299,7 @@
 														<td>" . $val['division_name'] . "</td>
 														<td>" . $val['transaction_date'] . "</td>
 														<td style='text-align:right'>" . number_format($val['mandatory_savings_amount'], 2) . "</td>
-							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
+							                            <td><a href='".base_url().'debt-print/delete/salary-mandatory/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
 													</tr>
 												";
                                             $i++;
@@ -353,7 +353,6 @@
 
                         <!-- Tabungan Potong gaji TAB -->
                         <div class="tab-pane" id="tab_1_3">
-                            <form action="#">
                             <table class="table table-striped table-bordered table-hover table-full-width" id="sample_3">
 									<thead>
 										<tr>
@@ -384,7 +383,7 @@
 														<td>".$val['member_name']."</td>
 														<td>".$val['division_name']."</td>
 														<td style='text-align:right'>".number_format($val['savings_cash_mutation_amount'], 2)."</td>
-							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
+							                            <td><a href='".base_url().'debt-print/delete/savings-salary-mutation/'.$val['savings_cash_mutation_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
                                                     </tr>
 												";
 												$no++;
@@ -394,10 +393,10 @@
 									</tbody>
 								</table>
                                 <div class="margin-top-10">
-                                    <a href="javascript:;" class="btn green"> Submit </a>
-                                    <a href="javascript:;" class="btn default"> Cancel </a>
+                                <button type="submit" class="btn green" id="view" name="view"
+                                    value="submit_salary_savings"><i class="fa fa-check"></i>Submit</button>
+                                <a href="javascript:;" class="btn default"> Cancel </a>
                                 </div>
-                            </form>
                         </div>
                         <!-- END CHANGE PASSWORD TAB -->
 

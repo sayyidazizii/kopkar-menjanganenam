@@ -238,6 +238,8 @@
 			echo json_encode($mutation_function);		
 		}
 		
+
+		//process simpan tabungan potong gaji tetapi belum di jurnal
 		public function processAddAcctSavingsSalaryMutation(){
 			$auth 				= $this->session->userdata('auth');
 			$token				= md5(rand());
@@ -883,6 +885,8 @@
 			// redirect('savings-salary-mutation');
 			$this->printNoteAcctSavingsSalaryMutationProcess($token);
 		}
+		//end process simpan tabungan potong gaji 
+
 
 		public function printNoteAcctSavingsSalaryMutation(){
 			$auth = $this->session->userdata('auth');
