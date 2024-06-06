@@ -403,44 +403,46 @@
                         <!-- Angsuran potong gaji TAB -->
                         <div class="tab-pane" id="tab_1_4">
                             <form action="#">
-                            <table class="table table-striped table-bordered table-hover table-full-width"
-                                id="sample_4">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align:center" width="5%">No</th>
-                                        <th style="text-align:center" width="25%">No Anggota</th>
-                                        <th style="text-align:center" width="25%">Nama Anggota</th>
-                                        <th style="text-align:center" width="20%">Bagian</th>
-                                        <th style="text-align:center" width="20%">Tgl Transaksi</th>
-                                        <th style="text-align:center" width="25%">Potongan Simpanan Wajib</th>
-                                        <th style="text-align:center" width="25%">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $no = 1;
-                                    $mandatory_savings_total_amount = 0;
-                                    if (empty($mandatory_savings)) {
-                                        echo "<tr><td align='center' colspan='5'> Data Kosong !</td></tr>";
-                                    } else {
-                                        foreach ($mandatory_savings as $key => $val) {
-                                            echo "
-													<tr>
-														<td style='text-align:center'>" . $no . "</td>
-														<td>" . $val['member_no'] . "</td>
-														<td>" . $val['member_name'] . "</td>
-														<td>" . $val['division_name'] . "</td>
-														<td>" . $val['transaction_date'] . "</td>
-														<td style='text-align:right'>" . number_format($val['mandatory_savings_amount'], 2) . "</td>
-							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
-													</tr>
-												";
-                                            $no++;
-                                            $mandatory_savings_total_amount += $val['mandatory_savings_amount'];
-                                        }
-                                    } ?>
-                                </tbody>
-                            </table>
+                            <table class="table table-striped table-bordered table-hover table-full-width" id="sample_3">
+										<thead>
+											<tr>
+												<th style="text-align:center" width="5%">No</th>
+												<th style="text-align:center" width="10%">No Perjanjian Kredit</th>
+												<th style="text-align:center" width="10%">No Anggota</th>
+												<th style="text-align:center" width="15%">Nama Anggota</th>
+												<th style="text-align:center" width="15%">Jenis Pinjaman</th>
+												<th style="text-align:center" width="15%">Angsuran Pokok</th>
+												<th style="text-align:center" width="15%">Angsuran Bunga</th>
+												<th style="text-align:center" width="15%">Subtotal Angsuran</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php 
+											$no=1;
+											$payment_total_amount = 0;
+
+											if(empty($salary_payment)){
+												echo "<tr><td align='center' colspan='8'> Data Kosong !</td></tr>";
+											} else {
+                                                foreach ($salary_payment as $key=>$val){ 
+													echo"
+														<tr>
+															<td style='text-align:center'>".$no."</td>
+															<td>".$val['credits_account_serial']."</td>
+															<td>".$val['member_no']."</td>
+															<td>".$val['member_name']."</td>
+															<td>".$val['credits_name']."</td>
+															<td style='text-align:right'>".number_format($val['credits_payment_principal'], 2)."</td>
+															<td style='text-align:right'>".number_format($val['credits_payment_interest'], 2)."</td>
+															<td style='text-align:right'>".number_format($val['credits_payment_principal']+$val['credits_payment_interest'], 2)."</td>
+														</tr>
+													";
+													$no++;
+													// $payment_total_amount += $angsuranpokok+$angsuranbunga;
+												}
+                                            } ?>
+										</tbody>
+									</table>
                                 <!--end profile-settings-->
                                 <div class="margin-top-10">
                                     <a href="javascript:;" class="btn red"> Save Changes </a>

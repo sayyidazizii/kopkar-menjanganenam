@@ -144,6 +144,29 @@
 			return $query = $this->db->insert('acct_credits_payment_temp',$data);
 		}
 
+		public function getAcctCreditsPaymentsTemp(){
+
+			$this->db->select('acct_credits_payment_temp.*, acct_credits_account.*, acct_credits.credits_name, core_member.member_no, core_member.member_name, core_division.division_name');
+			$this->db->from('acct_credits_payment_temp');
+			$this->db->join('acct_credits_account', 'acct_credits_account.credits_account_id = acct_credits_payment_temp.credits_account_id');
+			$this->db->join('core_member', 'acct_credits_payment_temp.member_id = core_member.member_id');
+			$this->db->join('core_member_working', 'acct_credits_payment_temp.member_id = core_member_working.member_id');
+			$this->db->join('core_division', 'core_member_working.division_id = core_division.division_id');
+			$this->db->join('acct_credits', 'acct_credits_account.credits_id = acct_credits.credits_id');
+			$this->db->where('acct_credits_payment_temp.data_state', 0);
+			// $this->db->where('acct_credits_account.credits_account_status', 0);
+			// $this->db->where('acct_credits_account.credits_approve_status', 1);
+			// $this->db->where('acct_credits_payment_temp.payment_preference_id', 3);
+			$this->db->where('DATE_FORMAT(acct_credits_payment_temp.credits_payment_date,"%Y%m")', date('Ym'));
+			return $this->db->get()->result_array();
+
+			// $this->db->select('*');
+			// $this->db->from('acct_credits_payment_temp');
+			// $this->db->order_by('acct_credits_payment_temp.credits_payment_id', 'DESC');
+			// $result = $this->db->get()->row_array();
+			// return $result;
+		}
+
 		public function insertAcctSavingsMemberDetail($data){
 			$query = $this->db->insert('acct_savings_member_detail',$data);
 			if($query){

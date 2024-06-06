@@ -10,6 +10,8 @@ class AcctDebtPrint extends CI_Controller
 		$this->load->model('AcctDebtPrint_model');
 		$this->load->model('CoreMember_model');
 		$this->load->model('AcctSavingsSalaryMutation_model');
+		$this->load->model('AcctSalaryPayment_model');
+		$this->load->model('AcctCreditAccount_model');
 		$this->load->helper('sistem');
 		$this->load->helper('url');
 		$this->load->database('default');
@@ -31,8 +33,66 @@ class AcctDebtPrint extends CI_Controller
 		$data['main_view']['principal_savings'] = $this->CoreMember_model->getMemberPrincipalSavingsTemp();
 		$data['main_view']['mandatory_savings'] = $this->CoreMember_model->getMemberMandatorySavingsTemp();
 		$data['main_view']['savings_salary_mutation'] = $this->AcctSavingsSalaryMutation_model->getSavingsSalaryMutationTemp();
-		
-		// echo json_encode($data);
+		// $acctcreditsaccounttemp = 
+
+		// foreach($acctcreditsaccounttemp as $key => $val){
+		// 	$accountcredit	= $this->AcctCreditAccount_model->getDetailByID($val['credits_account_id']);
+
+		// 	if($accountcredit['payment_type_id'] == 2){
+		// 		$anuitas = $this->anuitas($accountcredit['credits_account_id']);
+		// 		$data['main_view']['anuitas'] = $anuitas;
+		// 	}
+
+		// 	if($accountcredit['payment_type_id'] == 3){
+		// 		$slidingrate 	= $this->slidingrate($accountcredit['credits_account_id']);
+		// 		$angsuranke 	= substr($accountcredit['credits_account_payment_to'], -1) + 1;
+		// 		$payment_amount = $slidingrate[$angsuranke]['angsuran_bunga'] + $slidingrate[$angsuranke]['angsuran_pokok'];
+
+		// 		$data['main_view']['slidingrate']	= $slidingrate;
+		// 	}
+
+		// 	if($accountcredit['payment_type_id'] == 4){
+		// 		$last_pokok		= $this->AcctSalaryPayment_model->getAcctCreditsPaymentsPokokLast($accountcredit['credits_account_id']);
+		// 		$last_payment	= $this->AcctSalaryPayment_model->getAcctCreditsPaymentsLast($accountcredit['credits_account_id']);
+		// 		if($last_pokok){
+		// 			$start_date 			= tgltodb($last_pokok['credits_payment_date']);
+		// 			$end_date 				= date('Y-m-d', strtotime("+1 months", strtotime($start_date)));
+		// 			$date1					= new DateTime($last_pokok['credits_payment_date']);
+		// 			$date2					= new DateTime($end_date);
+		// 			$date3					= new DateTime(date('Y-m-d'));
+		// 			$interval_month			= $date1->diff($date2);
+		// 			$interval_payments		= $date1->diff($date3);
+		// 			if($last_payment){
+		// 				$date4 				= new DateTime($last_payment['credits_payment_date']);
+		// 				$interval_payments	= $date4->diff($date3);
+		// 			}
+		// 			$interest_month 		= $accountcredit['credits_account_last_balance'] * $accountcredit['credits_account_interest']/100;
+		// 			$angsuran_bunga 		= $interest_month / $interval_month->days * $interval_payments->days;
+		// 		}else{
+		// 			$start_date 			= tgltodb($accountcredit['credits_account_date']);
+		// 			$end_date 				= date('Y-m-d', strtotime("+1 months", strtotime($start_date)));
+		// 			$date1					= new DateTime($accountcredit['credits_account_date']);
+		// 			$date2					= new DateTime($end_date);
+		// 			$date3					= new DateTime(date('Y-m-d'));
+		// 			$interval_month			= $date1->diff($date2);
+		// 			$interval_payments		= $date1->diff($date3);
+		// 			if($last_payment){
+		// 				$date4 				= new DateTime($last_payment['credits_payment_date']);
+		// 				$interval_payments	= $date4->diff($date3);
+		// 			}
+		// 			$interest_month 		= $accountcredit['credits_account_last_balance'] * $accountcredit['credits_account_interest']/100;
+		// 			$angsuran_bunga 		= $interest_month / $interval_month->days * $interval_payments->days;
+		// 		}
+
+		// 		$data['main_view']['angsuran_bunga_menurunharian']	= $angsuran_bunga;
+		// 	}
+		// 	$acctcreditsaccount[$key]['accountcredit'] = $accountcredit;
+		// }
+
+
+		$data['main_view']['salary_payment'] = $this->AcctSalaryPayment_model->getAcctCreditsPaymentsTemp();
+		// echo json_encode($data['main_view']['salary_payment']);
+		// exit;
 		$data['main_view']['content'] = 'AcctDebtPrint/ListAcctDebtPrint_view';
 		$this->load->view('MainPage_view', $data);
 	}
@@ -3724,6 +3784,95 @@ class AcctDebtPrint extends CI_Controller
 		redirect('debt-print');
 	}
 
+
+	public function slidingrate($id){
+		$credistaccount					= $this->AcctCreditAccount_model->getCreditsAccount_Detail($id);
+
+		$total_credits_account 			= $credistaccount['credits_account_amount'];
+		$credits_account_interest 		= $credistaccount['credits_account_interest'];
+		$credits_account_period 		= $credistaccount['credits_account_period'];
+
+		$installment_pattern			= array();
+		$opening_balance				= $total_credits_account;
+
+		for($i=1; $i<=$credits_account_period; $i++){
+			
+			if($credistaccount['credits_payment_period'] == 2){
+				$a = $i * 7;
+
+				$tanggal_angsuran 								= date('d-m-Y', strtotime("+".$a." days", strtotime($credistaccount['credits_account_date'])));
+
+			} else {
+
+				$tanggal_angsuran 								= date('d-m-Y', strtotime("+".$i." months", strtotime($credistaccount['credits_account_date'])));
+			}
+			
+			$angsuran_pokok									= $credistaccount['credits_account_amount']/$credits_account_period;				
+
+			$angsuran_margin								= $opening_balance*$credits_account_interest/100;				
+
+			$angsuran 										= $angsuran_pokok + $angsuran_margin;
+
+			$last_balance 									= $opening_balance - $angsuran_pokok;
+
+			$installment_pattern[$i]['opening_balance']		= $opening_balance;
+			$installment_pattern[$i]['ke'] 					= $i;
+			$installment_pattern[$i]['tanggal_angsuran'] 	= $tanggal_angsuran;
+			$installment_pattern[$i]['angsuran'] 			= $angsuran;
+			$installment_pattern[$i]['angsuran_pokok']		= $angsuran_pokok;
+			$installment_pattern[$i]['angsuran_bunga'] 		= $angsuran_margin;
+			$installment_pattern[$i]['last_balance'] 		= $last_balance;
+			
+			$opening_balance 								= $last_balance;
+		}
+		
+		return $installment_pattern;
+		
+	}
+
+	public function anuitas($id){
+		$creditsaccount 	= $this->AcctCreditAccount_model->getCreditsAccount_Detail($id);
+
+		$pinjaman 	= $creditsaccount['credits_account_amount'];
+		$bunga 		= $creditsaccount['credits_account_interest'] / 100;
+		$period 	= $creditsaccount['credits_account_period'];
+
+
+
+		$bungaA 		= pow((1 + $bunga), $period);
+		$bungaB 		= pow((1 + $bunga), $period) - 1;
+		$bAnuitas 		= ($bungaA / $bungaB);
+		$totangsuran 	= round(($pinjaman*($bunga))+$pinjaman/$period);
+		$rate			= $this->rate3($period, $totangsuran, $pinjaman);
+
+
+		$sisapinjaman = $pinjaman;
+		for ($i=1; $i <= $period ; $i++) {
+
+			if($creditsaccount['credits_payment_period'] == 1){
+				$tanggal_angsuran 	= date('d-m-Y', strtotime("+".$i." months", strtotime($creditsaccount['credits_account_date']))); 
+			} else {
+				$a = $i * 7;
+
+				$tanggal_angsuran 	= date('d-m-Y', strtotime("+".$a." days", strtotime($creditsaccount['credits_account_date']))); 
+			}
+			
+			$angsuranbunga 		= $sisapinjaman * $rate;
+			$angsuranpokok 		= $totangsuran - $angsuranbunga;
+			$sisapokok 			= $sisapinjaman - $angsuranpokok;
+
+			$pola[$i]['ke']					= $i;
+			$pola[$i]['tanggal_angsuran']	= $tanggal_angsuran;
+			$pola[$i]['opening_balance']	= $sisapinjaman;
+			$pola[$i]['angsuran']			= $totangsuran;
+			$pola[$i]['angsuran_pokok']		= $angsuranpokok;
+			$pola[$i]['angsuran_bunga']		= $angsuranbunga;
+			$pola[$i]['last_balance']		= $sisapokok;
+
+			$sisapinjaman = $sisapinjaman - $angsuranpokok;
+		}
+		return $pola;
+	}
 
 	public function printNoteAcctSavingsSalaryMutationProcess($token){
 		$auth 						= $this->session->userdata('auth');
