@@ -289,6 +289,21 @@ class AcctDebtPrint_model extends CI_Model
 		return $result;
 	}
 
+	public function getMemberDebtCreditsTemp($sesi, $member_id)
+	{
+		$this->db->select('acct_credits_payment_temp.credits_payment_amount, acct_credits_payment_temp.credits_payment_date, acct_credits_account.credits_account_serial, acct_credits_account.credits_id, acct_credits.credits_name');
+		$this->db->from('acct_credits_payment_temp');
+		$this->db->join('acct_credits_account', 'acct_credits_account.credits_account_id = acct_credits_payment_temp.credits_account_id');
+		$this->db->join('acct_credits', 'acct_credits.credits_id = acct_credits_account.credits_id');
+		$this->db->where('credits_payment_date >=', $sesi['start_date']);
+		$this->db->where('credits_payment_date <=', $sesi['end_date']);
+		$this->db->where('acct_credits_payment_temp.member_id', $member_id);
+		$this->db->where('acct_credits_payment_temp.salary_payment_status', 1);
+		$this->db->where('acct_credits_payment_temp.data_state', 0);
+		$result = $this->db->get()->result_array();
+		return $result;
+	}
+
 	public function getMemberDebtStore($sesi, $member_id)
 	{
 		$this->dbminimarket->select('customer_id, sales_invoice_no, sales_invoice_date, total_amount');

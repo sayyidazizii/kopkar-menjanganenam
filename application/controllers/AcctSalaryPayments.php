@@ -302,8 +302,8 @@
 
 			$data['main_view']['acctcreditsaccount']	= $acctcreditsaccount;
 
-			echo json_encode($data);
-			exit;
+			// echo json_encode($data);
+			// exit;
 			$data['main_view']['content']				= 'AcctSalaryPayment/FormAddAcctSalaryPayment_view';
 			$this->load->view('MainPage_view',$data);
 		}

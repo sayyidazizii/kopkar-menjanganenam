@@ -342,7 +342,14 @@
 			if ($this->dbminimarket->insert('acct_journal_voucher', $data)){
 				return true;
 			}else{
-				return false;
+				  // Log the last query and the error message
+				  $last_query = $this->dbminimarket->last_query();
+				  $error = $this->dbminimarket->error();
+				  log_message('error', 'Failed to insert into acct_journal_voucher: ' . $last_query);
+				  log_message('error', 'DB Error: ' . $error['message']);
+				  
+				  // Return detailed error information for debugging
+				  return array('query' => $last_query, 'error' => $error);
 			}
 		}
 

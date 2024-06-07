@@ -421,10 +421,10 @@
 											$no=1;
 											$payment_total_amount = 0;
 
-											if(empty($salary_payment)){
+											if(empty($salary_payments)){
 												echo "<tr><td align='center' colspan='8'> Data Kosong !</td></tr>";
 											} else {
-                                                foreach ($salary_payment as $key=>$val){ 
+                                                foreach ($salary_payments as $key=>$val){ 
 													echo"
 														<tr>
 															<td style='text-align:center'>".$no."</td>
@@ -443,10 +443,10 @@
                                             } ?>
 										</tbody>
 									</table>
-                                <!--end profile-settings-->
                                 <div class="margin-top-10">
-                                    <a href="javascript:;" class="btn red"> Save Changes </a>
-                                    <a href="javascript:;" class="btn default"> Cancel </a>
+                                <button type="submit" class="btn green" id="view" name="view"
+                                    value="submit_salary_payments"><i class="fa fa-check"></i>Submit</button>
+                                <a href="javascript:;" class="btn default"> Cancel </a>
                                 </div>
                             </form>
                         </div>
