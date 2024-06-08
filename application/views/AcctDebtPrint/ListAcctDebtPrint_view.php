@@ -403,7 +403,7 @@
                         <!-- Angsuran potong gaji TAB -->
                         <div class="tab-pane" id="tab_1_4">
                             <form action="#">
-                            <table class="table table-striped table-bordered table-hover table-full-width" id="sample_3">
+                            <table class="table table-striped table-bordered table-hover table-full-width" id="sample_4">
 										<thead>
 											<tr>
 												<th style="text-align:center" width="5%">No</th>
@@ -414,6 +414,7 @@
 												<th style="text-align:center" width="15%">Angsuran Pokok</th>
 												<th style="text-align:center" width="15%">Angsuran Bunga</th>
 												<th style="text-align:center" width="15%">Subtotal Angsuran</th>
+											    <th style="text-align:center" width="15%">Aksi</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -435,7 +436,8 @@
 															<td style='text-align:right'>".number_format($val['credits_payment_principal'], 2)."</td>
 															<td style='text-align:right'>".number_format($val['credits_payment_interest'], 2)."</td>
 															<td style='text-align:right'>".number_format($val['credits_payment_principal']+$val['credits_payment_interest'], 2)."</td>
-														</tr>
+							                                <td><a href='".base_url().'debt-print/delete/salary-payments/'.$val['credits_payment_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
+                                                        </tr>
 													";
 													$no++;
 													// $payment_total_amount += $angsuranpokok+$angsuranbunga;
