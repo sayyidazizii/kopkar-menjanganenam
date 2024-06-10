@@ -3044,7 +3044,20 @@ class AcctDebtPrint extends CI_Controller
 
 	//hapus simp wajib potong gaji
 	public function deleteSalaryMandatory($acct_savings_member_detail_id)
-	{
+	{	
+
+		$member = $this->CoreMember_model->getSalaryMandatoryTempFirst($acct_savings_member_detail_id);
+
+		// echo json_encode($member);
+		// exit;
+
+		$data_member = array(
+			"member_id" 						=> $member['member_id'],
+			"member_debet_preference" 			=> 1,
+		);
+
+		$this->CoreMember_model->updateCoreMember($data_member);
+
 		$data_member = array(
 			"data_state" 						=> 1,
 		);

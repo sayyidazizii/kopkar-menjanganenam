@@ -435,6 +435,17 @@ class CoreMember_model extends CI_Model
 		
 	}
 
+	public function getSalaryMandatoryTempFirst($acct_savings_member_detail_id)
+	{
+			$this->db->select('acct_savings_member_detail_temp.*, core_member.*');
+			$this->db->from('acct_savings_member_detail_temp');
+			$this->db->join('core_member', 'acct_savings_member_detail_temp.member_id = core_member.member_id');
+			// $this->db->where('acct_savinsgs_member_detail_temp.data_state', 0);
+			$this->db->where('acct_savings_member_detail_temp.savings_member_detail_id', $acct_savings_member_detail_id);
+			$result = $this->db->get()->row_array();
+			return $result;
+	}
+
 	public function deleteDebtMemberSavingsTemp($id,$data)
 	{
 		$this->db->where("savings_member_detail_id", $id);
