@@ -15,6 +15,14 @@
 			$result = $this->db->get()->result_array();
 			return $result;
 		}
+
+		public function getAcctDebtTemporary(){
+			$this->db->select('*');
+			$this->db->from('acct_debt_temporary');
+			$this->db->where('acct_debt_temporary.data_state', 0);
+			$result = $this->db->get()->result_array();
+			return $result;
+		}
 		
 		public function getAcctDebt_Detail($debt_id){
 			$this->db->select('*');
@@ -227,6 +235,25 @@
 		
 		public function insertAcctDebt($data){
 			$query = $this->db->insert('acct_debt',$data);
+			if($query){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		public function insertAcctDebtTemporary($data){
+			$query = $this->db->insert('acct_debt_temporary',$data);
+			if($query){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		public function deleteAcctDebtTemporary($debt_id){
+			$this->db->where("debt_id",$debt_id);
+			$query = $this->db->update('acct_debt_temporary', array('data_state'=>1));
 			if($query){
 				return true;
 			}else{

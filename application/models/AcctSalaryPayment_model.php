@@ -159,12 +159,37 @@
 			// $this->db->where('acct_credits_payment_temp.payment_preference_id', 3);
 			$this->db->where('DATE_FORMAT(acct_credits_payment_temp.credits_payment_date,"%Y%m")', date('Ym'));
 			return $this->db->get()->result_array();
+		}
 
-			// $this->db->select('*');
-			// $this->db->from('acct_credits_payment_temp');
-			// $this->db->order_by('acct_credits_payment_temp.credits_payment_id', 'DESC');
-			// $result = $this->db->get()->row_array();
-			// return $result;
+		public function getAcctCreditsPaymentsTempFirst($credits_payment_id){
+
+			$this->db->select('acct_credits_payment_temp.*, acct_credits_account.*');
+			$this->db->from('acct_credits_payment_temp');
+			$this->db->join('acct_credits_account', 'acct_credits_account.credits_account_id = acct_credits_payment_temp.credits_account_id');
+			$this->db->where('acct_credits_payment_temp.data_state', 0);
+			// $this->db->where('acct_credits_payment_temp.payment_preference_id', 3);
+			$this->db->where('acct_credits_payment_temp.credits_payment_id', $credits_payment_id);
+			$result = $this->db->get()->row_array();
+			return $result;
+		}
+
+		public function deleteSalaryPaymentTemp($credits_payment_id,$data)
+		{
+			$this->db->where("credits_payment_id",$credits_payment_id);
+			$query = $this->db->update('acct_credits_payment_temp', $data);
+			if($query){
+				return true;
+			}else{
+				// return false;
+				// Log the last query and the error message
+				$last_query = $this->db->last_query();
+				$error = $this->db->error();
+				log_message('error', 'Failed to insert into acct_journal_voucher: ' . $last_query);
+				log_message('error', 'DB Error: ' . $error['message']);
+				
+				// Return detailed error information for debugging
+				return array('query' => $last_query, 'error' => $error);
+			}
 		}
 
 		public function insertAcctSavingsMemberDetail($data){

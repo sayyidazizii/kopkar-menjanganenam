@@ -227,6 +227,22 @@ class AcctDebtPrint_model extends CI_Model
 		return $result;
 	}
 
+	public function getMemberDebtCategoryTemp($sesi, $member_id)
+	{
+		$this->db->select('*');
+		$this->db->from('acct_debt_temporary');
+		$this->db->join('acct_debt_category', 'acct_debt_category.debt_category_id = acct_debt_temporary.debt_category_id');
+		$this->db->where('acct_debt_temporary.debt_date >=', $sesi['start_date']);
+		$this->db->where('acct_debt_temporary.debt_date <=', $sesi['end_date']);
+		if ($sesi['debt_category_id'] && $sesi['debt_category_id'] != '') {
+			$this->db->where('acct_debt_temporary.debt_category_id', $sesi['debt_category_id']);
+		}
+		$this->db->where('acct_debt_temporary.member_id', $member_id);
+		$this->db->where('acct_debt_temporary.data_state', 0);
+		$result = $this->db->get()->result_array();
+		return $result;
+	}
+
 	//sukarela 
 	public function getMemberDebtSavings($sesi, $member_id)
 	{

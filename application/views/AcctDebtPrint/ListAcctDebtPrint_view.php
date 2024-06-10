@@ -456,51 +456,45 @@
 
                         <!-- Potong gaji Baru TAB -->
                         <div class="tab-pane" id="tab_1_5">
-                            <form action="#">
-                            <table class="table table-striped table-bordered table-hover table-full-width"
-                                id="sample_5">
+                            <table class="table table-striped table-bordered table-hover table-full-width" id="myDataTable">
                                 <thead>
                                     <tr>
-                                        <th style="text-align:center" width="5%">No</th>
-                                        <th style="text-align:center" width="25%">No Anggota</th>
-                                        <th style="text-align:center" width="25%">Nama Anggota</th>
-                                        <th style="text-align:center" width="20%">Bagian</th>
-                                        <th style="text-align:center" width="20%">Tgl Transaksi</th>
-                                        <th style="text-align:center" width="25%">Potongan Simpanan Wajib</th>
-                                        <th style="text-align:center" width="25%">Aksi</th>
+                                        <th width="5%">No</th>
+                                        <th width="5%">No. Potong Gaji</th>
+                                        <th width="10%">Kategori</th>
+                                        <th width="10%">No. Anggota</th>
+                                        <th width="15%">Nama Anggota</th>
+                                        <th width="10%">Tanggal</th>
+                                        <th width="10%">Jumlah</th>
+                                        <th width="15%">Keterangan</th>
+                                        <th width="10%">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $no = 1;
-                                    $mandatory_savings_total_amount = 0;
-                                    if (empty($mandatory_savings)) {
-                                        echo "<tr><td align='center' colspan='5'> Data Kosong !</td></tr>";
-                                    } else {
-                                        foreach ($mandatory_savings as $key => $val) {
-                                            echo "
-													<tr>
-														<td style='text-align:center'>" . $no . "</td>
-														<td>" . $val['member_no'] . "</td>
-														<td>" . $val['member_name'] . "</td>
-														<td>" . $val['division_name'] . "</td>
-														<td>" . $val['transaction_date'] . "</td>
-														<td style='text-align:right'>" . number_format($val['mandatory_savings_amount'], 2) . "</td>
-							                            <td><a href='".base_url().'debt/delete/'.$val['savings_member_detail_id']."' class='btn red' onclick='return confirmDelete()' role='button'><i class='fa fa-trash'></i> Hapus</a></td>
-													</tr>
-												";
-                                            $no++;
-                                            $mandatory_savings_total_amount += $val['mandatory_savings_amount'];
-                                        }
-                                    } ?>
+                                    <?php 
+                                    $no = 0;
+                                    foreach($acct_debt as $val){ 
+                                        $no++
+                                        ?>
+                                    <tr>
+                                        <td><?=$no?></td>
+                                        <td><?= $val['debt_no']?></td>
+                                        <td><?= $this->AcctDebt_model->getAcctDebtCategoryName($val['debt_category_id'])?></td>
+                                        <td><?= $this->AcctDebt_model->getCoreMemberNo($val['member_id'])?></td>
+                                        <td><?= $this->AcctDebt_model->getCoreMemberName($val['member_id'])?></td>
+                                        <td><?= $val['debt_date']?></td>
+                                        <td><?= $val['debt_amount']?></td>
+                                        <td><?= $val['debt_remark']?></td>
+                                        <td><a href="<?=base_url().'debt-print/delete/acct_debt/'.$val['debt_id']?>" class="btn btn-xs red" onclick='return confirmDelete()' role='button'><i class="fa fa-trash"></i> Hapus</a></td>
+                                    </tr>
+                                    <?php } ?>
                                 </tbody>
-                            </table>
+                                </table>
                                 <!--end profile-settings-->
                                 <div class="margin-top-10">
-                                    <a href="javascript:;" class="btn red"> Save Changes </a>
-                                    <a href="javascript:;" class="btn default"> Cancel </a>
+                                <button type="submit" class="btn green" id="view" name="view" value="submit_acct_debt"><i class="fa fa-check"></i>Submit</button>
+                                <a href="javascript:;" class="btn default"> Cancel </a>
                                 </div>
-                            </form>
                         </div>
                     </div>
                 </div>

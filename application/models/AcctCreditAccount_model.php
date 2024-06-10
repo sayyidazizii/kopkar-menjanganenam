@@ -255,7 +255,15 @@
 			if($query){
 				return true;
 			}else{
-				return false;
+				// return false;
+				// Log the last query and the error message
+				$last_query = $this->db->last_query();
+				$error = $this->db->error();
+				log_message('error', 'Failed to insert into acct_journal_voucher: ' . $last_query);
+				log_message('error', 'DB Error: ' . $error['message']);
+				
+				// Return detailed error information for debugging
+				return array('query' => $last_query, 'error' => $error);
 			}
 		}
 		

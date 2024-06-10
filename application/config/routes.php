@@ -1084,6 +1084,8 @@ $route['debt-print/viewreport']                                     = 'AcctDebtP
 $route['debt-print/delete/salary-principal/(:num)']                 = 'AcctDebtPrint/deleteSalaryPrincipal/$1';
 $route['debt-print/delete/salary-mandatory/(:num)']                 = 'AcctDebtPrint/deleteSalaryMandatory/$1';
 $route['debt-print/delete/savings-salary-mutation/(:num)']          = 'AcctDebtPrint/deleteAcctSavingsSalaryMutation/$1';
+$route['debt-print/delete/salary-payments/(:num)']                  = 'AcctDebtPrint/deleteAcctSalaryPayments/$1';
+$route['debt-print/delete/acct_debt/(:num)']                        = 'AcctDebtPrint/deleteAcctDebt/$1';
 
 
 //AcctDebtMemberPrint

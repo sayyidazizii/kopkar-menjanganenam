@@ -158,7 +158,7 @@
 			$this->form_validation->set_rules('debt_amount', 'Jumlah', 'required');
 			
 			if($this->form_validation->run()==true){
-				if($this->AcctDebt_model->insertAcctDebt($data)){
+				if($this->AcctDebt_model->insertAcctDebtTemporary($data)){
 					$coremember 	= $this->AcctDebt_model->getCoreMemberDetail($data['member_id']);
 					$debtcategory 	= $this->AcctDebt_model->getAcctDebtCategoryDetail($data['debt_category_id']); 
 					$other_amount	= $coremember['member_account_other_debt'] + $data['debt_amount'];
@@ -170,7 +170,7 @@
 						'member_account_receivable_amount'  => $total
 					);
 
-					$this->AcctDebt_model->updateCoreMemberAccountReceivableAmount($dataanggota);
+					// $this->AcctDebt_model->updateCoreMemberAccountReceivableAmount($dataanggota);
 
 					$journal_voucher_period 		= date("Ym", strtotime($data['debt_date']));
 					$transaction_module_code 		= "PG";
@@ -191,41 +191,41 @@
 						'created_on' 						=> date('Y-m-d'),
 					);
 					
-					if($this->AcctDebt_model->insertAcctJournalVoucher($data_journal)){
-						$journal_voucher_id 				= $this->AcctDebt_model->getJournalVoucherID($data['created_id']);
+					// if($this->AcctDebt_model->insertAcctJournalVoucher($data_journal)){
+					// 	$journal_voucher_id 				= $this->AcctDebt_model->getJournalVoucherID($data['created_id']);
 						
-						$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['debet_account_id']);
+					// 	$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['debet_account_id']);
 
-						$data_debet = array (
-							'journal_voucher_id'			=> $journal_voucher_id,
-							'account_id'					=> $debtcategory['debet_account_id'],
-							'journal_voucher_description'	=> 'POTONG GAJI BARU',
-							'journal_voucher_amount'		=> $data['debt_amount'],
-							'journal_voucher_debit_amount'	=> $data['debt_amount'],
-							'account_id_default_status'		=> $account_id_default_status,
-							'account_id_status'				=> 0,
-							'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['debet_account_id'],
-							'created_id' 					=> $auth['user_id']
-						);
+					// 	$data_debet = array (
+					// 		'journal_voucher_id'			=> $journal_voucher_id,
+					// 		'account_id'					=> $debtcategory['debet_account_id'],
+					// 		'journal_voucher_description'	=> 'POTONG GAJI BARU',
+					// 		'journal_voucher_amount'		=> $data['debt_amount'],
+					// 		'journal_voucher_debit_amount'	=> $data['debt_amount'],
+					// 		'account_id_default_status'		=> $account_id_default_status,
+					// 		'account_id_status'				=> 0,
+					// 		'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['debet_account_id'],
+					// 		'created_id' 					=> $auth['user_id']
+					// 	);
 
-						$this->AcctDebt_model->insertAcctJournalVoucherItem($data_debet);
+					// 	$this->AcctDebt_model->insertAcctJournalVoucherItem($data_debet);
 
-						$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['credit_account_id']);
+					// 	$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['credit_account_id']);
 
-						$data_credit = array (
-							'journal_voucher_id'			=> $journal_voucher_id,
-							'account_id'					=> $debtcategory['credit_account_id'],
-							'journal_voucher_description'	=> 'POTONG GAJI BARU',
-							'journal_voucher_amount'		=> $data['debt_amount'],
-							'journal_voucher_credit_amount'	=> $data['debt_amount'],
-							'account_id_default_status'		=> $account_id_default_status,
-							'account_id_status'				=> 1,
-							'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['credit_account_id'],
-							'created_id' 					=> $auth['user_id']
-						);
+					// 	$data_credit = array (
+					// 		'journal_voucher_id'			=> $journal_voucher_id,
+					// 		'account_id'					=> $debtcategory['credit_account_id'],
+					// 		'journal_voucher_description'	=> 'POTONG GAJI BARU',
+					// 		'journal_voucher_amount'		=> $data['debt_amount'],
+					// 		'journal_voucher_credit_amount'	=> $data['debt_amount'],
+					// 		'account_id_default_status'		=> $account_id_default_status,
+					// 		'account_id_status'				=> 1,
+					// 		'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['credit_account_id'],
+					// 		'created_id' 					=> $auth['user_id']
+					// 	);
 
-						$this->AcctDebt_model->insertAcctJournalVoucherItem($data_credit);
-					}
+					// 	$this->AcctDebt_model->insertAcctJournalVoucherItem($data_credit);
+					// }
 
 					$auth = $this->session->userdata('auth');
 					$msg = "<div class='alert alert-success alert-dismissable'>  
@@ -424,6 +424,7 @@
 					'member_id' 		=> $val['member_id'],
 					'debt_category_id' 	=> $this->input->post('debt_category_id_'.$val['debt_temp_id'] ,true),
 					'debt_date' 		=> tgltodb($val['debt_temp_date']),
+					'debt_no' 			=> $val['debt_temp_no'],
 					'debt_amount' 		=> $val['debt_temp_amount'],
 					'debt_remark' 		=> $val['debt_temp_remark'],
 					'debt_token' 		=> md5(rand()).$val['debt_temp_id'],
@@ -431,7 +432,7 @@
 					'created_id'		=> $auth['user_id']
 				);
 
-				if($this->AcctDebt_model->insertAcctDebt($data)){
+				if($this->AcctDebt_model->insertAcctDebtTemporary($data)){
 					$coremember 	= $this->AcctDebt_model->getCoreMemberDetail($data['member_id']);
 					$debtcategory 	= $this->AcctDebt_model->getAcctDebtCategoryDetail($data['debt_category_id']); 
 					$other_amount	= $coremember['member_account_other_debt'] + $data['debt_amount'];
@@ -443,7 +444,7 @@
 						'member_account_receivable_amount'  => $total
 					);
 
-					$this->AcctDebt_model->updateCoreMemberAccountReceivableAmount($dataanggota);
+					// $this->AcctDebt_model->updateCoreMemberAccountReceivableAmount($dataanggota);
 
 					$journal_voucher_period 		= date("Ym", strtotime($data['debt_date']));
 					$transaction_module_code 		= "PG";
@@ -464,41 +465,41 @@
 						'created_on' 						=> date('Y-m-d'),
 					);
 					
-					if($this->AcctDebt_model->insertAcctJournalVoucher($data_journal)){
-						$journal_voucher_id 				= $this->AcctDebt_model->getJournalVoucherID($data['created_id']);
+					// if($this->AcctDebt_model->insertAcctJournalVoucher($data_journal)){
+					// 	$journal_voucher_id 				= $this->AcctDebt_model->getJournalVoucherID($data['created_id']);
 						
-						$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['debet_account_id']);
+					// 	$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['debet_account_id']);
 
-						$data_debet = array (
-							'journal_voucher_id'			=> $journal_voucher_id,
-							'account_id'					=> $debtcategory['debet_account_id'],
-							'journal_voucher_description'	=> 'POTONG GAJI BARU',
-							'journal_voucher_amount'		=> $data['debt_amount'],
-							'journal_voucher_debit_amount'	=> $data['debt_amount'],
-							'account_id_default_status'		=> $account_id_default_status,
-							'account_id_status'				=> 0,
-							'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['debet_account_id'],
-							'created_id' 					=> $auth['user_id']
-						);
+					// 	$data_debet = array (
+					// 		'journal_voucher_id'			=> $journal_voucher_id,
+					// 		'account_id'					=> $debtcategory['debet_account_id'],
+					// 		'journal_voucher_description'	=> 'POTONG GAJI BARU',
+					// 		'journal_voucher_amount'		=> $data['debt_amount'],
+					// 		'journal_voucher_debit_amount'	=> $data['debt_amount'],
+					// 		'account_id_default_status'		=> $account_id_default_status,
+					// 		'account_id_status'				=> 0,
+					// 		'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['debet_account_id'],
+					// 		'created_id' 					=> $auth['user_id']
+					// 	);
 
-						$this->AcctDebt_model->insertAcctJournalVoucherItem($data_debet);
+					// 	$this->AcctDebt_model->insertAcctJournalVoucherItem($data_debet);
 
-						$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['credit_account_id']);
+					// 	$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['credit_account_id']);
 
-						$data_credit = array (
-							'journal_voucher_id'			=> $journal_voucher_id,
-							'account_id'					=> $debtcategory['credit_account_id'],
-							'journal_voucher_description'	=> 'POTONG GAJI BARU',
-							'journal_voucher_amount'		=> $data['debt_amount'],
-							'journal_voucher_credit_amount'	=> $data['debt_amount'],
-							'account_id_default_status'		=> $account_id_default_status,
-							'account_id_status'				=> 1,
-							'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['credit_account_id'],
-							'created_id' 					=> $auth['user_id']
-						);
+					// 	$data_credit = array (
+					// 		'journal_voucher_id'			=> $journal_voucher_id,
+					// 		'account_id'					=> $debtcategory['credit_account_id'],
+					// 		'journal_voucher_description'	=> 'POTONG GAJI BARU',
+					// 		'journal_voucher_amount'		=> $data['debt_amount'],
+					// 		'journal_voucher_credit_amount'	=> $data['debt_amount'],
+					// 		'account_id_default_status'		=> $account_id_default_status,
+					// 		'account_id_status'				=> 1,
+					// 		'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['credit_account_id'],
+					// 		'created_id' 					=> $auth['user_id']
+					// 	);
 
-						$this->AcctDebt_model->insertAcctJournalVoucherItem($data_credit);
-					}
+					// 	$this->AcctDebt_model->insertAcctJournalVoucherItem($data_credit);
+					// }
 				}
 			}
 

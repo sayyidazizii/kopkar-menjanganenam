@@ -8,6 +8,7 @@ class AcctDebtPrint extends CI_Controller
 		$this->load->model('Connection_model');
 		$this->load->model('MainPage_model');
 		$this->load->model('AcctDebtPrint_model');
+		$this->load->model('AcctDebt_model');
 		$this->load->model('CoreMember_model');
 		$this->load->model('AcctSavingsSalaryMutation_model');
 		$this->load->model('AcctSalaryPayment_model');
@@ -34,6 +35,8 @@ class AcctDebtPrint extends CI_Controller
 		$data['main_view']['mandatory_savings'] = $this->CoreMember_model->getMemberMandatorySavingsTemp();
 		$data['main_view']['savings_salary_mutation'] = $this->AcctSavingsSalaryMutation_model->getSavingsSalaryMutationTemp();
 		$data['main_view']['salary_payments'] = $this->AcctSalaryPayment_model->getAcctCreditsPaymentsTemp();
+		$data['main_view']['acct_debt'] = $this->AcctDebt_model->getAcctDebtTemporary();
+
 		// echo json_encode($data['main_view']['salary_payment']);
 		// exit;
 		$data['main_view']['content'] = 'AcctDebtPrint/ListAcctDebtPrint_view';
@@ -96,6 +99,9 @@ class AcctDebtPrint extends CI_Controller
 		}
 		else if ($sesi['view'] == 'submit_salary_payments') {
 			$this->submitAcctSalaryPayments();
+		}
+		else if ($sesi['view'] == 'submit_acct_debt') {
+			$this->submitAcctDebt();
 		}
 	}
 
@@ -2343,19 +2349,20 @@ class AcctDebtPrint extends CI_Controller
 		$coremember = $this->AcctDebtPrint_model->getCoreMember($sesi);
 		$data = array();
 
-		// echo json_encode($preferencecompany);
+		// $list = $this->AcctDebtPrint_model->getMemberDebtCategoryTemp($sesi, '');
+		// echo json_encode($list);
 		// exit;
 
 		foreach ($coremember as $key => $val) {
 			$total = 0;
 
-			$debtcategory = $this->AcctDebtPrint_model->getMemberDebtCategory($sesi, $val['member_id']);
+			$debtcategory = $this->AcctDebtPrint_model->getMemberDebtCategoryTemp($sesi, $val['member_id']);
 			$debtsavings = $this->AcctDebtPrint_model->getMemberDebtSavingsTemp($sesi, $val['member_id']);
 			$debtcredits = $this->AcctDebtPrint_model->getMemberDebtCreditsTemp($sesi, $val['member_id']);
 			$debtstore = $this->AcctDebtPrint_model->getMemberDebtStore($sesi, $val['member_id']);
 			$debtmembersavings = $this->AcctDebtPrint_model->getMemberDebtMemberSavingsTemp($sesi, $val['member_id']);
 
-			// echo json_encode($debtmembersavings);
+			// echo json_encode($debtcategory);
 			// exit;
 
 
@@ -4248,6 +4255,165 @@ class AcctDebtPrint extends CI_Controller
 			$this->session->set_userdata('message',$msg);
 			redirect('debt-print');
 			$this->printNoteSalaryPaymentProcess($this->input->post('credits_payment_token', true));
+//------------------------end 
+	}
+
+	public function deleteAcctSalaryPayments($credits_payment_id)
+	{
+		$creditpaymenttemp = $this->AcctSalaryPayment_model->getAcctCreditsPaymentsTempFirst($credits_payment_id);
+
+		// echo json_encode($creditpaymenttemp['credits_account_id']);
+		// exit;
+
+		$credit_account = array(
+			"payment_preference_id"		=> 1,
+		);
+		//update
+		$this->AcctCreditAccount_model->updatedata($credit_account,$creditpaymenttemp['credits_account_id']);
+		// echo json_encode($query);
+		// exit;
+		$credit_payment_temp = array(
+			"data_state"				=> 1,
+		);	
+
+		//update
+		$this->AcctSalaryPayment_model->deleteSalaryPaymentTemp($creditpaymenttemp['credits_payment_id'],$credit_payment_temp);
+	
+		$msg = "<div class='alert alert-success alert-dismissable'>  
+		<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+			Hapus Angsuran Potong Gaji Sukses
+		</div> ";
+		$this->session->set_userdata('message',$msg);
+		redirect('debt-print');
+	}
+
+	public function submitAcctDebt()
+	{
+			$auth 				= $this->session->userdata('auth');
+			$preferencecompany 	= $this->AcctDebt_model->getPreferenceCompany();
+			$acctdebttemp 		= $this->AcctDebt_model->getAcctDebtTemporary();
+
+			foreach($acctdebttemp as $key => $val){
+				$total 					= 0;
+	
+				$data = array (
+					'member_id' 		=> $val['member_id'],
+					'debt_category_id' 	=> $val['debt_category_id'],
+					'debt_date' 		=> $val['debt_date'],
+					// 'debt_no' 			=> $val['debt_no'],
+					'debt_amount' 		=> $val['debt_amount'],
+					'debt_remark' 		=> $val['debt_remark'],
+					'debt_token' 		=> md5(rand()).$val['debt_id'],
+					'created_on'		=> date('Y-m-d H:i:s'),
+					'created_id'		=> $auth['user_id']
+				);
+
+				$data_update = array (
+					'debt_id' 		=> $val['debt_id'],
+				);
+
+				if($this->AcctDebt_model->insertAcctDebt($data)){
+					$coremember 	= $this->AcctDebt_model->getCoreMemberDetail($data['member_id']);
+					$debtcategory 	= $this->AcctDebt_model->getAcctDebtCategoryDetail($data['debt_category_id']); 
+					$other_amount	= $coremember['member_account_other_debt'] + $data['debt_amount'];
+					$total			= $coremember['member_account_receivable_amount'] + $data['debt_amount'];
+
+					$dataanggota 	= array(
+						'member_id' 						=> $data['member_id'],
+						'member_account_other_debt' 		=> $other_amount,
+						'member_account_receivable_amount'  => $total
+					);
+
+					$this->AcctDebt_model->updateCoreMemberAccountReceivableAmount($dataanggota);
+
+					$journal_voucher_period 		= date("Ym", strtotime($data['debt_date']));
+					$transaction_module_code 		= "PG";
+					$transaction_module_id 			= $this->AcctDebt_model->getTransactionModuleID($transaction_module_code);
+					
+					$data_journal = array(
+						'branch_id'							=> $auth['branch_id'],
+						'journal_voucher_period' 			=> $journal_voucher_period,
+						'journal_voucher_date'				=> date('Y-m-d'),
+						'journal_voucher_title'				=> 'POTONG GAJI BARU'.$coremember['member_name'],
+						'journal_voucher_description'		=> 'POTONG GAJI BARU'.$coremember['member_name'],
+						'journal_voucher_token'				=> md5(rand()).$val['debt_id'],
+						'transaction_module_id'				=> $transaction_module_id,
+						'transaction_module_code'			=> $transaction_module_code,
+						'transaction_journal_id' 			=> $debt_id,
+						'transaction_journal_no' 			=> $debt_no,
+						'created_id' 						=> $data['created_id'],
+						'created_on' 						=> date('Y-m-d'),
+					);
+					
+					if($this->AcctDebt_model->insertAcctJournalVoucher($data_journal)){
+						$journal_voucher_id 				= $this->AcctDebt_model->getJournalVoucherID($data['created_id']);
+						
+						$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['debet_account_id']);
+
+						$data_debet = array (
+							'journal_voucher_id'			=> $journal_voucher_id,
+							'account_id'					=> $debtcategory['debet_account_id'],
+							'journal_voucher_description'	=> 'POTONG GAJI BARU'.$coremember['member_name'],
+							'journal_voucher_amount'		=> $data['debt_amount'],
+							'journal_voucher_debit_amount'	=> $data['debt_amount'],
+							'account_id_default_status'		=> $account_id_default_status,
+							'account_id_status'				=> 0,
+							'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['debet_account_id'],
+							'created_id' 					=> $auth['user_id']
+						);
+
+						$this->AcctDebt_model->insertAcctJournalVoucherItem($data_debet);
+
+						$account_id_default_status 			= $this->AcctDebt_model->getAccountIDDefaultStatus($debtcategory['credit_account_id']);
+
+						$data_credit = array (
+							'journal_voucher_id'			=> $journal_voucher_id,
+							'account_id'					=> $debtcategory['credit_account_id'],
+							'journal_voucher_description'	=> 'POTONG GAJI BARU'.$coremember['member_name'],
+							'journal_voucher_amount'		=> $data['debt_amount'],
+							'journal_voucher_credit_amount'	=> $data['debt_amount'],
+							'account_id_default_status'		=> $account_id_default_status,
+							'account_id_status'				=> 1,
+							'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$debtcategory['credit_account_id'],
+							'created_id' 					=> $auth['user_id']
+						);
+
+						$this->AcctDebt_model->insertAcctJournalVoucherItem($data_credit);
+					}
+				}
+				$data_temp = array(
+					"debt_id"							=> $data_update['debt_id'],
+					"data_state" 						=> 1,
+				);
+
+				$this->AcctDebt_model->deleteAcctDebtTemporary($data_temp['debt_id']);
+			}
+
+			// $this->AcctDebt_model->truncateAcctDebtTemp();
+
+			$msg = "<div class='alert alert-success alert-dismissable'>  
+					<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>					
+						Submit Potong Gaji Baru Sukses
+					</div> ";
+			$this->session->unset_userdata('addAcctDebt');
+			$this->session->set_userdata('message',$msg);
+			redirect('debt-print');
+		
+	}
+
+	public function deleteAcctDebt($debt_id)
+	{
+		$data_debt = array(
+			"data_state" 						=> 1,
+		);
+		$this->AcctDebt_model->deleteAcctDebtTemporary($debt_id,$data_debt);
+
+		$msg = "<div class='alert alert-success alert-dismissable'>  
+								<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+									Hapus Potong Gaji Sukses
+								</div> ";
+		$this->session->set_userdata('message',$msg);
+		redirect('debt-print');
 	}
 }
 ?>
