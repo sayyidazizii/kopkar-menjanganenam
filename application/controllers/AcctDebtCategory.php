@@ -22,6 +22,11 @@
 		
 		public function addAcctDebtCategory(){
 			$data['main_view']['acctaccount']		= create_double($this->AcctDebtCategory_model->getAcctAccount(),'account_id', 'account_code');
+			$listoperator = array(
+				'+' => 'Menambah',
+				'-'	=> 'Mengurang'
+			);
+			$data['main_view']['listoperator']		= $listoperator;
 			$data['main_view']['content']			= 'AcctDebtCategory/FormAddAcctDebtCategory_view';
 			$this->load->view('MainPage_view',$data);
 		}
@@ -55,6 +60,7 @@
 			$data = array(
 				'debt_category_code'		=> $this->input->post('debt_category_code', true),
 				'debt_category_name'		=> $this->input->post('debt_category_name', true),
+				'operator'					=> $this->input->post('operator', true),
 				'debet_account_id'			=> $this->input->post('debet_account_id', true),
 				'credit_account_id'			=> $this->input->post('credit_account_id', true),
 				'created_id'				=> $auth['user_id'],
@@ -65,6 +71,7 @@
 			$this->form_validation->set_rules('debt_category_name', 'Nama Kategori', 'required');
 			$this->form_validation->set_rules('debet_account_id', 'Debit', 'required');
 			$this->form_validation->set_rules('credit_account_id', 'Kredit', 'required');
+			$this->form_validation->set_rules('operator', 'Operator', 'required');
 			
 			if($this->form_validation->run()==true){
 				if($this->AcctDebtCategory_model->insertAcctDebtCategory($data)){
@@ -97,6 +104,11 @@
 		public function editAcctDebtCategory(){
 			$data['main_view']['acctaccount']		= create_double($this->AcctDebtCategory_model->getAcctAccount(),'account_id', 'account_code');
 			$data['main_view']['acctdebtcategory']	= $this->AcctDebtCategory_model->getAcctDebtCategory_Detail($this->uri->segment(3));
+			$listoperator = array(
+				'+' => 'Menambah',
+				'-'	=> 'Mengurang'
+			);
+			$data['main_view']['listoperator']		= $listoperator;
 			$data['main_view']['content']			= 'AcctDebtCategory/FormEditAcctDebtCategory_view';
 			$this->load->view('MainPage_view',$data);
 		}
@@ -108,6 +120,7 @@
 				'debt_category_name'	=> $this->input->post('debt_category_name', true),
 				'debet_account_id'		=> $this->input->post('debet_account_id', true),
 				'credit_account_id'		=> $this->input->post('credit_account_id', true),
+				'operator'				=> $this->input->post('operator', true),
 			);
 			
 			$this->form_validation->set_rules('debt_category_code', 'Kode Kategori', 'required');

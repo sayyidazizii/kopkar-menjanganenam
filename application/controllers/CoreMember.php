@@ -650,6 +650,7 @@
 
 						//generate tabungan
 						$savingsaccount = array(
+							'savings_account_no'						=> $member_id,
 							'member_id'									=> $member_id,
 							'savings_id'								=> 34,
 							'office_id'									=> 6,

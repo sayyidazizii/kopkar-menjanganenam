@@ -96,6 +96,15 @@
 									<label class="control-label">Kredit<span class="required">*</span></label>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<div class="form-group form-md-line-input">
+									<?php 
+										echo form_dropdown('operator', $listoperator, set_value('operator', $data['operator']), 'id="operator" class="form-control select2me" onChange="function_elements_add(this.name, this.value);"');
+									?>
+
+									<label class="control-label">Operator<span class="required">*</span></label>
+								</div>
+							</div>
 						</div>
 
 						<input type="hidden" class="form-control" name="debt_category_id" id="debt_category_id" placeholder="id" value="<?php echo set_value('debt_category_id',$acctdebtcategory['debt_category_id']);?>"/>

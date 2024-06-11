@@ -2462,6 +2462,7 @@ class AcctDebtPrint extends CI_Controller
 			if ($val['debtcategory']) {
 				foreach ($val['debtcategory'] as $keyy => $vall) {
 					$category_total += $vall['debt_amount'];
+					$operator = $vall['operator'];
 				}
 			}
 
@@ -2500,8 +2501,13 @@ class AcctDebtPrint extends CI_Controller
 				}
 			}
 
+			if($operator == '+'){
+				$total =  $savings_total + $credits_total + $store_total + $simpanan_pokok + $simpanan_wajib + $category_total;
+			}else{
+				$total =  $savings_total + $credits_total + $store_total + $simpanan_pokok + $simpanan_wajib - $category_total;
+			}
+			
 
-			$total = $category_total + $savings_total + $credits_total + $store_total + $simpanan_pokok + $simpanan_wajib;
 
 			$tbl .= "
 				<table cellspacing=\"0\" cellpadding=\"3\" border=\"1\">

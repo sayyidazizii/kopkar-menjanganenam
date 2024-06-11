@@ -64,6 +64,7 @@
 								<th width="25%">Nama Kategori</th>
 								<th width="25%">Debit</th>
 								<th width="25%">Kredit</th>
+								<th width="25%">Operator</th>
 								<th width="10%">Action</th>
 							</tr>
 						</thead>
@@ -85,6 +86,7 @@
 												<td>".$val['debt_category_name']."</td>
 												<td>".$this->AcctDebtCategory_model->getAcctAccountCodeName($val['debet_account_id'])."</td>
 												<td>".$this->AcctDebtCategory_model->getAcctAccountCodeName($val['credit_account_id'])."</td>
+												<td>".$val['operator']."</td>
 												<td>
 													<a href='".$this->config->item('base_url').'debt-category/edit/'.$val['debt_category_id']."' class='btn default btn-xs purple'>
 														<i class='fa fa-edit'></i> Edit

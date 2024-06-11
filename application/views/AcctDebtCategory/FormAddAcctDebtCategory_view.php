@@ -120,6 +120,15 @@
 									<label class="control-label">Kredit<span class="required">*</span></label>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<div class="form-group form-md-line-input">
+									<?php 
+										echo form_dropdown('operator', $listoperator, set_value('operator', $data['operator']), 'id="operator" class="form-control select2me" onChange="function_elements_add(this.name, this.value);"');
+									?>
+
+									<label class="control-label">Operator<span class="required">*</span></label>
+								</div>
+							</div>
 						</div>
 
 						<div class="row">
