@@ -25,6 +25,8 @@
 			$auth 	= $this->session->userdata('auth');
 			$unique = $this->session->userdata('unique');
 			$this->session->unset_userdata('acctcreditsaccounttoken-'.$unique['unique']);
+			$this->session->unset_userdata('addarrayacctcreditsagunan-'.$sesi['unique']);
+
 			
 			$this->AcctCreditAccount_model->truncateAcctCreditsImport();
 
@@ -109,12 +111,14 @@
 						<a href="'.base_url().'credit-account/process-print-akad/'.$creditsaccount->credits_account_id.'" class="btn btn-xs green" role="button"><i class="fa fa-print"></i> Akad</a>
 						<a href="'.base_url().'credit-account/edit-date/'.$creditsaccount->credits_account_id.'" class="btn btn-xs green-jungle" role="button"><i class="fa fa-calendar"></i> Edit Tanggal & Asuransi</a>
 						<a href="'.base_url().'credit-account/edit-payment-pref/'.$creditsaccount->credits_account_id.'" class="btn btn-xs purple" role="button"><i class="fa fa-money"></i> Edit Preferensi Angsuran</a>
+						<a href="'.base_url().'credit-account/edit/'.$creditsaccount->credits_account_id.'" class="btn btn-xs green" role="button"><i class="fa fa-pencil"></i> Edit Pinjaman</a>
 						<a href="'.base_url().'credit-account/print-schedule-credits-payment/'.$creditsaccount->credits_account_id.'" class="btn btn-xs yellow-lemon" role="button"><i class="fa fa-print"></i> Jadwal Angsuran</a>';
 				}else if($creditsaccount->credits_approve_status == 1){
 					$row[] = '
 						<a href="'.base_url().'credit-account/print-note/'.$creditsaccount->credits_account_id.'" class="btn btn-xs blue" role="button"><i class="fa fa-print"></i> Kwitansi</a> &nbsp;
 						<a href="'.base_url().'credit-account/process-print-akad/'.$creditsaccount->credits_account_id.'" class="btn btn-xs green" role="button"><i class="fa fa-print"></i> Akad</a>
 						<a href="'.base_url().'credit-account/edit-payment-pref/'.$creditsaccount->credits_account_id.'" class="btn btn-xs purple" role="button"><i class="fa fa-money"></i> Edit Preferensi Angsuran</a>
+						<a href="'.base_url().'credit-account/edit/'.$creditsaccount->credits_account_id.'" class="btn btn-xs green" role="button"><i class="fa fa-pencil"></i> Edit Pinjaman</a>
 						<a href="'.base_url().'credit-account/print-schedule-credits-payment/'.$creditsaccount->credits_account_id.'" class="btn btn-xs yellow-lemon" role="button"><i class="fa fa-print"></i> Jadwal Angsuran</a>';
 				}else{
 					$row[] = '
@@ -285,6 +289,10 @@
 			$credits_account_insurance_old 		 = $this->input->post('credits_account_insurance_old', true);
 			$credits_account_insurance 			 = $this->input->post('credits_account_insurance', true);
 			$credits_account_amount_received 	 = $credits_account_amount_received_old + $credits_account_insurance_old - $credits_account_insurance;
+			$daftaragunan 					     = $this->session->userdata('addarrayacctcreditsagunan-'.$sesi['unique']);
+
+			// echo json_encode($daftaragunan);
+			// exit;
 
 			$data = array(
 				'credits_account_id'				=> $this->input->post('credits_account_id', true),
@@ -296,20 +304,45 @@
 			);
 
 			if($this->AcctCreditAccount_model->updatedata($data, $data['credits_account_id'])){
+
+				// if(!empty($daftaragunan)){
+					foreach ($daftaragunan as $key => $val) {
+						if($val['credits_agunan_type'] == 'Penerimaan'){
+							$credits_agunan_type	= 1;
+						}else if($val['credits_agunan_type'] == 'Deposito') {
+							$credits_agunan_type 	= 2;
+						}else if($val['credits_agunan_type'] == 'BPJS Ketenagakerjaan'){
+							$credits_agunan_type 	= 3;
+						}else {
+							$credits_agunan_type 	= 4;
+						}
+
+						$dataagunan = array (
+							'credits_account_id'						=> $data['credits_account_id'],
+							'credits_agunan_type'						=> $credits_agunan_type,
+							'credits_agunan_penerimaan_description'		=> $val['credits_agunan_penerimaan_description'],
+							'credits_agunan_deposito_account_no'		=> $val['credits_agunan_deposito_account_no'],
+							'credits_agunan_other_description'			=> $val['credits_agunan_other_description'],
+						);
+						$this->AcctCreditAccount_model->insertAcctCreditsAgunan($dataagunan);
+					}
+				// }
+
 				$msg = "<div class='alert alert-success alert-dismissable'>
 						<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>					
-							Edit Tanggal Pinjaman Berhasil
+							Edit Pinjaman Berhasil
 						</div> ";
+				$this->session->unset_userdata('addarrayacctcreditsagunan-'.$sesi['unique']);
 				$this->session->set_userdata('message',$msg);
 				$url='credit-account';
 				redirect($url);
 			}else{
 				$msg = "<div class='alert alert-danger alert-dismissable'>
 						<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>					
-							Edit Tanggal Pinjaman Tidak Berhasil
+							Edit Pinjaman Tidak Berhasil
 						</div> ";
 				$this->session->set_userdata('message',$msg);
-				$url='credit-account/edit-date/'.$data['credits_account_id'];
+				$url='credit-account/edit/'.$data['credits_account_id'];
 				redirect($url);
 			}
 		}
