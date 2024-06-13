@@ -64,6 +64,7 @@
 						<thead>
 							<tr>
 								<th width="5%">No</th>
+								<th width="10%">Id Perkiraan</th>
 								<th width="10%">No Perkiraan</th>
 								<th width="20%">Nama Perkiraan</th>
 								<th width="15%">Golongan Perkiraan</th>
@@ -86,6 +87,7 @@
 										echo"
 											<tr>			
 												<td style='text-align:center'>$no.</td>
+												<td style='text-align:left'>".$val['account_id']."</td>
 												<td style='text-align:left'>".$val['account_code']."</td>
 												<td style='text-align:left'>".$val['account_name']."</td>
 												<td>".$val['account_group']."</td>
