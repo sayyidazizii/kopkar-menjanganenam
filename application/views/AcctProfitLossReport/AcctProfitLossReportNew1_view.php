@@ -663,53 +663,6 @@
 															</div>
 														</td>
 													</tr>
-
-													<!-- <tr>
-														<td style="width: 70%">
-															<div style='font-weight:bold; font-size:16px'>
-																SHU SEBELUM PAJAK
-															</div>
-														</td >
-														<td style="width: 25%; text-align:right" >
-															<div style='font-weight:bold; font-size:16px'>
-																<?php
-																	$shu = $grand_total_all;
-																	echo number_format($shu, 2);
-																?>	
-															</div>
-														</td>
-													</tr>
-													<tr>
-														<td style="width: 70%">
-															<div style='font-weight:bold; font-size:16px'>
-																PAJAK PENGHASILAN
-															</div>
-														</td >
-														<td style="width: 25%; text-align:right" >
-															<div style='font-weight:bold; font-size:16px'>
-																<?php
-																	$income_tax 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($preferencecompany['account_income_tax_id'], $data['month_period_start'], $data['month_period_end'], $data['year_period'], $data['profit_loss_report_type'], $data['branch_id']);
-
-																	echo number_format($income_tax, 2);
-																?>	
-															</div>
-														</td>
-													</tr>
-													<tr>
-														<td style="width: 70%">
-															<div style='font-weight:bold; font-size:16px'>
-																SHU SESUDAH PAJAK
-															</div>
-														</td >
-														<td style="width: 25%; text-align:right" >
-															<div style='font-weight:bold; font-size:16px'>
-																<?php
-																	$shu = $grand_total_all - $income_tax;
-																	echo number_format($shu, 2);
-																?>	
-															</div>
-														</td>
-													</tr> -->
 												</table>
 											</td>
 										</tr>
