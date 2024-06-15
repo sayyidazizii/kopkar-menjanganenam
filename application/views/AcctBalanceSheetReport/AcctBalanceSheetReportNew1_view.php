@@ -502,12 +502,16 @@
 														echo "
 															<tr>";
 															if($val['report_type2']	== 10){
-																$last_balance210 	= 0;
-																$shutahunberjalan 	= $this->AcctBalanceSheetReportNew1_model->getSHUTahunBerjalan($val['account_id2'], $data['branch_id'], $month, $year);
-																foreach($shutahunberjalan as $keyshu => $valshu){
-																		$last_balance210 = $last_balance210 + $valshu['mutation_in_amount'] - $valshu['mutation_out_amount'];
-																	// echo  "<p>".$val['account_name2'] .":" . $last_balance210."</p>";
-																}
+																$last_balance210 	= $profitlossamount;
+																// $shutahunberjalan 	= $this->AcctBalanceSheetReportNew1_model->getSHUTahunBerjalan($val['account_id2'], $data['branch_id'], $month, $year);
+																// foreach($shutahunberjalan as $keyshu => $valshu){
+																// 		$last_balance210 = $last_balance210 + $valshu['mutation_in_amount'] - $valshu['mutation_out_amount'];
+																// 	// echo  "<p>".$val['account_name2'] .":" . $last_balance210."</p>";
+																// }
+																echo "
+																<td><div style='font-weight:".$report_bold2."'>".$report_tab2."(".$val['account_code2'].") ".$val['account_name2']."</div> </td>
+																<td style='text-align:right'><div style='font-weight:".$report_bold2."'>".number_format($last_balance210, 2)."</div></td>
+															";
 																
 																$account_amount210_top[$val['report_no']] = $last_balance210;
 															}	

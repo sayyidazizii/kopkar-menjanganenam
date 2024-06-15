@@ -1070,510 +1070,510 @@
 			}
 		}
 
-		// public function getProfitLossAmount(){
+		public function getProfitLossAmount(){
 
-		// 	$auth 	= $this->session->userdata('auth');
+			$auth 	= $this->session->userdata('auth');
 
-		// 	$data = $this->session->userdata('filter-AcctProfitLossReportNew1');
-		// 	if(!is_array($data)){
-		// 		$data['month_period_start']			= date('m');
-		// 		$data['month_period_end']			= date('m');
-		// 		$data['year_period']				= date('Y');
-		// 		$data['profit_loss_report_type'] 	= 1;
-		// 		$data['profit_loss_report_format'] 	= 3;
-		// 		$data['branch_id']					= $auth['branch_id'];
-		// 	}
-		// 	$preference_company 			= $this->AcctProfitLossReportNew1_model->getPreferenceCompany();
-		// 	$acctprofitlossreport_top		= $this->AcctProfitLossReportNew1_model->getAcctProfitLossReportNew1_Top($data['profit_loss_report_format']);
-		// 	$acctprofitlossreport_bottom	= $this->AcctProfitLossReportNew1_model->getAcctProfitLossReportNew1_Bottom($data['profit_loss_report_format']);
-		// 	$branch_name 					= $this->AcctProfitLossReportNew1_model->getBranchName($data['branch_id']);
+			$data = $this->session->userdata('filter-AcctProfitLossReportNew1');
+			if(!is_array($data)){
+				$data['month_period_start']			= date('m');
+				$data['month_period_end']			= date('m');
+				$data['year_period']				= date('Y');
+				$data['profit_loss_report_type'] 	= 1;
+				$data['profit_loss_report_format'] 	= 3;
+				$data['branch_id']					= $auth['branch_id'];
+			}
+			$preference_company 			= $this->AcctProfitLossReportNew1_model->getPreferenceCompany();
+			$acctprofitlossreport_top		= $this->AcctProfitLossReportNew1_model->getAcctProfitLossReportNew1_Top($data['profit_loss_report_format']);
+			$acctprofitlossreport_bottom	= $this->AcctProfitLossReportNew1_model->getAcctProfitLossReportNew1_Bottom($data['profit_loss_report_format']);
+			$branch_name 					= $this->AcctProfitLossReportNew1_model->getBranchName($data['branch_id']);
 
-		// 	require_once('tcpdf/config/tcpdf_config.php');
-		// 	require_once('tcpdf/tcpdf.php');
-		// 	$pdf = new TCPDF(P, PDF_UNIT, 'F4', true, 'UTF-8', false);
+			require_once('tcpdf/config/tcpdf_config.php');
+			require_once('tcpdf/tcpdf.php');
+			$pdf = new TCPDF(P, PDF_UNIT, 'F4', true, 'UTF-8', false);
 
-		// 	$pdf->SetPrintHeader(false);
-		// 	$pdf->SetPrintFooter(false);
+			$pdf->SetPrintHeader(false);
+			$pdf->SetPrintFooter(false);
 
-		// 	$pdf->SetMargins(6, 6, 6, 6);
-		// 	$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+			$pdf->SetMargins(6, 6, 6, 6);
+			$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-		// 	if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-		// 	    require_once(dirname(__FILE__).'/lang/eng.php');
-		// 	    $pdf->setLanguageArray($l);
-		// 	}
+			if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+			    require_once(dirname(__FILE__).'/lang/eng.php');
+			    $pdf->setLanguageArray($l);
+			}
 
-		// 	$pdf->SetFont('helvetica', 'B', 20);
-		// 	$pdf->AddPage();
-		// 	$pdf->SetFont('helvetica', '', 8);
+			$pdf->SetFont('helvetica', 'B', 20);
+			$pdf->AddPage();
+			$pdf->SetFont('helvetica', '', 8);
 
-		// 	switch ($data['month_period_start']) {
-		// 		case '01':
-		// 			$month_name1 = "Januari";
-		// 			break;
-		// 		case '02':
-		// 			$month_name1 = "Februari";
-		// 			break;
-		// 		case '03':
-		// 			$month_name1 = "Maret";
-		// 			break;
-		// 		case '04':
-		// 			$month_name1 = "April";
-		// 			break;
-		// 		case '05':
-		// 			$month_name1 = "Mei";
-		// 			break;
-		// 		case '06':
-		// 			$month_name1 = "Juni";
-		// 			break;
-		// 		case '07':
-		// 			$month_name1 = "Juli";
-		// 			break;
-		// 		case '08':
-		// 			$month_name1 = "Agustus";
-		// 			break;
-		// 		case '09':
-		// 			$month_name1 = "September";
-		// 			break;
-		// 		case '10':
-		// 			$month_name1 = "Oktober";
-		// 			break;
-		// 		case '11':
-		// 			$month_name1 = "November";
-		// 			break;
-		// 		case '12':
-		// 			$month_name1 = "Desember";
-		// 			break;
+			switch ($data['month_period_start']) {
+				case '01':
+					$month_name1 = "Januari";
+					break;
+				case '02':
+					$month_name1 = "Februari";
+					break;
+				case '03':
+					$month_name1 = "Maret";
+					break;
+				case '04':
+					$month_name1 = "April";
+					break;
+				case '05':
+					$month_name1 = "Mei";
+					break;
+				case '06':
+					$month_name1 = "Juni";
+					break;
+				case '07':
+					$month_name1 = "Juli";
+					break;
+				case '08':
+					$month_name1 = "Agustus";
+					break;
+				case '09':
+					$month_name1 = "September";
+					break;
+				case '10':
+					$month_name1 = "Oktober";
+					break;
+				case '11':
+					$month_name1 = "November";
+					break;
+				case '12':
+					$month_name1 = "Desember";
+					break;
 				
-		// 		default:
-		// 			# code...
-		// 			break;
-		// 	}
+				default:
+					# code...
+					break;
+			}
 
-		// 	switch ($data['month_period_end']) {
-		// 		case '01':
-		// 			$month_name2 = "Januari";
-		// 			break;
-		// 		case '02':
-		// 			$month_name2 = "Februari";
-		// 			break;
-		// 		case '03':
-		// 			$month_name2 = "Maret";
-		// 			break;
-		// 		case '04':
-		// 			$month_name2 = "April";
-		// 			break;
-		// 		case '05':
-		// 			$month_name2 = "Mei";
-		// 			break;
-		// 		case '06':
-		// 			$month_name2 = "Juni";
-		// 			break;
-		// 		case '07':
-		// 			$month_name2 = "Juli";
-		// 			break;
-		// 		case '08':
-		// 			$month_name2 = "Agustus";
-		// 			break;
-		// 		case '09':
-		// 			$month_name2 = "September";
-		// 			break;
-		// 		case '10':
-		// 			$month_name2 = "Oktober";
-		// 			break;
-		// 		case '11':
-		// 			$month_name2 = "November";
-		// 			break;
-		// 		case '12':
-		// 			$month_name2 = "Desember";
-		// 			break;
+			switch ($data['month_period_end']) {
+				case '01':
+					$month_name2 = "Januari";
+					break;
+				case '02':
+					$month_name2 = "Februari";
+					break;
+				case '03':
+					$month_name2 = "Maret";
+					break;
+				case '04':
+					$month_name2 = "April";
+					break;
+				case '05':
+					$month_name2 = "Mei";
+					break;
+				case '06':
+					$month_name2 = "Juni";
+					break;
+				case '07':
+					$month_name2 = "Juli";
+					break;
+				case '08':
+					$month_name2 = "Agustus";
+					break;
+				case '09':
+					$month_name2 = "September";
+					break;
+				case '10':
+					$month_name2 = "Oktober";
+					break;
+				case '11':
+					$month_name2 = "November";
+					break;
+				case '12':
+					$month_name2 = "Desember";
+					break;
 				
-		// 		default:
-		// 			# code...
-		// 			break;
-		// 	}
+				default:
+					# code...
+					break;
+			}
 
-		// 	if ($data['profit_loss_report_type'] == 1){
-		// 		$period = $month_name1."-".$month_name2." ".$data['year_period'];
-		// 	} else {
-		// 		$period = $data['year_period'];
-		// 	}
+			if ($data['profit_loss_report_type'] == 1){
+				$period = $month_name1."-".$month_name2." ".$data['year_period'];
+			} else {
+				$period = $data['year_period'];
+			}
 
-		// 	$tbl = "
-		// 		<table cellspacing=\"0\" cellpadding=\"5\" border=\"0\">
-		// 		    <tr>
-		// 		        <td colspan=\"5\"><div style=\"text-align: center; font-size:10px\">LAPORAN PERHITUNGAN SHU <br> ".$preference_company['company_name']." <br> ".$branch_name." <br> Periode ".$period."</div></td>
-		// 		    </tr>
-		// 		</table>
-		// 	";
+			$tbl = "
+				<table cellspacing=\"0\" cellpadding=\"5\" border=\"0\">
+				    <tr>
+				        <td colspan=\"5\"><div style=\"text-align: center; font-size:10px\">LAPORAN PERHITUNGAN SHU <br> ".$preference_company['company_name']." <br> ".$branch_name." <br> Periode ".$period."</div></td>
+				    </tr>
+				</table>
+			";
 
-		// 	$pdf->writeHTML($tbl, true, false, false, false, '');
+			$pdf->writeHTML($tbl, true, false, false, false, '');
 
-		// 	$minus_month= mktime(0, 0, 0, date($data['month_period'])-1);
-		// 	$month = date('m', $minus_month);
+			$minus_month= mktime(0, 0, 0, date($data['month_period'])-1);
+			$month = date('m', $minus_month);
 
-		// 	if($month == 12){
-		// 		$year = $data['year_period'] - 1;
-		// 	} else {
-		// 		$year = $data['year_period'];
-		// 	}
+			if($month == 12){
+				$year = $data['year_period'] - 1;
+			} else {
+				$year = $data['year_period'];
+			}
 
-		// 	$grand_total_all = 0;
-		// 	$shu_sebelum_lain_lain = 0;
+			$grand_total_all = 0;
+			$shu_sebelum_lain_lain = 0;
 
-		// 	$tblHeader = "
-		// 	<table id=\"items\" width=\"100%\" cellspacing=\"1\" cellpadding=\"1\" border=\"0\">";
-		//         $tblheader_top = "
-		//         	<tr>
-		//         		<td width=\"10%\"></td>
-		//         		<td width=\"80%\" style=\"border-top:1px black solid;border-left:1px black solid;border-right:1px black solid\">	
-		//         			<table id=\"items\" width=\"100%\" cellspacing=\"1\" cellpadding=\"2\" border=\"0\">";	
-		// 	        			$tblitem_top = "";
-		// 	        			foreach ($acctprofitlossreport_top as $keyTop => $valTop) {
-		// 							if($valTop['report_tab'] == 0){
-		// 								$report_tab = ' ';
-		// 							} else if($valTop['report_tab'] == 1){
-		// 								$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		// 							} else if($valTop['report_tab'] == 2){
-		// 								$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		// 							} else if($valTop['report_tab'] == 3){
-		// 								$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		// 							}
+			$tblHeader = "
+			<table id=\"items\" width=\"100%\" cellspacing=\"1\" cellpadding=\"1\" border=\"0\">";
+		        $tblheader_top = "
+		        	<tr>
+		        		<td width=\"10%\"></td>
+		        		<td width=\"80%\" style=\"border-top:1px black solid;border-left:1px black solid;border-right:1px black solid\">	
+		        			<table id=\"items\" width=\"100%\" cellspacing=\"1\" cellpadding=\"2\" border=\"0\">";	
+			        			$tblitem_top = "";
+			        			foreach ($acctprofitlossreport_top as $keyTop => $valTop) {
+									if($valTop['report_tab'] == 0){
+										$report_tab = ' ';
+									} else if($valTop['report_tab'] == 1){
+										$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+									} else if($valTop['report_tab'] == 2){
+										$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+									} else if($valTop['report_tab'] == 3){
+										$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+									}
 
-		// 							if($valTop['report_bold'] == 1){
-		// 								$report_bold = 'bold';
-		// 							} else {
-		// 								$report_bold = 'normal';
-		// 							}									
+									if($valTop['report_bold'] == 1){
+										$report_bold = 'bold';
+									} else {
+										$report_bold = 'normal';
+									}									
 
-		// 							if($valTop['report_type'] == 1){
-		// 								$tblitem_top1 = "
-		// 									<tr>
-		// 										<td colspan=\"2\" style='width: 100%'><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
-		// 									</tr>";
-		// 							} else {
-		// 								$tblitem_top1 = "";
-		// 							}
+									if($valTop['report_type'] == 1){
+										$tblitem_top1 = "
+											<tr>
+												<td colspan=\"2\" style='width: 100%'><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
+											</tr>";
+									} else {
+										$tblitem_top1 = "";
+									}
 
-		// 							if($valTop['report_type'] == 2){
-		// 								$tblitem_top2 = "
-		// 									<tr>
-		// 										<td style=\"width: 73%\"><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
-		// 										<td style=\"width: 25%\"><div style='font-weight:".$report_bold."'></div></td>
-		// 									</tr>";
-		// 							} else {
-		// 								$tblitem_top2 = "";
-		// 							}									
+									if($valTop['report_type'] == 2){
+										$tblitem_top2 = "
+											<tr>
+												<td style=\"width: 73%\"><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
+												<td style=\"width: 25%\"><div style='font-weight:".$report_bold."'></div></td>
+											</tr>";
+									} else {
+										$tblitem_top2 = "";
+									}									
 
-		// 							if($valTop['report_type'] == 3){
-		// 								$account_subtotal 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($valTop['account_id'], $data['month_period_start'], $data['month_period_end'], $data['year_period'], $data['profit_loss_report_type'], $data['branch_id']);
+									if($valTop['report_type'] == 3){
+										$account_subtotal 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($valTop['account_id'], $data['month_period_start'], $data['month_period_end'], $data['year_period'], $data['profit_loss_report_type'], $data['branch_id']);
 
-		// 								$tblitem_top3 = "
-		// 									<tr>
-		// 										<td style=\"width: 73%\"><div style='font-weight:".$report_bold."'>".$report_tab."(".$valTop['account_code'].") ".$valTop['account_name']."</div> </td>
-		// 										<td style=\"text-align:right;width: 25%\">".number_format($account_subtotal, 2)."</td>
-		// 									</tr>";
-		// 								$account_amount[$valTop['report_no']] = $account_subtotal;
-		// 							} else {
-		// 								$tblitem_top3 = "";
-		// 							}
+										$tblitem_top3 = "
+											<tr>
+												<td style=\"width: 73%\"><div style='font-weight:".$report_bold."'>".$report_tab."(".$valTop['account_code'].") ".$valTop['account_name']."</div> </td>
+												<td style=\"text-align:right;width: 25%\">".number_format($account_subtotal, 2)."</td>
+											</tr>";
+										$account_amount[$valTop['report_no']] = $account_subtotal;
+									} else {
+										$tblitem_top3 = "";
+									}
 
-		// 							if($valTop['report_type'] == 4){
-		// 								if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
-		// 									$report_formula 		= explode('#', $valTop['report_formula']);
-		// 									$report_operator 		= explode('#', $valTop['report_operator']);
-		// 									$total_account_amount	= 0;
+									if($valTop['report_type'] == 4){
+										if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
+											$report_formula 		= explode('#', $valTop['report_formula']);
+											$report_operator 		= explode('#', $valTop['report_operator']);
+											$total_account_amount	= 0;
 
-		// 									for($i = 0; $i < count($report_formula); $i++){
-		// 										if($report_operator[$i] == '-'){
-		// 											if($total_account_amount == 0 ){
-		// 												$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$total_account_amount = $total_account_amount - $account_amount[$report_formula[$i]];
-		// 											}
-		// 										} else if($report_operator[$i] == '+'){
-		// 											if($total_account_amount == 0){
-		// 												$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
-		// 											}
-		// 										}
-		// 									}
-		// 									$tblitem_top4 = "
-		// 										<tr>
-		// 											<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
-		// 											<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($total_account_amount, 2)."</div></td>
-		// 										</tr>";
-		// 								} else {
-		// 									$tblitem_top4 = "";
-		// 								}
-		// 							} else {
-		// 								$tblitem_top4 = "";
-		// 							}
-
-
-		// 							if($valTop['report_type'] == 5){
-		// 								if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
-		// 									$report_formula 		= explode('#', $valTop['report_formula']);
-		// 									$report_operator 		= explode('#', $valTop['report_operator']);
-		// 									$total_account_amount	= 0;
-
-		// 									for($i = 0; $i < count($report_formula); $i++){
-		// 										if($report_operator[$i] == '-'){
-		// 											if($total_account_amount == 0 ){
-		// 												$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$total_account_amount = $total_account_amount - $account_amount[$report_formula[$i]];
-		// 											}
-		// 										} else if($report_operator[$i] == '+'){
-		// 											if($total_account_amount == 0){
-		// 												$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
-		// 											}
-		// 										}
-		// 									}
-		// 									$tblitem_top5 = "
-		// 										<tr>
-		// 											<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
-		// 											<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($total_account_amount, 2)."</div></td>
-		// 										</tr>";
-		// 								} else {
-		// 									$tblitem_top5 = "";
-		// 								}
-		// 							} else {
-		// 								$tblitem_top5 = "";
-		// 							}
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($total_account_amount == 0 ){
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount = $total_account_amount - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($total_account_amount == 0){
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
+											$tblitem_top4 = "
+												<tr>
+													<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
+													<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($total_account_amount, 2)."</div></td>
+												</tr>";
+										} else {
+											$tblitem_top4 = "";
+										}
+									} else {
+										$tblitem_top4 = "";
+									}
 
 
-		// 							if($valTop['report_type'] == 6){
-		// 								if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
-		// 									$report_formula 	= explode('#', $valTop['report_formula']);
-		// 									$report_operator 	= explode('#', $valTop['report_operator']);
+									if($valTop['report_type'] == 5){
+										if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
+											$report_formula 		= explode('#', $valTop['report_formula']);
+											$report_operator 		= explode('#', $valTop['report_operator']);
+											$total_account_amount	= 0;
 
-		// 									$grand_total_account_amount1	= 0;
-		// 									for($i = 0; $i < count($report_formula); $i++){
-		// 										if($report_operator[$i] == '-'){
-		// 											if($grand_total_account_amount1 == 0 ){
-		// 												$grand_total_account_amount1 = $grand_total_account_amount1 + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$grand_total_account_amount1 = $grand_total_account_amount1 - $account_amount[$report_formula[$i]];
-		// 											}
-		// 										} else if($report_operator[$i] == '+'){
-		// 											if($grand_total_account_amount1 == 0){
-		// 												$grand_total_account_amount1 = $grand_total_account_amount1 + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$grand_total_account_amount1 = $grand_total_account_amount1 + $account_amount[$report_formula[$i]];
-		// 											}
-		// 										}
-		// 									}
-		// 									// if($valTop['category_type'] == 1){
-		// 									// 	$grand_total_all += $grand_total_account_amount1;
-		// 									// }
-		// 								} else {
-		// 								}
-		// 							} else {
-		// 							}
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($total_account_amount == 0 ){
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount = $total_account_amount - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($total_account_amount == 0){
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
+											$tblitem_top5 = "
+												<tr>
+													<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
+													<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($total_account_amount, 2)."</div></td>
+												</tr>";
+										} else {
+											$tblitem_top5 = "";
+										}
+									} else {
+										$tblitem_top5 = "";
+									}
 
-		// 							if($valTop['report_type'] == 7){
-		// 								$shu_sebelum_lain_lain = $total_account_amount - $grand_total_account_amount1;
+
+									if($valTop['report_type'] == 6){
+										if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
+											$report_formula 	= explode('#', $valTop['report_formula']);
+											$report_operator 	= explode('#', $valTop['report_operator']);
+
+											$grand_total_account_amount1	= 0;
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($grand_total_account_amount1 == 0 ){
+														$grand_total_account_amount1 = $grand_total_account_amount1 + $account_amount[$report_formula[$i]];
+													} else {
+														$grand_total_account_amount1 = $grand_total_account_amount1 - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($grand_total_account_amount1 == 0){
+														$grand_total_account_amount1 = $grand_total_account_amount1 + $account_amount[$report_formula[$i]];
+													} else {
+														$grand_total_account_amount1 = $grand_total_account_amount1 + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
+											// if($valTop['category_type'] == 1){
+											// 	$grand_total_all += $grand_total_account_amount1;
+											// }
+										} else {
+										}
+									} else {
+									}
+
+									if($valTop['report_type'] == 7){
+										$shu_sebelum_lain_lain = $total_account_amount - $grand_total_account_amount1;
 										
-		// 									$tblitem_top7 = "
-		// 										<tr>
-		// 											<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
-		// 											<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($shu_sebelum_lain_lain, 2)."</div></td>
-		// 										</tr>";
-		// 							} else {
-		// 								$tblitem_top7 = "";
-		// 							}
+											$tblitem_top7 = "
+												<tr>
+													<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
+													<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($shu_sebelum_lain_lain, 2)."</div></td>
+												</tr>";
+									} else {
+										$tblitem_top7 = "";
+									}
 
-		// 							if($valTop['report_type'] == 8){
-		// 								if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
-		// 									$report_formula 		= explode('#', $valTop['report_formula']);
-		// 									$report_operator 		= explode('#', $valTop['report_operator']);
-		// 									$pendapatan_biaya_lain	= 0;
+									if($valTop['report_type'] == 8){
+										if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
+											$report_formula 		= explode('#', $valTop['report_formula']);
+											$report_operator 		= explode('#', $valTop['report_operator']);
+											$pendapatan_biaya_lain	= 0;
 
-		// 									for($i = 0; $i < count($report_formula); $i++){
-		// 										if($report_operator[$i] == '-'){
-		// 											if($pendapatan_biaya_lain == 0 ){
-		// 												$pendapatan_biaya_lain = $pendapatan_biaya_lain + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$pendapatan_biaya_lain = $pendapatan_biaya_lain - $account_amount[$report_formula[$i]];
-		// 											}
-		// 										} else if($report_operator[$i] == '+'){
-		// 											if($pendapatan_biaya_lain == 0){
-		// 												$pendapatan_biaya_lain = $pendapatan_biaya_lain + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$pendapatan_biaya_lain = $pendapatan_biaya_lain + $account_amount[$report_formula[$i]];
-		// 											}
-		// 										}
-		// 									}
-		// 									$tblitem_top8 = "
-		// 										<tr>
-		// 											<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
-		// 											<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($pendapatan_biaya_lain, 2)."</div></td>
-		// 										</tr>";
-		// 								} else {
-		// 									$tblitem_top8 = "";
-		// 								}
-		// 							} else {
-		// 								$tblitem_top8 = "";
-		// 							}
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($pendapatan_biaya_lain == 0 ){
+														$pendapatan_biaya_lain = $pendapatan_biaya_lain + $account_amount[$report_formula[$i]];
+													} else {
+														$pendapatan_biaya_lain = $pendapatan_biaya_lain - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($pendapatan_biaya_lain == 0){
+														$pendapatan_biaya_lain = $pendapatan_biaya_lain + $account_amount[$report_formula[$i]];
+													} else {
+														$pendapatan_biaya_lain = $pendapatan_biaya_lain + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
+											$tblitem_top8 = "
+												<tr>
+													<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
+													<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($pendapatan_biaya_lain, 2)."</div></td>
+												</tr>";
+										} else {
+											$tblitem_top8 = "";
+										}
+									} else {
+										$tblitem_top8 = "";
+									}
 
-		// 							$tblitem_top .= $tblitem_top1.$tblitem_top2.$tblitem_top3.$tblitem_top4.$tblitem_top5.$tblitem_top6.$tblitem_top7.$tblitem_top8;
+									$tblitem_top .= $tblitem_top1.$tblitem_top2.$tblitem_top3.$tblitem_top4.$tblitem_top5.$tblitem_top6.$tblitem_top7.$tblitem_top8;
 
-		// 						}
-		//         $tblfooter_top	= "
-		//         		</table>
-		//         	</td>
-		//         	<td width=\"10%\"></td>
-		//         </tr>";
+								}
+		        $tblfooter_top	= "
+		        		</table>
+		        	</td>
+		        	<td width=\"10%\"></td>
+		        </tr>";
 
-		// 		$tblheader_bottom = "
-		// 			<tr>
-		// 				<td width=\"10%\"></td>
-		// 	        	<td width=\"80%\" style=\"border-bottom:1px black solid;border-left:1px black solid;border-right:1px black solid\">	
-		// 	        		<table id=\"items\" width=\"100%\" cellspacing=\"1\" cellpadding=\"2\" border=\"0\">";		
-		// 	        			$tblitem_bottom = "";
-		// 	        			foreach ($acctprofitlossreport_bottom as $keyBottom => $valBottom) {
-		// 							if($valBottom['report_tab'] == 0){
-		// 								$report_tab = ' ';
-		// 							} else if($valBottom['report_tab'] == 1){
-		// 								$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		// 							} else if($valBottom['report_tab'] == 2){
-		// 								$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		// 							} else if($valBottom['report_tab'] == 3){
-		// 								$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-		// 							}
+				$tblheader_bottom = "
+					<tr>
+						<td width=\"10%\"></td>
+			        	<td width=\"80%\" style=\"border-bottom:1px black solid;border-left:1px black solid;border-right:1px black solid\">	
+			        		<table id=\"items\" width=\"100%\" cellspacing=\"1\" cellpadding=\"2\" border=\"0\">";		
+			        			$tblitem_bottom = "";
+			        			foreach ($acctprofitlossreport_bottom as $keyBottom => $valBottom) {
+									if($valBottom['report_tab'] == 0){
+										$report_tab = ' ';
+									} else if($valBottom['report_tab'] == 1){
+										$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+									} else if($valBottom['report_tab'] == 2){
+										$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+									} else if($valBottom['report_tab'] == 3){
+										$report_tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+									}
 
-		// 							if($valBottom['report_bold'] == 1){
-		// 								$report_bold = 'bold';
-		// 							} else {
-		// 								$report_bold = 'normal';
-		// 							}									
+									if($valBottom['report_bold'] == 1){
+										$report_bold = 'bold';
+									} else {
+										$report_bold = 'normal';
+									}									
 
-		// 							if($valBottom['report_type'] == 1){
-		// 								$tblitem_bottom1 = "
-		// 									<tr>
-		// 										<td colspan=\"2\"><div style=\"font-weight:".$report_bold."\">".$report_tab."".$valBottom['account_name']."</div></td>
-		// 									</tr>";
-		// 							} else {
-		// 								$tblitem_bottom1 = "";
-		// 							}
+									if($valBottom['report_type'] == 1){
+										$tblitem_bottom1 = "
+											<tr>
+												<td colspan=\"2\"><div style=\"font-weight:".$report_bold."\">".$report_tab."".$valBottom['account_name']."</div></td>
+											</tr>";
+									} else {
+										$tblitem_bottom1 = "";
+									}
 
-		// 							if($valBottom['report_type'] == 2){
-		// 								$tblitem_bottom2 = "
-		// 									<tr>
-		// 										<td style=\"width: 73%\"><div style=\"font-weight:".$report_bold."\">".$report_tab."".$valBottom['account_name']."</div></td>
-		// 										<td style=\"width: 25%\"><div style=\"font-weight:".$report_bold."\"></div></td>
-		// 									</tr>";
-		// 							} else {
-		// 								$tblitem_bottom2 = "";
-		// 							}									
+									if($valBottom['report_type'] == 2){
+										$tblitem_bottom2 = "
+											<tr>
+												<td style=\"width: 73%\"><div style=\"font-weight:".$report_bold."\">".$report_tab."".$valBottom['account_name']."</div></td>
+												<td style=\"width: 25%\"><div style=\"font-weight:".$report_bold."\"></div></td>
+											</tr>";
+									} else {
+										$tblitem_bottom2 = "";
+									}									
 
-		// 							if($valBottom['report_type']	== 3){
-		// 								$account_subtotal 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($valBottom['account_id'], $data['month_period_start'], $data['month_period_end'], $data['year_period'], $data['profit_loss_report_type'], $data['branch_id']);
+									if($valBottom['report_type']	== 3){
+										$account_subtotal 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($valBottom['account_id'], $data['month_period_start'], $data['month_period_end'], $data['year_period'], $data['profit_loss_report_type'], $data['branch_id']);
 
-		// 								$tblitem_bottom3 = "
-		// 								<tr>
-		// 									<td style=\"width: 73%\"><div style=\"font-weight:".$report_bold."\">".$report_tab."(".$valBottom['account_code'].") ".$valBottom['account_name']."</div> </td>
-		// 									<td style=\"text-align:right;width: 25%\">".number_format($account_subtotal, 2)."</td>
-		// 								</tr>";
+										$tblitem_bottom3 = "
+										<tr>
+											<td style=\"width: 73%\"><div style=\"font-weight:".$report_bold."\">".$report_tab."(".$valBottom['account_code'].") ".$valBottom['account_name']."</div> </td>
+											<td style=\"text-align:right;width: 25%\">".number_format($account_subtotal, 2)."</td>
+										</tr>";
 
-		// 								$account_amount[$valBottom['report_no']] = $account_subtotal;
-		// 							} else {
-		// 								$tblitem_bottom3 = "";
-		// 							}
+										$account_amount[$valBottom['report_no']] = $account_subtotal;
+									} else {
+										$tblitem_bottom3 = "";
+									}
 
-		// 							if($valBottom['report_type'] == 5){
-		// 								if(!empty($valBottom['report_formula']) && !empty($valBottom['report_operator'])){
-		// 									$report_formula 		= explode('#', $valBottom['report_formula']);
-		// 									$report_operator 		= explode('#', $valBottom['report_operator']);
-		// 									$total_account_amount2	= 0;
+									if($valBottom['report_type'] == 5){
+										if(!empty($valBottom['report_formula']) && !empty($valBottom['report_operator'])){
+											$report_formula 		= explode('#', $valBottom['report_formula']);
+											$report_operator 		= explode('#', $valBottom['report_operator']);
+											$total_account_amount2	= 0;
 
-		// 									for($i = 0; $i < count($report_formula); $i++){
-		// 										if($report_operator[$i] == '-'){
-		// 											if($total_account_amount2 == 0 ){
-		// 												$total_account_amount2 = $total_account_amount2 + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$total_account_amount2 = $total_account_amount2 - $account_amount[$report_formula[$i]];
-		// 											}
-		// 										} else if($report_operator[$i] == '+'){
-		// 											if($total_account_amount2 == 0){
-		// 												$total_account_amount2 = $total_account_amount2 + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$total_account_amount2 = $total_account_amount2 + $account_amount[$report_formula[$i]];
-		// 											}
-		// 										}
-		// 									}
-		// 									$tblitem_bottom5 = "
-		// 										<tr>
-		// 											<td><div style=\"font-weight:".$report_bold."\">".$report_tab."".$valBottom['account_name']."</div></td>
-		// 											<td style=\"text-align:righr;\"><div style=\"font-weight:".$report_bold."\">".number_format($total_account_amount2, 2)."</div></td>
-		// 										</tr>";
-		// 								} else {
-		// 									$tblitem_bottom5 = "";
-		// 								}
-		// 							} else {
-		// 								$tblitem_bottom5 = "";
-		// 							}
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($total_account_amount2 == 0 ){
+														$total_account_amount2 = $total_account_amount2 + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount2 = $total_account_amount2 - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($total_account_amount2 == 0){
+														$total_account_amount2 = $total_account_amount2 + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount2 = $total_account_amount2 + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
+											$tblitem_bottom5 = "
+												<tr>
+													<td><div style=\"font-weight:".$report_bold."\">".$report_tab."".$valBottom['account_name']."</div></td>
+													<td style=\"text-align:righr;\"><div style=\"font-weight:".$report_bold."\">".number_format($total_account_amount2, 2)."</div></td>
+												</tr>";
+										} else {
+											$tblitem_bottom5 = "";
+										}
+									} else {
+										$tblitem_bottom5 = "";
+									}
 
-		// 							$tblitem_bottom .= $tblitem_bottom1.$tblitem_bottom2.$tblitem_bottom3.$tblitem_bottom5;
+									$tblitem_bottom .= $tblitem_bottom1.$tblitem_bottom2.$tblitem_bottom3.$tblitem_bottom5;
 
-		// 							if($valBottom['report_type'] == 6){
-		// 								if(!empty($valBottom['report_formula']) && !empty($valBottom['report_operator'])){
-		// 									$report_formula 				= explode('#', $valBottom['report_formula']);
-		// 									$report_operator 				= explode('#', $valBottom['report_operator']);
-		// 									$grand_total_account_amount2	= 0;
+									if($valBottom['report_type'] == 6){
+										if(!empty($valBottom['report_formula']) && !empty($valBottom['report_operator'])){
+											$report_formula 				= explode('#', $valBottom['report_formula']);
+											$report_operator 				= explode('#', $valBottom['report_operator']);
+											$grand_total_account_amount2	= 0;
 
-		// 									for($i = 0; $i < count($report_formula); $i++){
-		// 										if($report_operator[$i] == '-'){
-		// 											if($grand_total_account_amount2 == 0 ){
-		// 												$grand_total_account_amount2 = $grand_total_account_amount2 + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$grand_total_account_amount2 = $grand_total_account_amount2 - $account_amount[$report_formula[$i]];
-		// 											}
-		// 										} else if($report_operator[$i] == '+'){
-		// 											if($grand_total_account_amount2 == 0){
-		// 												$grand_total_account_amount2 = $grand_total_account_amount2 + $account_amount[$report_formula[$i]];
-		// 											} else {
-		// 												$grand_total_account_amount2 = $grand_total_account_amount2 + $account_amount[$report_formula[$i]];
-		// 											}
-		// 										}
-		// 									}
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($grand_total_account_amount2 == 0 ){
+														$grand_total_account_amount2 = $grand_total_account_amount2 + $account_amount[$report_formula[$i]];
+													} else {
+														$grand_total_account_amount2 = $grand_total_account_amount2 - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($grand_total_account_amount2 == 0){
+														$grand_total_account_amount2 = $grand_total_account_amount2 + $account_amount[$report_formula[$i]];
+													} else {
+														$grand_total_account_amount2 = $grand_total_account_amount2 + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
 											
-		// 									if($valBottom['category_type'] == 1){
-		// 										$grand_total_all += $grand_total_account_amount2;
-		// 									}
-		// 								} else {
-		// 								}
-		// 							} else {
-		// 							}
-		// 						}
+											if($valBottom['category_type'] == 1){
+												$grand_total_all += $grand_total_account_amount2;
+											}
+										} else {
+										}
+									} else {
+									}
+								}
 
-		//        	$tblfooter_bottom = "
-		//        			</table>
-		//         	</td>
-		//         	<td width=\"10%\"></td>
-		//         </tr>";
+		       	$tblfooter_bottom = "
+		       			</table>
+		        	</td>
+		        	<td width=\"10%\"></td>
+		        </tr>";
 
-		// 		$shu = $grand_total_all;
+				$shu = $grand_total_all;
 				
-		// 		$income_tax 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($preference_company['account_income_tax_id'], $data['month_period_start'], $data['month_period_end'], $data['year_period'], $data['profit_loss_report_type'], $data['branch_id']);
+				$income_tax 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($preference_company['account_income_tax_id'], $data['month_period_start'], $data['month_period_end'], $data['year_period'], $data['profit_loss_report_type'], $data['branch_id']);
 
-		// 		$shu = $shu_sebelum_lain_lain + $pendapatan_biaya_lain;
+				$shu = $shu_sebelum_lain_lain + $pendapatan_biaya_lain;
 
 
-		// 	// $table = $tblHeader.$tblheader_top.$tblitem_top.$tblfooter_top.$tblheader_bottom.$tblitem_bottom.$tblfooter_bottom.$tblFooter;
+			// $table = $tblHeader.$tblheader_top.$tblitem_top.$tblfooter_top.$tblheader_bottom.$tblitem_bottom.$tblfooter_bottom.$tblFooter;
 
-		// 	// $pdf->writeHTML($table, true, false, false, false, '');
+			// $pdf->writeHTML($table, true, false, false, false, '');
 
-		// 	// ob_clean();
+			// ob_clean();
 
-		// 	// $filename = 'Laporan Rugi Laba.pdf';
-		// 	// $pdf->Output($filename, 'I');
+			// $filename = 'Laporan Rugi Laba.pdf';
+			// $pdf->Output($filename, 'I');
 
-		// 		echo $shu;
-		// }
+				echo $shu;
+		}
 	}
 ?>

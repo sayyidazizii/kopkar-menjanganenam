@@ -8,6 +8,7 @@ ob_start();?>
 			$this->load->model('Connection_model');
 			$this->load->model('MainPage_model');
 			$this->load->model('AcctBalanceSheetReportNew1_model');
+			$this->load->model('AcctProfitLossReportNew1_model');
 			$this->load->helper('sistem');
 			$this->load->helper('url');
 			$this->load->database('default');
@@ -23,6 +24,8 @@ ob_start();?>
 
 			$data['main_view']['corebranch']					= create_double($this->AcctBalanceSheetReportNew1_model->getCoreBranch(),'branch_id','branch_name');
 			$data['main_view']['acctbalancesheetreport_left']	= $this->AcctBalanceSheetReportNew1_model->getAcctBalanceSheetReportNew1_Left();
+
+			$data['main_view']['profitlossamount']				= $this->getProfitLossAmount();
 
 			$data['main_view']['acctbalancesheetreport_right']	= $this->AcctBalanceSheetReportNew1_model->getAcctBalanceSheetReportNew1_Right();
 
@@ -1168,5 +1171,257 @@ ob_start();?>
 				echo "Maaf data yang di eksport tidak ada !";
 			}
 		}
+
+
+		public function getProfitLossAmount(){
+
+			$auth 	= $this->session->userdata('auth');
+
+			$data = $this->session->userdata('filter-AcctBalanceSheetReportNew1');
+			// echo json_encode($data);
+			if(!is_array($data)){
+				$data['month_period']				= date('m');
+				$data['year_period']				= date('Y');
+				$data['profit_loss_report_type'] 	= 2;
+				$data['profit_loss_report_format'] 	= 3;
+				$data['branch_id']					= $auth['branch_id'];
+			}
+			$preference_company 			= $this->AcctProfitLossReportNew1_model->getPreferenceCompany();
+			$acctprofitlossreport_top		= $this->AcctProfitLossReportNew1_model->getAcctProfitLossReportNew1_Top($data['profit_loss_report_format']);
+			$acctprofitlossreport_bottom	= $this->AcctProfitLossReportNew1_model->getAcctProfitLossReportNew1_Bottom($data['profit_loss_report_format']);
+			$branch_name 					= $this->AcctProfitLossReportNew1_model->getBranchName($data['branch_id']);
+
+			switch ($data['month_period_start']) {
+				case '01':
+					$month_name1 = "Januari";
+					break;
+				case '02':
+					$month_name1 = "Februari";
+					break;
+				case '03':
+					$month_name1 = "Maret";
+					break;
+				case '04':
+					$month_name1 = "April";
+					break;
+				case '05':
+					$month_name1 = "Mei";
+					break;
+				case '06':
+					$month_name1 = "Juni";
+					break;
+				case '07':
+					$month_name1 = "Juli";
+					break;
+				case '08':
+					$month_name1 = "Agustus";
+					break;
+				case '09':
+					$month_name1 = "September";
+					break;
+				case '10':
+					$month_name1 = "Oktober";
+					break;
+				case '11':
+					$month_name1 = "November";
+					break;
+				case '12':
+					$month_name1 = "Desember";
+					break;
+				
+				default:
+					# code...
+					break;
+			}
+
+			switch ($data['month_period_end']) {
+				case '01':
+					$month_name2 = "Januari";
+					break;
+				case '02':
+					$month_name2 = "Februari";
+					break;
+				case '03':
+					$month_name2 = "Maret";
+					break;
+				case '04':
+					$month_name2 = "April";
+					break;
+				case '05':
+					$month_name2 = "Mei";
+					break;
+				case '06':
+					$month_name2 = "Juni";
+					break;
+				case '07':
+					$month_name2 = "Juli";
+					break;
+				case '08':
+					$month_name2 = "Agustus";
+					break;
+				case '09':
+					$month_name2 = "September";
+					break;
+				case '10':
+					$month_name2 = "Oktober";
+					break;
+				case '11':
+					$month_name2 = "November";
+					break;
+				case '12':
+					$month_name2 = "Desember";
+					break;
+				
+				default:
+					# code...
+					break;
+			}
+
+			if ($data['profit_loss_report_type'] == 1){
+				$period = $month_name1."-".$month_name2." ".$data['year_period'];
+			} else {
+				$period = $data['year_period'];
+			}
+
+			$minus_month= mktime(0, 0, 0, date($data['month_period'])-1);
+			$month = date('m', $minus_month);
+
+			if($month == 12){
+				$year = $data['year_period'] - 1;
+			} else {
+				$year = $data['year_period'];
+			}
+
+			$grand_total_all = 0;
+			$shu_sebelum_lain_lain = 0;
+
+			        			foreach ($acctprofitlossreport_top as $keyTop => $valTop) {
+
+									if($valTop['report_type'] == 3){
+										$account_subtotal 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($valTop['account_id'], $data['month_period'], $data['month_period'], $data['year_period'], 2, $data['branch_id']);
+									
+										$account_amount[$valTop['report_no']] = $account_subtotal;
+									} else {
+									}
+
+									if($valTop['report_type'] == 4){
+										if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
+											$report_formula 		= explode('#', $valTop['report_formula']);
+											$report_operator 		= explode('#', $valTop['report_operator']);
+											$total_account_amount	= 0;
+
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($total_account_amount == 0 ){
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount = $total_account_amount - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($total_account_amount == 0){
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
+											$tblitem_top4 = "
+												<tr>
+													<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
+													<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($total_account_amount, 2)."</div></td>
+												</tr>";
+										} else {
+											$tblitem_top4 = "";
+										}
+									} else {
+										$tblitem_top4 = "";
+									}
+
+									if($valTop['report_type'] == 5){
+										if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
+											$report_formula 		= explode('#', $valTop['report_formula']);
+											$report_operator 		= explode('#', $valTop['report_operator']);
+											$total_account_amount	= 0;
+
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($total_account_amount == 0 ){
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount = $total_account_amount - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($total_account_amount == 0){
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													} else {
+														$total_account_amount = $total_account_amount + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
+									
+										} 
+									} 
+
+
+									if($valTop['report_type'] == 6){
+										if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
+											$report_formula 	= explode('#', $valTop['report_formula']);
+											$report_operator 	= explode('#', $valTop['report_operator']);
+
+											$grand_total_account_amount1	= 0;
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($grand_total_account_amount1 == 0 ){
+														$grand_total_account_amount1 = $grand_total_account_amount1 + $account_amount[$report_formula[$i]];
+													} else {
+														$grand_total_account_amount1 = $grand_total_account_amount1 - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($grand_total_account_amount1 == 0){
+														$grand_total_account_amount1 = $grand_total_account_amount1 + $account_amount[$report_formula[$i]];
+													} else {
+														$grand_total_account_amount1 = $grand_total_account_amount1 + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
+										} 
+									} 
+
+									if($valTop['report_type'] == 7){
+										$shu_sebelum_lain_lain = $total_account_amount - $grand_total_account_amount1;
+									} 
+
+									if($valTop['report_type'] == 8){
+										if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
+											$report_formula 		= explode('#', $valTop['report_formula']);
+											$report_operator 		= explode('#', $valTop['report_operator']);
+											$pendapatan_biaya_lain	= 0;
+
+											for($i = 0; $i < count($report_formula); $i++){
+												if($report_operator[$i] == '-'){
+													if($pendapatan_biaya_lain == 0 ){
+														$pendapatan_biaya_lain = $pendapatan_biaya_lain + $account_amount[$report_formula[$i]];
+													} else {
+														$pendapatan_biaya_lain = $pendapatan_biaya_lain - $account_amount[$report_formula[$i]];
+													}
+												} else if($report_operator[$i] == '+'){
+													if($pendapatan_biaya_lain == 0){
+														$pendapatan_biaya_lain = $pendapatan_biaya_lain + $account_amount[$report_formula[$i]];
+													} else {
+														$pendapatan_biaya_lain = $pendapatan_biaya_lain + $account_amount[$report_formula[$i]];
+													}
+												}
+											}
+										} 
+									} 
+								}
+
+				$income_tax 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($preference_company['account_income_tax_id'], $data['month_period_start'], $data['month_period_end'], $data['year_period'], $data['profit_loss_report_type'], $data['branch_id']);
+
+				$shu = $shu_sebelum_lain_lain + $pendapatan_biaya_lain;
+
+				return $shu;
+		}
+
 	}
 ?>

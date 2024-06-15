@@ -858,6 +858,9 @@ $route['credits-migration-report'] 			                        = 'CreditsMigratio
 //AcctBalanceSheetReportNew1 
 $route['balance-sheet'] 			                                = 'AcctBalanceSheetReportNew1';
 
+$route['balance-sheet/get-profit-loss-amount']                      = 'AcctBalanceSheetReportNew1/getProfitLossAmount';
+
+
 //AcctProfitLossReportNew1
 $route['profit-loss'] 			                                    = 'AcctProfitLossReportNew1';
 
@@ -1091,6 +1094,11 @@ $route['debt-print/delete/acct_debt/(:num)']                        = 'AcctDebtP
 //AcctDebtMemberPrint
 $route['debt-member-print']                                         = 'AcctDebtMemberPrint';
 $route['debt-member-print/viewreport']                              = 'AcctDebtMemberPrint/processPrintDebt';
+
+
+//AcctDebtMemberPrint Temp
+$route['debt-member-print-temp']                                    = 'AcctDebtMemberPrintTemp';
+$route['debt-member-print-temp/viewreport']                         = 'AcctDebtMemberPrintTemp/processPrintDebt';
 
 //AcctDebtCutOff
 $route['debt-cut-off']                                              = 'AcctDebtCutOff';
