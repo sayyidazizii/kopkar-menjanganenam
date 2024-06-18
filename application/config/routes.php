@@ -1219,3 +1219,5 @@ $route['credits-migration-report']                                  = 'CreditsMi
 $route['deposito-account/form-generate-profit']                     = 'AcctDepositoAccount/formGenerateAcctDepositoAccount';
 $route['deposito-account/generate-profit']                          = 'AcctDepositoAccount/generateAcctDepositoProfitSharing';
 
+$route['preference-company']                                        = 'PreferenceCompany';
+
