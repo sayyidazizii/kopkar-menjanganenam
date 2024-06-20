@@ -403,7 +403,7 @@
                         <!-- Angsuran potong gaji TAB -->
                         <div class="tab-pane" id="tab_1_4">
                             <form action="#">
-                            <table class="table table-striped table-bordered table-hover table-full-width" id="sample_4">
+                            <table class="table table-striped table-bordered table-hover table-full-width" id="dt_4">
 										<thead>
 											<tr>
 												<th style="text-align:center" width="5%">No</th>
@@ -504,3 +504,11 @@
 
 </div>
 <?php echo form_close(); ?>
+
+<script>
+    $(document).ready(function() {
+    $('#sample_2').DataTable();
+    $('#sample_3').DataTable();
+    $('#myDataTable').DataTable();
+});
+</script>
