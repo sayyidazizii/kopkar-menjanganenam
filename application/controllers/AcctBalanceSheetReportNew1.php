@@ -1416,7 +1416,6 @@ ob_start();?>
 									} 
 								}
 
-				$income_tax 	= $this->AcctProfitLossReportNew1_model->getAccountAmount($preference_company['account_income_tax_id'], $data['month_period_start'], $data['month_period_end'], $data['year_period'], $data['profit_loss_report_type'], $data['branch_id']);
 
 				$shu = $shu_sebelum_lain_lain + $pendapatan_biaya_lain;
 

@@ -580,8 +580,8 @@
 														<tr>";
 
 														if($val['report_type2']	== 7){
-															$profit_loss = $this->AcctBalanceSheetReportNew1_model->getProfitLossAmount($data['branch_id'], $month, $year);
-
+															$profit_loss = $profitlossamount;
+															echo($profit_loss);
 															if(empty($profit_loss)){
 																$profit_loss = 0;
 															}
