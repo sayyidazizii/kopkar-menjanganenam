@@ -1221,3 +1221,9 @@ $route['deposito-account/generate-profit']                          = 'AcctDepos
 
 $route['preference-company']                                        = 'PreferenceCompany';
 
+$route['migration']                                                 = 'AcctMigration';
+$route['migration/add-profit-loss']                                 = 'AcctMigration/addAcctProfitLossMigration';
+$route['migration/add-profit-loss-array']                           = 'AcctMigration/addArrayAcctProfitLossMigration';
+$route['migration/update-profit-loss-amount']                       = 'AcctMigration/processAddAcctProfitLossMigration';
+
+

@@ -1041,6 +1041,7 @@ if(count($memberacctcreditsaccount)!=0){
 	</div>
 </div>
 </div>
+<?php echo form_close(); ?>
 
 <script type="text/javascript">
 	$(document).ready(function() {
