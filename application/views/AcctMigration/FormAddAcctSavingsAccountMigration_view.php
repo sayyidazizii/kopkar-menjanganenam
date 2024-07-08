@@ -39,8 +39,12 @@
 			success: function(msg) {}
 		});
 	}
+
+    function confirmDelete() {
+		return confirm('Are you sure you want to reset the data? This action cannot be undone.');
+	}
 </script>
-<?php echo form_open_multipart('migration/add-profit-loss-array', array('id' => 'myform', 'class' => 'horizontal-form')); ?>
+<?php echo form_open_multipart('migration/add-savings-account-array', array('id' => 'myform', 'class' => 'horizontal-form')); ?>
 <?php
 $sesi 	= $this->session->userdata('unique');
 $data 	= $this->session->userdata('addcreditaccount-' . $sesi['unique']);
@@ -58,7 +62,7 @@ $token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique'])
 			<div class="portlet box blue">
 				<div class="portlet-title">
 					<div class="caption">
-						Form Migrasi Laba rugi
+						Form Migrasi Tabungan
 					</div>
 					<div class="actions">
 						<a href="<?php echo base_url() ?>migration" class="btn btn-default btn-sm">
@@ -97,7 +101,7 @@ $token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique'])
 	</div>
 </div>
 <?php echo form_close(); ?>
-<?php echo form_open_multipart('migration/update-profit-loss-amount',array('id' => 'myform', 'class' => 'horizontal-form')); ?>
+<?php echo form_open_multipart('migration/update-savings-account-amount',array('id' => 'myform', 'class' => 'horizontal-form')); ?>
 
 <div class="row">
 	<div class="col-md-12">
@@ -115,25 +119,26 @@ $token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique'])
 							<thead>
 								<tr>
 								    <th width="5%">No</th>
-									<th width="10%">ID</th>
-									<th width="15%">Kode</th>
+									<th width="15%">No Rek</th>
+									<th width="15%">No Agt</th>
+									<th width="15%">member id</th>
 									<th width="15%">Nama</th>
-									<th width="15%">Jumlah</th>
+									<th width="15%">Saldo Akhir</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php 
 								$no = 1;
 								
-									foreach($profitloss as $key => $val){
+									foreach($savingsaccount as $key => $val){
 								?>
 										<tr>
 											<td width="5%" style="text-align: center;"><?php echo $no; ?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['id']?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['account_code']?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['account_name']?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['account_amount']?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['test']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['no_rek']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['no_agt']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['member_id']?></td>
+                                            <td width="25%" style="text-align: left;"><?php echo $val['nama']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['saldo_akhr']?></td>
 										</tr>
 								<?php 
 										$no++;
@@ -144,19 +149,10 @@ $token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique'])
 						</div>
 						<div class="row">
                         <table style="width: 100%;" border="0" padding="0">
-							<tbody>
-								<tr>
-									<td>Periode Bulan<span class="required" style="color : red">*</span></td>
-									<td>:</td>
-									<td><?php echo form_dropdown('month_period', $monthlist, set_value('month_period', $data['month_period']), 'id="month_period" class="form-control select2me" onChange="function_elements_add(this.name, this.value);" '); ?></td>
-									<td>Tahun <span class="required" style="color : red">*</span></td>
-									<td>:</td>
-									<td><?php echo form_dropdown('year_period', $yearlist, set_value('year_period', $data['year_period']), 'id="year_period" class="form-control select2me" onChange="change_method(this.name, this.value);" '); ?></td>
-								</tr>
-							</tbody>
 						</table>
 							<div class="col-md-12" style='text-align:right'>
-								<button type="submit" name="Save" value="Save" id="Save" class="btn green-jungle" title="Simpan Data"><i class="fa fa-check"> Simpan</i></button>
+								<a href="delete-savings-account-old" name="delete" value="delete" id="delete" class="btn red" title="Reset Data" onclick="return confirmDelete();"><i class="fa fa-trash"> Reset Data</i></a>
+								<button type="submit" name="Save" value="Save" id="Save" class="btn green-jungle" title="Simpan Data"><i class="fa fa-save"> Simpan</i></button>
 							</div>	
 						</div>
 					</div>

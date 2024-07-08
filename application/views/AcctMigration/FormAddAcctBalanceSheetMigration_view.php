@@ -40,7 +40,7 @@
 		});
 	}
 </script>
-<?php echo form_open_multipart('migration/add-profit-loss-array', array('id' => 'myform', 'class' => 'horizontal-form')); ?>
+<?php echo form_open_multipart('migration/add-balance-sheet-array', array('id' => 'myform', 'class' => 'horizontal-form')); ?>
 <?php
 $sesi 	= $this->session->userdata('unique');
 $data 	= $this->session->userdata('addcreditaccount-' . $sesi['unique']);
@@ -58,7 +58,7 @@ $token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique'])
 			<div class="portlet box blue">
 				<div class="portlet-title">
 					<div class="caption">
-						Form Migrasi Laba rugi
+						Form Migrasi Neraca
 					</div>
 					<div class="actions">
 						<a href="<?php echo base_url() ?>migration" class="btn btn-default btn-sm">
@@ -97,7 +97,7 @@ $token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique'])
 	</div>
 </div>
 <?php echo form_close(); ?>
-<?php echo form_open_multipart('migration/update-profit-loss-amount',array('id' => 'myform', 'class' => 'horizontal-form')); ?>
+<?php echo form_open_multipart('migration/update-balance-sheet-amount',array('id' => 'myform', 'class' => 'horizontal-form')); ?>
 
 <div class="row">
 	<div class="col-md-12">
@@ -116,24 +116,29 @@ $token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique'])
 								<tr>
 								    <th width="5%">No</th>
 									<th width="10%">ID</th>
-									<th width="15%">Kode</th>
-									<th width="15%">Nama</th>
-									<th width="15%">Jumlah</th>
+									<th width="15%">Kode1</th>
+									<th width="15%">Nama1</th>
+									<th width="15%">Opening Balance1</th>
+									<th width="15%">Kode2</th>
+									<th width="15%">Nama2</th>
+									<th width="15%">Opening Balance2</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php 
 								$no = 1;
 								
-									foreach($profitloss as $key => $val){
+									foreach($balancesheet as $key => $val){
 								?>
 										<tr>
 											<td width="5%" style="text-align: center;"><?php echo $no; ?></td>
 											<td width="25%" style="text-align: left;"><?php echo $val['id']?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['account_code']?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['account_name']?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['account_amount']?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['test']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['account_code1']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['account_name1']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['opening_balance1']?></td>
+                                            <td width="25%" style="text-align: left;"><?php echo $val['account_code2']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['account_name2']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['opening_balance2']?></td>
 										</tr>
 								<?php 
 										$no++;

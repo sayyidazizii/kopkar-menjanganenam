@@ -1222,8 +1222,19 @@ $route['deposito-account/generate-profit']                          = 'AcctDepos
 $route['preference-company']                                        = 'PreferenceCompany';
 
 $route['migration']                                                 = 'AcctMigration';
+
+//migrasi profit loss
 $route['migration/add-profit-loss']                                 = 'AcctMigration/addAcctProfitLossMigration';
 $route['migration/add-profit-loss-array']                           = 'AcctMigration/addArrayAcctProfitLossMigration';
 $route['migration/update-profit-loss-amount']                       = 'AcctMigration/processAddAcctProfitLossMigration';
 
+//migrasi balance sheet
+$route['migration/add-balance-sheet']                               = 'AcctMigration/addAcctBalanceSheetMigration';
+$route['migration/add-balance-sheet-array']                         = 'AcctMigration/addArrayAcctBalanceSheetMigration';
+$route['migration/update-balance-sheet-amount']                     = 'AcctMigration/processAddAcctBalanceSheetMigration';
 
+//migrasi savings account
+$route['migration/add-savings-account']                             = 'AcctMigration/addAcctSavingsAccountMigration';
+$route['migration/add-savings-account-array']                       = 'AcctMigration/addArrayAcctSavingsAccountMigration';
+$route['migration/delete-savings-account-old']                      = 'AcctMigration/processtruncateAcctSavingsAccountOld';
+$route['migration/update-savings-account-amount']                   = 'AcctMigration/processAddAcctSavingsAccountMigration';
