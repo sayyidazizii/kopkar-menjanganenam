@@ -23,7 +23,7 @@
         {
             // Query for account_code1
             $sql = " INSERT INTO acct_savings_account (branch_id, savings_id, office_id, savings_account_no, member_id, savings_account_last_balance, savings_account_date)
-                SELECT '2', '34', '6', no_rek, member_id, saldo_akhr, NOW()
+                SELECT '2', '35', '6', no_rek, member_id, saldo_akhr, NOW()
                 FROM migrasi_sicantik
             ";
 
@@ -49,15 +49,15 @@
         
             // Truncate the tables
             $query1 = $this->db->truncate('migrasi_sicantik');
-            $query2 = $this->db->truncate('acct_savings_account');
-            $query3 = $this->db->truncate('acct_savings_account_detail');
-            $query4 = $this->db->truncate('acct_savings_account_detail_temp');
+            // $query2 = $this->db->truncate('acct_savings_account');
+            // $query3 = $this->db->truncate('acct_savings_account_detail');
+            // $query4 = $this->db->truncate('acct_savings_account_detail_temp');
         
             // Enable foreign key checks
             $this->db->query('SET foreign_key_checks = 1');
         
             // Check if all queries executed successfully
-            return $query1 && $query2 && $query3 && $query4;
+            return $query1;
         }
         
     

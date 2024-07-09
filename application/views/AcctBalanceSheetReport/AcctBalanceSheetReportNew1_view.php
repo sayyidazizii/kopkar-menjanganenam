@@ -581,7 +581,7 @@
 
 														if($val['report_type2']	== 7){
 															$profit_loss = $profitlossamount;
-															echo($profit_loss);
+															// echo($profit_loss);
 															if(empty($profit_loss)){
 																$profit_loss = 0;
 															}

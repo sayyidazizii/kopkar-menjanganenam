@@ -13,6 +13,7 @@ class AcctMigration extends CI_Controller
         $this->load->model('AcctBalanceSheetMigration_model');
         $this->load->model('AcctSavingsAccountMigration_model');
         $this->load->model('AcctSicantikMigration_model');
+        $this->load->model('AcctDepositoAccountMigration_model');
         $this->load->model('AcctSavingsCashMutation_model');
         $this->load->model('AcctSavingsBankMutation_model');
         $this->load->model('AcctSavingsAccount_model');
@@ -635,8 +636,8 @@ class AcctMigration extends CI_Controller
 
         $data['main_view']['monthlist'] = $monthlist;
         $data['main_view']['yearlist'] = $yearlist;    
-        $data['main_view']['savingsaccount'] = $this->AcctSavingsAccountMigration_model->getdataSavingsAccount();
-        $data['main_view']['content'] = 'AcctMigration/FormAddAcctSavingsAccountMigration_view';
+        $data['main_view']['savingsaccount'] = $this->AcctSicantikMigration_model->getdataSicantik();
+        $data['main_view']['content'] = 'AcctMigration/FormAddAcctSicantikMigration_view';
         $this->load->view('MainPage_view', $data);
     }
 
@@ -645,7 +646,7 @@ class AcctMigration extends CI_Controller
     {
         $auth = $this->session->userdata('auth');
 
-        $this->AcctSavingsAccountMigration_model->truncateAcctSavingsAccountMigration();
+        $this->AcctSicantikMigration_model->truncateAcctSicantikMigration();
 
         $fileName = $_FILES['excel_file']['name'];
         $fileSize = $_FILES['excel_file']['size'];
@@ -662,7 +663,7 @@ class AcctMigration extends CI_Controller
         if (!$this->upload->do_upload('excel_file')) {
             $msg = "<div class='alert alert-danger alert-dismissable'>" . $this->upload->display_errors('', '') . "</div> ";
             $this->session->set_userdata('message', $msg);
-            redirect('migration/add-savings-account');
+            redirect('migration/add-sicantik');
         } else {
             $media = $this->upload->data();
             $inputFileName = './assets/' . $media['file_name'];
@@ -689,20 +690,22 @@ class AcctMigration extends CI_Controller
 
                 $data = [
                     'no_rek' => $rowData[0][0],
-                    'no_agt' => $rowData[0][1],
-                    'member_id' => $rowData[0][2],
+                    'member_id' => $rowData[0][1],
+                    'no_agt' => $rowData[0][2],
                     'nama' => $rowData[0][3],
-                    'saldo_akhr' => $rowData[0][4],
+                    'tanggal_buka' => $rowData[0][4],
+                    'saldo_akhr' => $rowData[0][5],
+                    'setoran_awal' => $rowData[0][6],
                 ];
                 // Debugging: echo data array before inserting into database
                 // echo '<pre>';
                 // print_r($data);
                 // echo '</pre>';
 
-                $this->AcctSavingsAccountMigration_model->insertAcctSavingsAccountMigration($data);
+                $this->AcctSicantikMigration_model->insertAcctSicantikMigration($data);
             }
 
-            $updateResult = $this->AcctSavingsAccountMigration_model->updateMemberId();
+            $updateResult = $this->AcctSicantikMigration_model->updateMemberId();
             // Logging: echo or log the value of $updateResult
             // echo 'updateMemberId result: ';
             // var_dump($updateResult);
@@ -713,12 +716,12 @@ class AcctMigration extends CI_Controller
                 unlink($inputFileName);
                 $msg = "<div class='alert alert-success'>Import Data Sicantik Excel berhasil</div> ";
                 $this->session->set_userdata('message', $msg);
-                redirect('migration/add-savings-account');
+                redirect('migration/add-sicantik');
             } else {
                 unlink($inputFileName);
                 $msg = "<div class='alert alert-danger'>Import Data Sicantik Excel gagal</div> ";
                 $this->session->set_userdata('message', $msg);
-                redirect('migration/add-savings-account');
+                redirect('migration/add-sicantik');
             }
         }
     }
@@ -726,8 +729,8 @@ class AcctMigration extends CI_Controller
     //** Save Sicantik */
     public function processAddSicantikMigration() {
         $auth = $this->session->userdata('auth');
-        if($this->AcctSavingsAccountMigration_model->insertSavingsAccountAmount() == true) {
-            $this->AcctSavingsAccountMigration_model->truncateAcctSavingsAccountMigration();
+        if($this->AcctSicantikMigration_model->insertSicantikAmount() == true) {
+            $this->AcctSicantikMigration_model->truncateAcctSicantikMigration();
 
             $msg = "<div class='alert alert-success alert-dismissable'>  
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
@@ -741,9 +744,206 @@ class AcctMigration extends CI_Controller
         }
     
         $this->session->set_userdata('message', $msg);
-        redirect('migration/add-savings-account');
+        redirect('migration/add-sicantik');
     }
 
+    //** form add Deposito */
+    public function addDepositoAccountMigration()
+    {
+        $auth = $this->session->userdata('auth');
+        $unique = $this->session->userdata('unique');
+        $token = $this->session->userdata('acctdepositoaccountmigrationtoken-' . $unique['unique']);
+
+        if (empty($token)) {
+            $token = md5(date('Y-m-d H:i:s'));
+            $this->session->set_userdata('acctdepositoaccountmigrationtoken-' . $unique['unique'], $token);
+            $this->session->unset_userdata('adddepositoaccountmigration-' . $unique['unique']);
+        }
+        // Define monthlist
+        $monthlist = array(
+            '01' => 'January',
+            '02' => 'February',
+            '03' => 'March',
+            '04' => 'April',
+            '05' => 'May',
+            '06' => 'June',
+            '07' => 'July',
+            '08' => 'August',
+            '09' => 'September',
+            '10' => 'October',
+            '11' => 'November',
+            '12' => 'December',
+        );
+
+        // Define yearlist (e.g., from 2000 to current year)
+        $yearlist = array();
+        $current_year = date('Y');
+        for ($year = 2000; $year <= $current_year; $year++) {
+            $yearlist[$year] = $year;
+        }
+
+        $data['main_view']['monthlist'] = $monthlist;
+        $data['main_view']['yearlist'] = $yearlist;    
+        $data['main_view']['depositoaccount'] = $this->AcctDepositoAccountMigration_model->getdataDeposito();
+        $data['main_view']['content'] = 'AcctMigration/FormAddAcctDepositoAccountMigration_view';
+        $this->load->view('MainPage_view', $data);
+    }
+
+    //** Add Array Deposito Excel To Db*/
+    public function addArrayDepositoAccountMigration()
+    {
+        $auth = $this->session->userdata('auth');
+
+        $this->AcctDepositoAccountMigration_model->truncateAcctDepositoMigration();
+
+        $fileName = $_FILES['excel_file']['name'];
+        $fileSize = $_FILES['excel_file']['size'];
+        $fileError = $_FILES['excel_file']['error'];
+        $fileType = $_FILES['excel_file']['type'];
+
+        $config['upload_path'] = './assets/';
+        $config['file_name'] = $fileName;
+        $config['allowed_types'] = 'xls|xlsx';
+        $config['max_size'] = 10000;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('excel_file')) {
+            $msg = "<div class='alert alert-danger alert-dismissable'>" . $this->upload->display_errors('', '') . "</div> ";
+            $this->session->set_userdata('message', $msg);
+            redirect('migration/add-deposito-account');
+        } else {
+            $media = $this->upload->data();
+            $inputFileName = './assets/' . $media['file_name'];
+
+            try {
+                $inputFileType = IOFactory::identify($inputFileName);
+                $objReader = IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileName);
+            } catch (Exception $e) {
+                die('Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME) . '": ' . $e->getMessage());
+            }
+
+            $sheet = $objPHPExcel->getSheet(0);
+            $highestRow = $sheet->getHighestRow();
+            $highestColumn = $sheet->getHighestColumn();
+
+            for ($row = 2; $row <= $highestRow; $row++) {
+                $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, null, true, false);
+
+                // Debugging: echo data to check
+                // echo '<pre>';
+                // print_r($rowData);
+                // echo '</pre>';
+
+                 // Konversi tanggal ke format yang sesuai
+                    $tanggal_buka = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($rowData[0][9]));
+                    $jatuh_tempo = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($rowData[0][10]));
+
+                    // Debugging: Verifikasi tanggal
+                    // echo 'Tanggal Buka: ' . $tanggal_buka . ', Jatuh Tempo: ' . $jatuh_tempo;
+
+                    $data = [
+                        'id' => $rowData[0][0],
+                        'no_berjangka' => $rowData[0][1],
+                        'no_anggota' => $rowData[0][2],
+                        'member_id' => $rowData[0][3],
+                        'deposito_id' => $rowData[0][4],
+                        'savings_account_id' => $rowData[0][5],
+                        'no_tabungan' => $rowData[0][6],
+                        'nama' => $rowData[0][7],
+                        'jangka_waktu' => $rowData[0][8],
+                        'tanggal_buka' => $tanggal_buka,
+                        'jatuh_tempo' => $jatuh_tempo,
+                        'saldo' => $rowData[0][11],
+                        'suku_bunga' => $rowData[0][12],
+                        'sk_bg' => $rowData[0][13],
+                    ];
+                // Debugging: echo data array before inserting into database
+                // echo '<pre>';
+                // print_r($data);
+                // echo '</pre>';
+
+                $this->AcctDepositoAccountMigration_model->insertAcctDepositoMigration($data);
+            }
+
+            //update member
+            $memberid = $this->AcctDepositoAccountMigration_model->updateMemberId();
+            //update savings id
+            if($memberid){
+                $savingaccount = $this->AcctDepositoAccountMigration_model->updateSavingsAccountId();
+                if($savingaccount){
+                    //sk bunga
+                    $skbg = $this->AcctDepositoAccountMigration_model->updateSk_Bg();
+                    if($skbg){
+                       //update deposito id
+                        $updateResult = $this->AcctDepositoAccountMigration_model->updateDepositoId(); 
+                    }
+                }
+            }
+            
+            error_log('updateMemberId result: ' . print_r($memberid, true));
+
+            if ($memberid) {
+                unlink($inputFileName);
+                $msg = "<div class='alert alert-success'>Import Data Deposito Excel berhasil</div> ";
+                $this->session->set_userdata('message', $msg);
+                redirect('migration/add-deposito-account');
+            } else {
+                unlink($inputFileName);
+                $msg = "<div class='alert alert-danger'>Import Data Deposito Excel gagal</div> ";
+                $this->session->set_userdata('message', $msg);
+                redirect('migration/add-deposito-account');
+            }
+        }
+    }
+
+    //** Save Deposito */
+    public function processAddDepositoAccountMigration() {
+        $auth = $this->session->userdata('auth');
+        if($this->AcctDepositoAccountMigration_model->insertDepositoAmount() == true) {
+
+            $depositoNo = $this->AcctDepositoAccountMigration_model->updateDepositoAccount();
+
+            if($depositoNo){
+                $this->AcctDepositoAccountMigration_model->truncateAcctDepositoMigration();
+            }
+
+            $msg = "<div class='alert alert-success alert-dismissable'>  
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
+                    Proses Migrasi Berhasil
+                    </div>";
+        } else {
+            $msg = "<div class='alert alert-danger alert-dismissable'>  
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
+                    Proses Migrasi Gagal
+                    </div>";
+        }
+    
+        $this->session->set_userdata('message', $msg);
+        redirect('migration/add-deposito-account');
+    }
+
+    //** hapus data migrasi deposit lama */
+    public function processtruncateMigrasiDeposito() {
+        $auth = $this->session->userdata('auth');
+       
+        if($this->AcctDepositoAccountMigration_model->truncateAcctDepositoMigration() == true) {
+            $msg = "<div class='alert alert-success alert-dismissable'>  
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
+                    Proses hapus Berhasil
+                    </div>";
+        } else {
+            $msg = "<div class='alert alert-danger alert-dismissable'>  
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
+                    Proses hapus Gagal
+                    </div>";
+        }
+    
+        $this->session->set_userdata('message', $msg);
+        redirect('migration/add-deposito-account');
+    }
+    
     public function function_elements_add()
     {
         $unique = $this->session->userdata('unique');

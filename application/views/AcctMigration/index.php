@@ -68,8 +68,9 @@ $token = $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique']);
 							<div class="card mb-4 ">
 								<div class="card-body">
 									<h5 class="card-title">Data Migrasi Laba rugi</h5>
-									<p class="card-text">kosong</p>
-									<a href="<?php echo base_url() ?>migration/add-profit-loss" class="btn btn-primary">Go somewhere</a>
+									<p class="card-text">terakhir migrasi :
+								</p>
+									<a href="<?php echo base_url() ?>migration/add-profit-loss"  class="btn green-jungle" title="Simpan Data"><i class="fa fa-check"> update</i></a>
 								</div>
 							</div>
 						</div>
@@ -77,8 +78,9 @@ $token = $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique']);
 							<div class="card mb-4 ">
 								<div class="card-body">
 									<h5 class="card-title">Data Migrasi Neraca</h5>
-									<p class="card-text">kosong</p>
-									<a href="<?php echo base_url() ?>migration/add-balance-sheet" class="btn btn-primary">Go somewhere</a>
+									<p class="card-text">terakhir migrasi :
+								</p>
+									<a href="<?php echo base_url() ?>migration/add-balance-sheet"  class="btn green-jungle" title="Simpan Data"><i class="fa fa-check"> update</i></a>
 								</div>
 							</div>
 						</div>
@@ -86,8 +88,9 @@ $token = $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique']);
 							<div class="card mb-4 ">
 								<div class="card-body">
 									<h5 class="card-title">Data Migrasi Tabungan</h5>
-									<p class="card-text">kosong</p>
-									<a href="<?php echo base_url() ?>migration/add-savings-account" class="btn btn-primary">Go somewhere</a>
+									<p class="card-text">terakhir migrasi :
+								</p>
+									<a href="<?php echo base_url() ?>migration/add-savings-account"  class="btn green-jungle" title="Simpan Data"><i class="fa fa-check"> update</i></a>
 								</div>
 							</div>
 						</div>
@@ -95,8 +98,9 @@ $token = $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique']);
 							<div class="card mb-4 ">
 								<div class="card-body">
 									<h5 class="card-title">Data Migrasi Sicantik</h5>
-									<p class="card-text">kosong</p>
-									<a href="<?php echo base_url() ?>migration/add-savings-account" class="btn btn-primary">Go somewhere</a>
+									<p class="card-text">terakhir migrasi :
+								</p>
+									<a href="<?php echo base_url() ?>migration/add-sicantik"  class="btn green-jungle" title="Simpan Data"><i class="fa fa-check"> update</i></a>
 								</div>
 							</div>
 						</div>
@@ -104,8 +108,19 @@ $token = $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique']);
 							<div class="card mb-4 ">
 								<div class="card-body">
 									<h5 class="card-title">Data Migrasi Deposito</h5>
-									<p class="card-text">kosong</p>
-									<a href="<?php echo base_url() ?>migration/add-savings-account" class="btn btn-primary">Go somewhere</a>
+									<p class="card-text">terakhir migrasi :
+								</p>
+									<a href="<?php echo base_url() ?>migration/add-deposito-account"  class="btn green-jungle" title="Simpan Data"><i class="fa fa-check"> update</i></a>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="card mb-4 ">
+								<div class="card-body">
+									<h5 class="card-title">Generate Deposito</h5>
+									<p class="card-text">terakhir migrasi :
+								</p>
+									<a href="<?php echo base_url() ?>deposito-account/form-generate-profit"  class="btn green-jungle" title="Simpan Data"><i class="fa fa-check"> generate</i></a>
 								</div>
 							</div>
 						</div>

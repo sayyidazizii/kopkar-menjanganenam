@@ -125,7 +125,7 @@
 						Form Generate Profit Rekening Simpanan Berjangka
 					</div>
 					<div class="actions">
-						<a href="<?php echo base_url();?>deposito-account" class="btn btn-default btn-sm">
+						<a href="<?php echo base_url();?>migration" class="btn btn-default btn-sm">
 							<i class="fa fa-angle-left"></i>
 							<span class="hidden-480">
 								Kembali

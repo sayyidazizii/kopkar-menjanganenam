@@ -1238,3 +1238,16 @@ $route['migration/add-savings-account']                             = 'AcctMigra
 $route['migration/add-savings-account-array']                       = 'AcctMigration/addArrayAcctSavingsAccountMigration';
 $route['migration/delete-savings-account-old']                      = 'AcctMigration/processtruncateAcctSavingsAccountOld';
 $route['migration/update-savings-account-amount']                   = 'AcctMigration/processAddAcctSavingsAccountMigration';
+
+
+//migrasi sicantik
+$route['migration/add-sicantik']                                    = 'AcctMigration/addSicantikMigration';
+$route['migration/add-sicantik-array']                              = 'AcctMigration/addArraySicantikMigration';
+$route['migration/delete-sicantik-old']                             = 'AcctMigration/processtruncateAcctSavingsAccountOld';
+$route['migration/update-sicantik-amount']                          = 'AcctMigration/processAddSicantikMigration';
+
+//migrasi deposito
+$route['migration/add-deposito-account']                            = 'AcctMigration/addDepositoAccountMigration';
+$route['migration/add-deposito-account-array']                      = 'AcctMigration/addArrayDepositoAccountMigration';
+$route['migration/delete-deposito-account-old']                     = 'AcctMigration/processtruncateMigrasiDeposito';
+$route['migration/update-deposito-account-amount']                  = 'AcctMigration/processAddDepositoAccountMigration';
