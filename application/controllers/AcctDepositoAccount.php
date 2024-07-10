@@ -1640,6 +1640,8 @@
 			$this->session->unset_userdata('addacctdepositoaccount-'.$sesi['unique']);
 			$data['main_view']['acctdepositoaccount']		= $this->AcctDepositoAccount_model->getClosedAcctDepositoAccount($sesi['deposito_id'], $sesi['branch_id']);
 			$data['main_view']['acctdeposito']				= create_double($this->AcctDepositoAccount_model->getAcctDeposito(),'deposito_id', 'deposito_name');
+			// echo json_encode($data);
+			// exit;
 			$data['main_view']['corebranch']				= create_double($this->AcctDepositoAccount_model->getCoreBranch(),'branch_id','branch_name');
 			$data['main_view']['content']					= 'AcctDepositoAccount/ListAcctDepositoAccountClosed_view';
 			$this->load->view('MainPage_view',$data);
@@ -1710,6 +1712,8 @@
 			$data['main_view']['acctdepositoaccount']		= $this->AcctDepositoAccount_model->getAcctDepositoAccount_Detail($this->uri->segment(3));
 			$data['main_view']['acctsavingsaccount']		= $this->AcctDepositoAccount_model->getAcctSavingsAccount_Detail($this->uri->segment(4));
 			$data['main_view']['interest_total']			= $interest_total;
+			// echo json_encode($data);
+			// exit;
 			$data['main_view']['content']					= 'AcctDepositoAccount/FormClosedAcctDepositoAccount_view';
 			$this->load->view('MainPage_view',$data);
 		}
@@ -1892,6 +1896,8 @@
 							}
 
 							if($data['deposito_account_penalty'] > 0){
+								$preferencecompany = $this->AcctDepositoAccount_model->getPreferenceCompany();
+
 								$data_debet = array (
 									'journal_voucher_id'			=> $journal_voucher_id,
 									'account_id'					=> $preferencecompany['account_cash_id'],

@@ -906,6 +906,8 @@ class AcctMigration extends CI_Controller
             $depositoNo = $this->AcctDepositoAccountMigration_model->updateDepositoAccount();
 
             if($depositoNo){
+                $this->AcctDepositoAccountMigration_model->validateDepositoAccount();
+                
                 $this->AcctDepositoAccountMigration_model->truncateAcctDepositoMigration();
             }
 

@@ -189,7 +189,7 @@
 											if($val['deposito_account_blockir_status'] == 0){
 												echo "
 													<td>
-														<a href='".$this->config->item('base_url').'deposito-account/add-closed/'.$val['deposito_account_id']."' class='btn default btn-xs yellow'>
+														<a href='".$this->config->item('base_url').'deposito-account/add-closed/'.$val['deposito_account_id']."/".$val['savings_account_id']."' class='btn default btn-xs yellow'>
 															<i class='fa fa-edit'></i> Penutupan
 														</a>
 													</td>

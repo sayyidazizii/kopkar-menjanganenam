@@ -117,6 +117,17 @@
             $result = $this->db->query($query);
             return $result;
         }
+
+        public function validateDepositoAccount()
+        {
+            $query = "UPDATE acct_deposito_account
+                    SET `validation` = '1',
+                    `validation_id` = '37',
+                    `validation_on` = NOW(),
+                    `created_id` = '37',`created_on` = NOW()";
+            $result = $this->db->query($query);
+            return $result;
+        }
     }
     
 ?>

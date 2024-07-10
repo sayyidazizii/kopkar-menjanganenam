@@ -83,11 +83,11 @@
 				if($debit == $kredit){
 					$warning = "";
 				}else{
-					$warning = "
-					<div class='alert alert-danger alert-dismissable'>  
-						<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>					
-						Debet dan Kredit Tidak Balance!
-					</div> ";
+					// $warning = "
+					// <div class='alert alert-danger alert-dismissable'>  
+					// 	<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>					
+					// 	Debet dan Kredit Tidak Balance!
+					// </div> ";
 				}
 			}else{
 				$warning = "";

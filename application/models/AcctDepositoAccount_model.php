@@ -520,17 +520,17 @@
 		}
 
 		public function getClosedAcctDepositoAccount($deposito_id, $branch_id){
-			$this->db->select('acct_deposito_account.deposito_account_id, acct_deposito_account.member_id, core_member.member_name, acct_deposito_account.deposito_id, acct_deposito.deposito_code, acct_deposito.deposito_name, acct_deposito_account.deposito_account_no, acct_deposito_account.deposito_account_date, acct_deposito_account.deposito_account_amount, acct_deposito_account.deposito_account_due_date, acct_deposito_account.deposito_account_serial_no, acct_deposito_account.deposito_account_nisbah, acct_deposito_account.deposito_account_blockir_type, acct_deposito_account.deposito_account_blockir_status');
+			$this->db->select('acct_deposito_account.deposito_account_id, acct_deposito_account.member_id, core_member.member_name, acct_deposito_account.deposito_id, acct_deposito.deposito_code, acct_deposito.deposito_name, acct_deposito_account.deposito_account_no, acct_deposito_account.deposito_account_date, acct_deposito_account.deposito_account_amount, acct_deposito_account.deposito_account_due_date, acct_deposito_account.deposito_account_serial_no, acct_deposito_account.deposito_account_nisbah, acct_deposito_account.deposito_account_blockir_type, acct_deposito_account.deposito_account_blockir_status,acct_deposito_account.savings_account_id');
 			$this->db->from('acct_deposito_account');
 			$this->db->join('core_member', 'acct_deposito_account.member_id = core_member.member_id');
 			$this->db->join('acct_deposito', 'acct_deposito_account.deposito_id = acct_deposito.deposito_id');
 			// $this->db->where('acct_deposito_account.deposito_account_date >=', $start_date);
 			// $this->db->where('acct_deposito_account.deposito_account_date <=', $end_date);
-			if(!empty($branch_id)){
-			$this->db->where('acct_deposito_account.branch_id ', $branch_id);
+			if (!empty($branch_id)) {
+				$this->db->where('acct_deposito_account.branch_id ', $branch_id);
 			}
-			
-			if(!empty($deposito_id)){
+
+			if (!empty($deposito_id)) {
 				$this->db->where('acct_deposito_account.deposito_id ', $deposito_id);
 			}
 			$this->db->where('acct_deposito_account.deposito_account_status', 0);
