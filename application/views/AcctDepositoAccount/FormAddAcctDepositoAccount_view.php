@@ -253,6 +253,11 @@
 										<td width="60%"><?php echo form_dropdown('deposito_id', $acctdeposito, set_value('deposito_id',$data['deposito_id']),'id="deposito_id" class="easyui-combobox" style="width:100%"');?></td>
 									</tr>
 									<tr>
+										<td width="35%">No . Perkiraan</td>
+										<td width="5%">:</td>
+										<td width="60%"><?php echo form_dropdown('account_id', $acctaccount, set_value('account_id', $data['account_id']), 'id="account_id" class="easyui-combobox" style="width:100%"'); ?></td>
+									</tr>
+									<tr>
 										<td width="35%">Jenis Perpanjangan Simpanan Berjangka <span class="required" style="color : red">*</span></td>
 										<td width="5%">:</td>
 										<td width="60%"><?php echo form_dropdown('deposito_account_extra_type', $depositoextratype, set_value('deposito_account_extra_type',$data['deposito_account_extra_type']),'id="deposito_account_extra_type" class="easyui-combobox" style="width:100%"');?></td>

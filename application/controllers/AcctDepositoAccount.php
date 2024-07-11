@@ -303,6 +303,7 @@
 			$data['main_view']['membergender']				= $this->configuration->MemberGender();
 			$data['main_view']['memberidentity']			= $this->configuration->MemberIdentity();
 			$data['main_view']['familyrelationship']		= $this->configuration->FamilyRelationship();
+			$data['main_view']['acctaccount']				= create_double($this->AcctDepositoAccount_model->getAcctAccount(),'account_id','account_code');
 			$data['main_view']['content']					= 'AcctDepositoAccount/FormAddAcctDepositoAccount_view';
 			$this->load->view('MainPage_view',$data);
 		}
@@ -372,6 +373,8 @@
 				'deposito_account_token'				=> $this->input->post('deposito_account_token', true),
 				'created_id'							=> $auth['user_id'],
 				'created_on'							=> date('Y-m-d H:i:s'),
+				'journal_account_id'					=> $this->input->post('account_id', true),
+
 			);
 
 			// print_r($data_debet);exit;
@@ -455,7 +458,8 @@
 
 							$data_debet = array (
 								'journal_voucher_id'			=> $journal_voucher_id,
-								'account_id'					=> $preferencecompany['account_cash_id'],
+								'account_id'					=> $data['journal_account_id'],
+								// 'account_id'					=> $preferencecompany['account_cash_id'],
 								'journal_voucher_description'	=> $data_journal['journal_voucher_description'],
 								'journal_voucher_amount'		=> ABS($data['deposito_account_amount']),
 								'journal_voucher_debit_amount'	=> ABS($data['deposito_account_amount']),
@@ -543,7 +547,8 @@
 
 					$data_debet = array (
 						'journal_voucher_id'			=> $journal_voucher_id,
-						'account_id'					=> $preferencecompany['account_cash_id'],
+						'account_id'					=> $data['journal_account_id'],
+						// 'account_id'					=> $preferencecompany['account_cash_id'],
 						'journal_voucher_description'	=> $data_journal['journal_voucher_description'],
 						'journal_voucher_amount'		=> ABS($data['deposito_account_amount']),
 						'journal_voucher_debit_amount'	=> ABS($data['deposito_account_amount']),
@@ -1710,7 +1715,7 @@
 			$data['main_view']['admmethod']					= $this->configuration->AdmMethod();
 			$data['main_view']['acctbankaccount']			= create_double($this->AcctDepositoAccount_model->getAcctBankAccount(),'bank_account_id', 'bank_account_code');
 			$data['main_view']['acctdepositoaccount']		= $this->AcctDepositoAccount_model->getAcctDepositoAccount_Detail($this->uri->segment(3));
-			$data['main_view']['acctsavingsaccount']		= $this->AcctDepositoAccount_model->getAcctSavingsAccount_Detail($this->uri->segment(4));
+			// $data['main_view']['acctsavingsaccount']		= $this->AcctDepositoAccount_model->getAcctSavingsAccount_Detail($this->uri->segment(4));
 			$data['main_view']['interest_total']			= $interest_total;
 			// echo json_encode($data);
 			// exit;
@@ -2646,6 +2651,7 @@
 			$data['main_view']['acctsavingsaccount']		= create_double($this->AcctDepositoAccount_model->getAcctSavingsAccount($auth['branch_id']),'savings_account_id', 'savings_account_no');
 			$data['main_view']['membergender']				=$this->configuration->MemberGender();
 			$data['main_view']['memberidentity'] 			= $this->configuration->MemberIdentity();
+			$data['main_view']['acctaccount']				= create_double($this->AcctDepositoAccount_model->getAcctAccount(),'account_id','account_code');
 
 			$data['main_view']['content']			= 'AcctDepositoAccount/FormGenerate';
 			$this->load->view('MainPage_view',$data);
@@ -2657,12 +2663,20 @@
 			// echo json_encode($acctdeposito);
 			// exit;
 
+
+			$transaction_module_code 	= "DEP";
+			$transaction_module_id 		= $this->AcctDepositoAccount_model->getTransactionModuleID($transaction_module_code);
+
+			// $deposito_account_token 	= $this->AcctDepositoAccount_model->getDepositoAccountToken($data['deposito_account_token']);
+
+			// generate jurnal loop
 			foreach($acctdeposito as $key => $val){
 				
 				$date 	= date('d', strtotime($val['deposito_account_date']));
 				$month 	= date('m', strtotime($val['deposito_account_date']));
 				$year 	= date('Y', strtotime($val['deposito_account_date']));
-
+				
+				//generate bunga
 				for ($i=1; $i<= 100; $i++) { 
 					$depositoprofitsharing = array ();
 
@@ -2708,6 +2722,67 @@
 					$this->AcctDepositoAccount_model->insertAcctDepositoProfitSharing($depositoprofitsharing);
 
 				}
+
+						// $acctdepositoaccount_last 	= $this->AcctDepositoAccount_model->getAcctDepositoAccount_Last($data['created_on']);
+
+						$journal_voucher_period = date("Ym", strtotime($val['deposito_account_date']));
+						
+						$data_journal = array(
+							'branch_id'						=> $val['branch_id'],
+							'journal_voucher_period' 		=> $journal_voucher_period,
+							'journal_voucher_date'			=> date('Y-m-d'),
+							'journal_voucher_title'			=> 'SETORAN SIMP BERJANGKA '.$val['member_name'],
+							'journal_voucher_description'	=> 'SETORAN SIMP BERJANGKA '.$val['member_name'],
+							'journal_voucher_token'			=> $val['deposito_account_token'],
+							'transaction_module_id'			=> $transaction_module_id,
+							'transaction_module_code'		=> $transaction_module_code,
+							'transaction_journal_id' 		=> $val['deposito_account_id'],
+							'transaction_journal_no' 		=> $val['deposito_account_serial_no'],
+							'created_id' 					=> $val['created_id'],
+							'created_on' 					=> $val['created_on'],
+						);
+						
+						$this->AcctDepositoAccount_model->insertAcctJournalVoucher($data_journal);
+
+						$journal_voucher_id = $this->AcctDepositoAccount_model->getJournalVoucherID($data['created_id']);
+
+						// $preferencecompany = $this->AcctDepositoAccount_model->getPreferenceCompany();
+						$journal_account_id = $this->input->post('account_id');
+
+						$account_id_default_status = $this->AcctDepositoAccount_model->getAccountIDDefaultStatus($preferencecompany['account_cash_id']);
+
+							$data_debet = array (
+								'journal_voucher_id'			=> $journal_voucher_id,
+								'account_id'					=> $journal_account_id,
+								'journal_voucher_description'	=> $data_journal['journal_voucher_description'],
+								'journal_voucher_amount'		=> ABS($val['deposito_account_amount']),
+								'journal_voucher_debit_amount'	=> ABS($val['deposito_account_amount']),
+								'account_id_default_status'		=> $account_id_default_status,
+								'account_id_status'				=> 0,
+								'journal_voucher_item_token'	=> $val['deposito_account_token'].$preferencecompany['account_cash_id'],
+								'created_id' 					=> $auth['user_id'],
+							);
+
+							$this->AcctDepositoAccount_model->insertAcctJournalVoucherItem($data_debet);
+
+							$account_id = $this->AcctDepositoAccount_model->getAccountID($val['deposito_id']);
+
+							$account_id_default_status = $this->AcctDepositoAccount_model->getAccountIDDefaultStatus($account_id);
+
+							$data_credit =array(
+								'journal_voucher_id'			=> $journal_voucher_id,
+								'account_id'					=> $account_id,
+								'journal_voucher_description'	=> $data_journal['journal_voucher_description'],
+								'journal_voucher_amount'		=> ABS($val['deposito_account_amount']),
+								'journal_voucher_credit_amount'	=> ABS($val['deposito_account_amount']),
+								'account_id_default_status'		=> $account_id_default_status,
+								'account_id_status'				=> 1,
+								'journal_voucher_item_token'	=> $val['deposito_account_token'].$account_id,
+								'created_id' 					=> $auth['user_id'],
+							);
+
+							$this->AcctDepositoAccount_model->insertAcctJournalVoucherItem($data_credit);
+
 			}
 
 			$msg = "<div class='alert alert-success alert-dismissable'>  

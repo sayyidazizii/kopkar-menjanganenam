@@ -146,9 +146,11 @@
 							<div class="col-md-5">
 								<table width="100%">
 									<tr>
-										<td width="35%"></td>
+										<td width="15%">No . Perkiraan</td>
+										<td width="5%">:</td>
+										<td width="30%"><?php echo form_dropdown('account_id', $acctaccount, set_value('account_id', $data['account_id']), 'id="account_id" class="easyui-combobox" style="width:100%"'); ?></td>
 										<td width="5%"></td>
-										<td width="60%" align="right">
+										<td width="50%" align="right">
 											<button type="button" class="btn red" onClick="reset_data();"><i class="fa fa-times"></i> Batal</button>
 											<button type="submit" class="btn green-jungle"><i class="fa fa-check"></i> Generate</button>
 										</td>

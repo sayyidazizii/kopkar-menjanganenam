@@ -171,6 +171,7 @@
 			acct_deposito_account.deposito_account_amount,
 			acct_deposito_account.savings_account_id,
 			acct_deposito_account.created_on,
+			core_member.member_name,
 			');
 		
 			$this->db->from('acct_deposito_account');
@@ -714,6 +715,15 @@
 			$this->db->where('acct_bank_account.bank_account_id', $bank_account_id);
 			$result = $this->db->get()->row_array();
 			return $result['account_id'];
+		}
+
+		public function getAcctAccount(){
+			$hasil = $this->db->query("
+							SELECT acct_account.account_id, 
+							CONCAT(acct_account.account_code,' - ', acct_account.account_name) as account_code 
+							from acct_account
+							where acct_account.data_state = 0");
+			return $hasil->result_array();
 		}
 	}
 ?>
