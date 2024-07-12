@@ -100,6 +100,11 @@
 			}
 		});
 	});
+	function confirmSave() {
+		if(confirm("Apakah Anda yakin ingin menyimpan data ini?")) {
+			document.getElementById('myform').submit();
+		}
+	}
 </script>
 
 <div class="page-bar">
@@ -251,6 +256,11 @@
 										</td>
 									</tr>
 									<tr>
+										<td width="35%">No . Perkiraan</td>
+										<td width="5%">:</td>
+										<td width="60%"><?php echo form_dropdown('account_id', $acctaccount, set_value('account_id', $data['account_id']), 'id="account_id" class="easyui-combobox" style="width:100%"');?></td>
+									</tr>
+									<tr>
 										<td width="35%">Saldo</td>
 										<td width="5%">:</td>
 										<td width="60%">
@@ -307,6 +317,7 @@
 										<td width="20%">
 											<input type="text"  class="easyui-textbox" size="4" name="savings_account_no" id="savings_account_no" autocomplete="off" value="<?php echo set_value('savings_account_no', $acctsavingsaccount['savings_account_no']);?>" style="width: 100%" readonly/>
 											 &nbsp <a href="#" role="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#simpananlist">Cari No. Rek</a> 
+											<button type="button" class="btn red  btn-sm" onClick="reset_data();"><i class="fa fa-times"></i> tanpa tabungan</button>
 											<input type="hidden" class="easyui-textbox" name="deposito_account_amount" id="deposito_account_amount" autocomplete="off" value="<?php echo $acctdepositoaccount['deposito_account_amount'];?>"/>
 											<input type="hidden"  class="easyui-textbox" size="4" name="savings_account_id" id="savings_account_id" autocomplete="off" value="<?php echo set_value('savings_account_id', $acctsavingsaccount['savings_account_id']);?>" readonly/>
 											<input type="hidden"  class="easyui-textbox" size="4" name="savings_id" id="savings_id" autocomplete="off" value="<?php echo set_value('savings_id', $acctsavingsaccount['savings_id']);?>" readonly/>
@@ -319,7 +330,7 @@
 										<td width="5%"></td>
 										<td width="60%" align="right">
 											<button type="button" class="btn red" onClick="reset_data();"><i class="fa fa-times"></i> Batal</button>
-											<button type="submit" class="btn green-jungle"><i class="fa fa-check"></i> Simpan</button>
+											<button type="button" class="btn green-jungle" onClick="confirmSave();"><i class="fa fa-check"></i> Simpan</button>
 										</td>
 									</tr>
 								</table>

@@ -93,6 +93,12 @@
 			}
 		});
 	});
+
+	function confirmSave() {
+		if(confirm("Apakah Anda yakin ingin menyimpan data ini?")) {
+			document.getElementById('myform').submit();
+		}
+	}
 </script>
 
 <?php echo form_open('deposito-account/process-add',array('id' => 'myform', 'class' => 'horizontal-form')); ?>
@@ -311,7 +317,7 @@
 										<?php if($coremember['member_active_status'] == 1){ ?>
 											<button type="submit" class="btn green-jungle" disabled><i class="fa fa-check"></i> Simpan</button>
 										<?php } else{ ?> 
-											<button type="submit" class="btn green-jungle"><i class="fa fa-check"></i> Simpan</button>
+											<button type="submit" class="btn green-jungle" onClick="confirmSave();><i class="fa fa-check"></i> Simpan</button>
 										<?php }?>
 										</td>
 									</tr>
