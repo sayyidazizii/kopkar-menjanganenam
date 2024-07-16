@@ -600,7 +600,7 @@
 			$this->form_validation->set_rules('division_id', 'Divisi', 'required');
 			$this->form_validation->set_rules('part_id', 'Divisi', 'required');
 
-			$membertoken = $this->CoreMember_model->getMemberToken($data['member_token']);
+			// $membertoken = $this->CoreMember_model->getMemberToken($data['member_token']);
 			
 			if($this->form_validation->run()==true){
 				if($membertoken->num_rows() == 0){

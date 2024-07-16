@@ -170,6 +170,8 @@
 			$data['main_view']['methods']					= $this->configuration->AcquittanceMethod();
 			$data['main_view']['mutationtype']				= $mutationtype;
 			$data['main_view']['sessiondata']				= $sessiondata;
+			// echo json_encode($data);	
+			// exit;
 
 			$data['main_view']['content']					= 'AcctSavingsImportMutation/FormAddAcctSavingsImportMutation_view';
 			$this->load->view('MainPage_view',$data);

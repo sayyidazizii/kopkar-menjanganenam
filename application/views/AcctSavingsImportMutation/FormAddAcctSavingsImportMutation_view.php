@@ -53,6 +53,8 @@
 	}
 
 	$(document).ready(function(){
+		var sessiondata = <?php echo json_encode($sessiondata); ?>;
+		console.log(sessiondata);
 		$('#mutation_id').combobox({
 			onChange: function(value){
 				function_elements_add('mutation_id', value);
@@ -60,13 +62,16 @@
 		})
 
 		$('#method_id').combobox({
-			onChange: function(value){
-				function_elements_add('method_id', value);
-				if(value == 2){
-					document.getElementById("bank_dropdown").style.display = "contents";
-				}else{
-					document.getElementById("bank_dropdown").style.display = "none";
-				}
+        onChange: function(value){
+            function_elements_add('method_id', value);
+			console.log(sessiondata);
+
+            if (value == 2) {
+                document.getElementById("bank_dropdown").style.display = "contents";
+            } else {
+                document.getElementById("bank_dropdown").style.display = "none";
+            }
+            
 			}
 		});
 
@@ -161,11 +166,7 @@
 							</div>
 							<div class="col-md-6">
 								<table width="100%">
-									<?php if($sessiondata['method_id'] == 2){?>
 									<tr name="bank_dropdown" id="bank_dropdown">
-									<?php }else{?>
-									<tr name="bank_dropdown" id="bank_dropdown" style="display: none">
-									<?php }?>
 										<td width="10%">Bank <span class="required" style="color : red">*</span></td>
 										<td width="5%">:</td>
 										<td width="60%"><?php echo form_dropdown('bank_account_id', $acctbankaccount, set_value('bank_account_id', $sessiondata['bank_account_id']),'id="bank_account_id" name="bank_account_id" class="easyui-combobox"');?></td>
