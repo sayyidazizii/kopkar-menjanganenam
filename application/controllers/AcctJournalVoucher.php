@@ -169,6 +169,7 @@
 					'journal_voucher_period' 		=> $journal_voucher_period,
 					'journal_voucher_date'			=> tgltodb($this->input->post('journal_voucher_date', true)),
 					'journal_voucher_title'			=> $this->input->post('journal_voucher_description', true),
+					'journal_voucher_subtitle'	    => $this->input->post('journal_voucher_subtitle', true),
 					'journal_voucher_description'	=> $this->input->post('journal_voucher_description', true),
 					'journal_voucher_token'			=> $this->input->post('journal_voucher_token', true),
 					'transaction_module_id'			=> $transaction_module_id,
@@ -189,6 +190,7 @@
 					'journal_voucher_period' 		=> $journal_voucher_period,
 					'journal_voucher_date'			=> tgltodb($this->input->post('journal_voucher_date', true)),
 					'journal_voucher_title'			=> $this->input->post('journal_voucher_description', true),
+					'journal_voucher_subtitle'		=> $this->input->post('journal_voucher_subtitle', true),
 					'journal_voucher_description'	=> $this->input->post('journal_voucher_description', true),
 					'journal_voucher_token'			=> $this->input->post('journal_voucher_token', true),
 					'transaction_module_id'			=> $transaction_module_id,
@@ -402,7 +404,7 @@
 						$ttd 		= "Penyetor";
 					}else{
 						$keterangan = "KELUAR";
-						$diterima 	= "Diterima oleh";
+						$diterima 	= "Dibayar Kepada";
 						$ttd 		= "Penerima";
 					}
 				}
@@ -441,7 +443,7 @@
 			<table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">
 				<tr>
 					<td width=\"20%\"><div style=\"text-align: left;\">".$diterima."</div></td>
-					<td width=\"80%\"><div style=\"text-align: left;\">: </div></td>
+					<td width=\"80%\"><div style=\"text-align: left;\">: ".$acctjournalvoucher['journal_voucher_subtitle']."</div></td>
 				</tr>
 				<tr>
 					<td width=\"20%\"><div style=\"text-align: left;\">Jumlah Rp. </div></td>
