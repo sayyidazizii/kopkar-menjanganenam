@@ -27,6 +27,19 @@
 			return $result;
 		}
 
+		public function getAcctDepositoProfitSharingAll(){
+			$this->db->select('acct_deposito_profit_sharing.deposito_account_id, acct_deposito_account.deposito_account_no, acct_deposito_profit_sharing.savings_account_id, acct_savings_account.savings_account_no, acct_deposito_profit_sharing.member_id, core_member.member_name, acct_deposito_profit_sharing.deposito_profit_sharing_amount, acct_deposito_profit_sharing.deposito_account_last_balance, acct_deposito_profit_sharing.deposito_profit_sharing_due_date, acct_deposito_profit_sharing.deposito_profit_sharing_date, acct_deposito_profit_sharing.deposito_profit_sharing_tax, core_member.member_no, acct_savings_account.savings_account_last_balance');
+			$this->db->from('acct_deposito_profit_sharing');
+			$this->db->join('core_member', 'acct_deposito_profit_sharing.member_id = core_member.member_id');
+			$this->db->join('acct_savings_account', 'acct_deposito_profit_sharing.savings_account_id = acct_savings_account.savings_account_id');
+			$this->db->join('acct_deposito_account', 'acct_deposito_profit_sharing.deposito_account_id = acct_deposito_account.deposito_account_id');
+			// $this->db->where('acct_deposito_profit_sharing.deposito_profit_sharing_due_date >=', $start_date);
+			// $this->db->where('acct_deposito_profit_sharing.deposito_profit_sharing_due_date <=', $end_date);
+			$this->db->order_by('acct_deposito_account.deposito_account_no', 'ASC');
+			$result = $this->db->get()->result_array();
+			return $result;
+		}
+
 		public function getCoreBranch(){
 			$this->db->select('core_branch.branch_id, core_branch.branch_name');
 			$this->db->from('core_branch');

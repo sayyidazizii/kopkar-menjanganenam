@@ -754,7 +754,7 @@
 										<td width="35%">Nama Lengkap (sesuai KTP) <span class="required" style="color : red">*</span></td>
 										<td width="5%">:</td>
 										<td width="60%">
-										<input type="hidden" class="easyui-textbox" name="member_token" id="member_token" autocomplete="off" value="<?php echo set_value('member_token',$member_token);?>" style="width:100%;"/>
+										<input type="" class="easyui-textbox" name="member_token" id="member_token" autocomplete="off" value="<?php echo set_value('member_token',$member_token);?>" style="width:100%;"/>
 											<input type="text" class="easyui-textbox" name="member_name" id="member_name" autocomplete="off" value="<?php echo set_value('member_name',$data['member_name']);?>" index="0" style="width:100%;"/>
 										</td>
 									</tr>

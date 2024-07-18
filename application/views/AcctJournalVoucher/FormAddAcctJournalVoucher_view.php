@@ -80,6 +80,14 @@
 			}
 		});
 
+		$('#journal_voucher_subtitle').textbox({
+			onChange: function(value){
+				var name   	= 'journal_voucher_subtitle';
+
+		    	function_elements_add(name, value);
+			}
+		});
+
 		$('#journal_voucher_amount_view').textbox({
 			onChange: function(value){
 				if(loop == 0){
@@ -138,6 +146,9 @@
 	if(empty($data['journal_voucher_description'])){
 		$dara['journal_voucher_description'] = '';
 	}
+	if(empty($data['journal_voucher_subtitle'])){
+		$dara['journal_voucher_subtitle'] = '';
+	}
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -185,6 +196,13 @@
 										<td width="5%">:</td>
 										<td width="60%">
 											<input type="text" class="easyui-textbox" name="journal_voucher_description" id="journal_voucher_description" placeholder="Uraian" onChange="function_elements_add(this.name, this.value);" style="width: 100%" value="<?php echo $data['journal_voucher_description']; ?>">
+										</td>
+									</tr>
+									<tr>
+										<td width="35%">Diterima/Dikirim</td>
+										<td width="5%">:</td>
+										<td width="60%">
+											<input type="text" class="easyui-textbox" name="journal_voucher_subtitle" id="journal_voucher_subtitle" placeholder="Uraian" onChange="function_elements_add(this.name, this.value);" style="width: 100%" value="<?php echo $data['journal_voucher_subtitle']; ?>">
 										</td>
 									</tr>
 								</table>

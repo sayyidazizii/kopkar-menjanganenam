@@ -244,34 +244,34 @@ class AcctCreditsAccountImport extends CI_Controller
             $period = $rowData[0][3];
 
             // Hitung tanggal jatuh tempo berdasarkan nilai dari Excel
-            if ($angsuran == 1) {
-                $due_date = date('Y-m-d', strtotime($date2 . ' +' . $period . ' months'));
-                $payment_to_date = date('Y-m-d', strtotime($date2 . ' +1 months'));
+            // if ($angsuran == 1) {
+            //     $due_date = date('Y-m-d', strtotime($date2 . ' +' . $period . ' months'));
+            //     $payment_to_date = date('Y-m-d', strtotime($date2 . ' +1 months'));
 
-            // Perhitungan tambahan untuk jenis angsuran
-                $pinjaman = $rowData[0][4];
-                $bunga = $rowData[0][5];
-                $angsuran_pokok = $pinjaman / $period;
-                $angsuran_bunga = $pinjaman * ($bunga / 100);
-                $jumlah_angsuran = ($pinjaman / $period) + ($pinjaman * ($bunga / 100));
-                $terima = $pinjaman - $rowData[0][7] - $rowData[0][8] - $rowData[0][9]; //pemotongan
+            // // Perhitungan tambahan untuk jenis angsuran
+            //     $pinjaman = $rowData[0][4];
+            //     $bunga = $rowData[0][5];
+            //     $angsuran_pokok = $pinjaman / $period;
+            //     $angsuran_bunga = $pinjaman * ($bunga / 100);
+            //     $jumlah_angsuran = ($pinjaman / $period) + ($pinjaman * ($bunga / 100));
+            //     $terima = $pinjaman - $rowData[0][7] - $rowData[0][8] - $rowData[0][9]; //pemotongan
 
-            } else {
-                $due_date = date('Y-m-d', strtotime($date2 . ' +' . $period * 7 . ' days'));
-                $payment_to_date = date('Y-m-d', strtotime($date2 . ' +7 days'));
+            // } else {
+            //     $due_date = date('Y-m-d', strtotime($date2 . ' +' . $period * 7 . ' days'));
+            //     $payment_to_date = date('Y-m-d', strtotime($date2 . ' +7 days'));
 
-                // Hitung angsuran berdasarkan rumus angsuran annuitas
-                $pinjaman = $rowData[0][4];
-                $bunga = $rowData[0][5];
-                $bunga_decimal = $bunga / 100; // Konversi bunga menjadi desimal
-                $bunga_perbulan = $bunga_decimal / 12; // Bunga per bulan
-                $angsuran_bunga_annuitas = $pinjaman * $bunga_perbulan; // Angsuran bunga annuitas
-                $angsuran_pokok_annuitas = ($pinjaman * $bunga_perbulan) / (1 - pow((1 + $bunga_perbulan), -$period)); // Angsuran pokok annuitas
-                $jumlah_angsuran = $angsuran_pokok_annuitas + $angsuran_bunga_annuitas; // Total angsuran annuitas
-                $angsuran_pokok = $angsuran_pokok_annuitas;
-                $angsuran_bunga = $angsuran_bunga_annuitas;
-                $terima = $pinjaman - $rowData[0][7] - $rowData[0][8] - $rowData[0][9]; //pemotongan
-            }
+            //     // Hitung angsuran berdasarkan rumus angsuran annuitas
+            //     $pinjaman = $rowData[0][4];
+            //     $bunga = $rowData[0][5];
+            //     $bunga_decimal = $bunga / 100; // Konversi bunga menjadi desimal
+            //     $bunga_perbulan = $bunga_decimal / 12; // Bunga per bulan
+            //     $angsuran_bunga_annuitas = $pinjaman * $bunga_perbulan; // Angsuran bunga annuitas
+            //     $angsuran_pokok_annuitas = ($pinjaman * $bunga_perbulan) / (1 - pow((1 + $bunga_perbulan), -$period)); // Angsuran pokok annuitas
+            //     $jumlah_angsuran = $angsuran_pokok_annuitas + $angsuran_bunga_annuitas; // Total angsuran annuitas
+            //     $angsuran_pokok = $angsuran_pokok_annuitas;
+            //     $angsuran_bunga = $angsuran_bunga_annuitas;
+            //     $terima = $pinjaman - $rowData[0][7] - $rowData[0][8] - $rowData[0][9]; //pemotongan
+            // }
 
 
             $this->form_validation->set_rules('credit_id', 'jenis Pinjaman', 'required');
@@ -312,15 +312,15 @@ class AcctCreditsAccountImport extends CI_Controller
                         'credits_account_bank_account' => $rowData[0][12],
                         'credits_account_bank_owner' => $rowData[0][13],
 
-                        // 'credits_account_amount_received' => $rowData[0][14],
-                        // 'credits_account_principal_amount' => $rowData[0][15],
-                        // 'credits_account_interest_amount' => $rowData[0][16],
-                        // 'credits_account_payment_amount' => $rowData[0][17],
+                        'credits_account_amount_received' => $rowData[0][14],
+                        'credits_account_principal_amount' => $rowData[0][15],
+                        'credits_account_interest_amount' => $rowData[0][16],
+                        'credits_account_payment_amount' => $rowData[0][17],
 
-                        'credits_account_amount_received' => $terima,
-                        'credits_account_principal_amount' =>  $angsuran_pokok,
-                        'credits_account_interest_amount' => $angsuran_bunga,
-                        'credits_account_payment_amount' => $jumlah_angsuran,
+                        // 'credits_account_amount_received' => $terima,
+                        // 'credits_account_principal_amount' =>  $angsuran_pokok,
+                        // 'credits_account_interest_amount' => $angsuran_bunga,
+                        // 'credits_account_payment_amount' => $jumlah_angsuran,
 
                         'credits_account_last_balance' => $rowData[0][18],
                         'credits_account_token' => $this->input->post('credits_account_token', true) . $val['member_id'],

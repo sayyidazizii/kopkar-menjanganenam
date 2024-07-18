@@ -163,7 +163,7 @@
 		// }
 
 		public function getAcctJournalVoucher_Detail($journal_voucher_id){
-			$this->db->select('acct_journal_voucher.journal_voucher_id, acct_journal_voucher.journal_voucher_date, acct_journal_voucher.journal_voucher_description,acct_journal_voucher.journal_voucher_no, acct_journal_voucher.branch_id, acct_journal_voucher.proof_no, core_branch.branch_name');
+			$this->db->select('acct_journal_voucher.journal_voucher_id, acct_journal_voucher.journal_voucher_date, acct_journal_voucher.journal_voucher_description,acct_journal_voucher.journal_voucher_subtitle,acct_journal_voucher.journal_voucher_no, acct_journal_voucher.branch_id, acct_journal_voucher.proof_no, core_branch.branch_name');
 			$this->db->from('acct_journal_voucher');
 			$this->db->join('core_branch','acct_journal_voucher.branch_id = core_branch.branch_id');
 			$this->db->where('acct_journal_voucher.journal_voucher_id', $journal_voucher_id);

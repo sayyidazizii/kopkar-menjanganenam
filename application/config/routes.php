@@ -1251,3 +1251,8 @@ $route['migration/add-deposito-account']                            = 'AcctMigra
 $route['migration/add-deposito-account-array']                      = 'AcctMigration/addArrayDepositoAccountMigration';
 $route['migration/delete-deposito-account-old']                     = 'AcctMigration/processtruncateMigrasiDeposito';
 $route['migration/update-deposito-account-amount']                  = 'AcctMigration/processAddDepositoAccountMigration';
+
+
+//AcctSavingsProfitSharingNew  Total
+$route['savings-profit-sharing-acumulation-report'] 			     = 'AcctSavingsProfitSharingTotalReport';
+$route['savings-profit-sharing-acumulation-report/view']             = 'AcctSavingsProfitSharingTotalReport/viewport';

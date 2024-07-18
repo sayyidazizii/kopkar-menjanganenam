@@ -889,7 +889,7 @@ if(count($memberacctcreditsaccount)!=0){
 								<tr>
 									<td>Tanggal Realisasi</td>
 									<td>:</td>
-									<td> <input type="text" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser" name="credit_account_date" id="credit_account_date" autocomplete="off" readonly onChange="duedatecalc(this);" value="<?php echo tgltoview($data['credit_account_date']); ?>" />
+									<td> <input type="text" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser" name="credit_account_date" id="credit_account_date" autocomplete="off"  onChange="duedatecalc(this);" value="<?php echo tgltoview($data['credit_account_date']); ?>" />
 									</td>
 									<td>Preferensi Angsuran <span class="required" style="color : red">*</span></td>
 									<td>:</td>

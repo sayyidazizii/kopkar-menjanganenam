@@ -29,7 +29,9 @@
         var month_period 	= $("#month_period_start").val();
         var year_period 	= $("#year_period").val();
 
-		document.location= base_url+"AcctRecalculateEOM/processAcctRecalculateEOM/"+branch_id+"/"+month_period+"/"+year_period;
+		if (confirm("Apakah Anda yakin ingin memproses SHU?")) {
+			document.location = base_url + "AcctRecalculateEOM/processAcctRecalculateEOM/" + branch_id + "/" + month_period + "/" + year_period;
+		}
 	}
 </script>
 
