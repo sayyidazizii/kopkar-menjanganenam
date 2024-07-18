@@ -55,20 +55,16 @@ Login page
   color: #8290a3;
   border: 1px solid #dde3ec;
 }
-
 .login .content .form-control:focus, .login .content .form-control:active {
   border: 1px solid #c3ccda;
 }
-
 .login .content .form-control::-moz-placeholder {
   color: #8290a3;
   opacity: 1;
 }
-
 .login .content .form-control:-ms-input-placeholder {
   color: #8290a3;
 }
-
 .login .content .form-control::-webkit-input-placeholder {
   color: #8290a3;
 }
@@ -99,7 +95,6 @@ Login page
   margin-left: -30px;
   margin-right: -30px;
 }
-
 .login .content .form-actions > .btn {
   margin-top: -2px;
 }
@@ -189,7 +184,6 @@ Login page
   background-color: #6c7a8d;
   border-radius: 0 0 7px 7px;
 }
-
 .login .content .create-account > p {
   margin: 0;
 }
@@ -239,5 +233,4 @@ Login page
   .login .checkbox {
     font-size: 13px;
   }
-}
-/*# sourceMappingURL=login.css.map */
+}/*# sourceMappingURL=login.css.map */

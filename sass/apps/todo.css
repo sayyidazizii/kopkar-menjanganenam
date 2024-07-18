@@ -6,7 +6,6 @@ NEW TODO Page
 .todo-main-header {
   margin-top: -20px;
 }
-
 .todo-main-header > h3 {
   font-weight: 400;
   font-size: 22px;
@@ -14,7 +13,6 @@ NEW TODO Page
   display: inline-block;
   color: #3b464f;
 }
-
 .todo-main-header > .todo-breadcrumb {
   border-left: 1px solid;
   border-color: #dae3eb;
@@ -22,33 +20,27 @@ NEW TODO Page
   display: inline-block;
   margin-top: 17px;
 }
-
 .todo-main-header > .todo-breadcrumb > li {
   display: inline-block;
   font-size: 11px;
 }
-
 .todo-main-header > .todo-breadcrumb > li > a {
   color: #77838d;
   text-transform: uppercase;
   text-decoration: none;
 }
-
 .todo-main-header > .todo-breadcrumb > li > a:hover {
   color: #337ab7;
   text-decoration: none;
 }
-
 .todo-main-header > .todo-breadcrumb > li > .todo-active {
   color: #49a7fa;
 }
-
 .todo-main-header > .todo-breadcrumb > li:before {
   content: "•";
   color: #b6c1cb;
   margin: 0 1em;
 }
-
 .todo-main-header > .todo-breadcrumb > li:first-child:before {
   content: "";
   margin: 0;
@@ -60,32 +52,26 @@ NEW TODO Page
   border: 1px solid;
   border-color: #ebf0f5;
 }
-
 .todo-container .todo-projects-container {
   padding: 0;
 }
-
 .todo-container .todo-projects-container > li {
   list-style: none;
   padding: 30px 20px;
 }
-
 .todo-container .todo-projects-divider {
   height: 1px;
   margin: 0;
   background-color: #ebf0f5;
 }
-
 .todo-container .todo-tasks-container {
   padding: 30px 20px;
 }
-
 .todo-container .todo-head {
   border-bottom: 1px solid;
   border-color: #ebf0f5;
   padding-bottom: 20px;
 }
-
 .todo-container .todo-head > h3 {
   margin-top: 0;
   display: inline-block;
@@ -94,7 +80,6 @@ NEW TODO Page
   text-transform: uppercase;
   font-size: 15px;
 }
-
 .todo-container .todo-head > p {
   display: inline-block;
   color: #9eacb4;
@@ -103,25 +88,21 @@ NEW TODO Page
   margin-bottom: 0;
   margin-top: 0;
 }
-
 .todo-container .todo-head > button {
   float: right;
   font-weight: 600;
   font-size: 11px;
   text-transform: uppercase;
 }
-
 .todo-container .todo-projects-content,
 .todo-container .todo-tasks-content {
   padding-left: 0;
 }
-
 .todo-container .todo-projects-item,
 .todo-container .todo-tasks-item {
   list-style: none;
   margin-left: 0;
 }
-
 .todo-container .todo-projects-item > h3 {
   font-size: 20px;
   color: #4e5a64;
@@ -129,26 +110,21 @@ NEW TODO Page
   margin-top: 0;
   margin-bottom: 15px;
 }
-
 .todo-container .todo-projects-item p {
   color: #a0a9b4;
   margin-bottom: 15px;
   margin-top: 0;
 }
-
 .todo-container .todo-projects-item:last-child {
   border-bottom: none;
 }
-
 .todo-container .todo-projects-item.todo-active {
   background-color: #fafbfc;
   position: relative;
 }
-
 .todo-container .todo-projects-item.todo-active > h3 {
   color: #49a7fa;
 }
-
 .todo-container .todo-projects-item.todo-active:after {
   content: " ";
   width: 0;
@@ -160,48 +136,39 @@ NEW TODO Page
   right: -20px;
   top: 65px;
 }
-
 .todo-container .todo-projects-item:hover {
   background-color: #fafbfc;
   cursor: pointer;
 }
-
 .todo-container .todo-projects-item > .todo-project-item-foot {
   font-size: 12px;
 }
-
 .todo-container .todo-tasks-item {
   padding: 30px 0;
   border-bottom: 1px solid;
   border-color: #ebf0f5;
 }
-
 .todo-container .todo-tasks-item > h4 {
   font-size: 16px;
   font-weight: 600;
   margin: 0;
   line-height: 1.3em;
 }
-
 .todo-container .todo-tasks-item > h4 > a {
   color: #65717b;
 }
-
 .todo-container .todo-tasks-item > h4 > a:hover {
   color: #49a7fa;
   text-decoration: none;
 }
-
 .todo-container .todo-tasks-item > h4 > a:focus {
   color: #65717b;
   text-decoration: none;
 }
-
 .todo-container .todo-tasks-item > p {
   margin: 0;
   color: #9eacb4;
 }
-
 .todo-container .todo-tasks-item:last-child {
   border-bottom: none;
 }
@@ -217,13 +184,11 @@ NEW TODO Page
   margin: -0.3em 0 0 0.5em;
   float: right;
 }
-
 .todo-add-button:hover {
   background-color: #4db3a4;
   color: #fff;
   text-decoration: none;
 }
-
 .todo-add-button:focus {
   color: #c1cbd1;
   text-decoration: none;
@@ -232,7 +197,6 @@ NEW TODO Page
 #todo-members-modal > .modal-dialog {
   top: 20px;
 }
-
 #todo-members-modal .select-height {
   height: 10em;
 }
@@ -245,7 +209,6 @@ NEW TODO Page
   width: 60%;
   margin: 0 auto;
 }
-
 #todo-task-modal > .modal-dialog .modal-content {
   position: absolute;
   top: 0;
@@ -254,20 +217,17 @@ NEW TODO Page
   left: 0;
   overflow: auto;
 }
-
 #todo-task-modal > .modal-dialog .modal-content .todo-task-modal-title {
   font-weight: 600;
   text-transform: uppercase;
   margin-left: 2em;
 }
-
 #todo-task-modal > .modal-dialog .modal-content .todo-task-due {
   margin-left: 1em;
   font-weight: 600;
   color: #4db3a4;
   width: 150px !important;
 }
-
 #todo-task-modal > .modal-dialog .modal-content .todo-task-assign {
   margin-left: 1em;
   border: 1px solid;
@@ -277,29 +237,24 @@ NEW TODO Page
   color: #4db3a4;
   text-transform: uppercase;
 }
-
 #todo-task-modal > .modal-dialog .modal-content .todo-task-assign:hover, #todo-task-modal > .modal-dialog .modal-content .todo-task-assign:focus {
   text-decoration: none;
 }
-
 #todo-task-modal > .modal-dialog .modal-content > .todo-task-modal-body > .todo-task-modal-bg {
   background-color: #f7f9fa;
   padding: 20px;
 }
-
 #todo-task-modal > .modal-dialog .modal-content > .todo-task-modal-body > h3 {
   margin: 15px 0;
   font-size: 20px;
   color: #4e5a64;
   font-weight: 600;
 }
-
 #todo-task-modal > .modal-dialog .modal-content > .todo-task-modal-body > p {
   font-size: 15px;
   color: #8f9ea6;
   line-height: 24px;
 }
-
 #todo-task-modal > .modal-dialog .modal-content > .todo-task-modal-body > h4 {
   font-size: 14px;
   font-weight: 600;
@@ -307,25 +262,20 @@ NEW TODO Page
   color: #9eacb4;
   margin-top: 25px;
 }
-
 #todo-task-modal > .modal-dialog .modal-content > .todo-task-modal-body > h4 > .todo-add-button {
   float: none;
 }
-
 #todo-task-modal > .modal-dialog .modal-content > .todo-task-modal-body > .todo-task-file {
   color: #49a7fa;
   font-size: 13px;
 }
-
 #todo-task-modal > .modal-dialog .modal-content > .todo-task-modal-body > .todo-task-file > i {
   margin-right: 0.5em;
 }
-
 #todo-task-modal > .modal-dialog .modal-content > .todo-task-modal-body > .todo-task-file > .todo-remove-file {
   color: #9eacb4;
   margin-left: 0.5em;
 }
-
 #todo-task-modal > .modal-dialog .modal-content > .todo-task-modal-body > .todo-task-file > .todo-remove-file:hover {
   color: #4db3a4;
   cursor: pointer;
@@ -368,9 +318,7 @@ NEW TODO Page
     margin-left: 0 !important;
   }
 }
-
-@media (max-width: 991px) {
-  /* 991px */
+@media (max-width: 991px) { /* 991px */
   #todo-task-modal > .modal-dialog {
     width: 95%;
   }
@@ -378,7 +326,6 @@ NEW TODO Page
     border: none !important;
   }
 }
-
 @media (max-width: 480px) {
   .todo-task-modal-title {
     margin-left: 0 !important;
@@ -389,5 +336,4 @@ NEW TODO Page
     margin-left: 0 !important;
     margin-top: 1em;
   }
-}
-/*# sourceMappingURL=todo.css.map */
+}/*# sourceMappingURL=todo.css.map */

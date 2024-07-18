@@ -49,7 +49,6 @@ TODO Page
 .todo-projects-config {
   padding: 6px 9px 3px 9px !important;
 }
-
 .todo-projects-config > i {
   font-size: 14px !important;
 }
@@ -79,15 +78,12 @@ TODO Page
   padding: 0;
   margin: 0;
 }
-
 .todo-task-history > li {
   padding: 5px 0;
 }
-
 .todo-task-history > li > .todo-task-history-desc {
   overflow: hidden;
 }
-
 .todo-task-history > li > .todo-task-history-date {
   font-size: 12px;
   float: right;
@@ -105,7 +101,6 @@ TODO Page
   margin-bottom: 15px;
   overflow: hidden;
 }
-
 .todo-tasklist-item:last-child {
   margin-bottom: 0;
 }
@@ -243,8 +238,7 @@ div .todo-tasklist-item:hover {
 
 /* END TASK BODY */
 /* RESPONSIVE MODE */
-@media (max-width: 991px) {
-  /* 991px */
+@media (max-width: 991px) { /* 991px */
   .todo-sidebar {
     float: none;
     width: 100%;
@@ -260,13 +254,11 @@ div .todo-tasklist-item:hover {
     overflow: visible;
   }
 }
-
 .todo-tasklist-devider {
   display: none;
 }
 
-@media (max-width: 767px) {
-  /* 767px */
+@media (max-width: 767px) { /* 767px */
   .todo-tasklist-devider {
     display: block;
     height: 20px;
@@ -281,5 +273,4 @@ div .todo-tasklist-item:hover {
     width: 100px;
     font-size: 11px;
   }
-}
-/*# sourceMappingURL=todo-2.css.map */
+}/*# sourceMappingURL=todo-2.css.map */

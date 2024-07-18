@@ -89,7 +89,6 @@ body {
     padding: 10px;
   }
 }
-
 @media (max-width: 767px) {
   .coming-soon-header,
   .coming-soon-countdown,
@@ -99,10 +98,8 @@ body {
     padding: 10px;
   }
 }
-
 @media (max-width: 320px) {
   .coming-soon-content .btn-subscribe span {
     display: none;
   }
-}
-/*# sourceMappingURL=coming-soon.css.map */
+}/*# sourceMappingURL=coming-soon.css.map */

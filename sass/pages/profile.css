@@ -53,7 +53,6 @@ New Profile Page
 .profile-userbuttons .btn {
   margin-right: 5px;
 }
-
 .profile-userbuttons .btn:last-child {
   margin-right: 0;
 }
@@ -145,8 +144,7 @@ New Profile Page
 
 /* END PROFILE SIDEBAR */
 /* RESPONSIVE MODE */
-@media (max-width: 991px) {
-  /* 991px */
+@media (max-width: 991px) { /* 991px */
   /* 991px */
   .profile-sidebar {
     float: none;
@@ -159,5 +157,4 @@ New Profile Page
   .profile-content {
     overflow: visible;
   }
-}
-/*# sourceMappingURL=profile.css.map */
+}/*# sourceMappingURL=profile.css.map */

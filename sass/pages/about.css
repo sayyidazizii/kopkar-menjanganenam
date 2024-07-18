@@ -173,7 +173,6 @@ Anout Us Page
   height: 500px;
   padding: 0 !important;
 }
-
 .about-text > h4 {
   background-color: #d9534f;
   font-size: 24px;
@@ -182,27 +181,22 @@ Anout Us Page
   padding: 1em 20px;
   margin: 0;
 }
-
 .about-text > h4 > i {
   font-size: 24px !important;
   color: #fff;
 }
-
 .about-text > p {
   color: #808a94;
 }
-
 .about-text ul,
 .about-text > p,
 .about-text .about-quote {
   padding-left: 20px;
   padding-right: 20px;
 }
-
 .about-text li {
   margin-bottom: 0.5em;
 }
-
 .about-text .about-quote > h3 {
   border-left: 3px solid;
   border-color: #ccc;
@@ -210,7 +204,6 @@ Anout Us Page
   font-style: italic;
   line-height: 1.3em;
 }
-
 .about-text .about-quote > .about-author {
   text-align: right;
 }
@@ -234,6 +227,4 @@ Anout Us Page
     margin: 0 -20px;
   }
 }
-
-/* END RESPONSIVE */
-/*# sourceMappingURL=about.css.map */
+/* END RESPONSIVE *//*# sourceMappingURL=about.css.map */
