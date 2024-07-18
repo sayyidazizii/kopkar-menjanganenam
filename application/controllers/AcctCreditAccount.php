@@ -1,4 +1,4 @@
-<?php
+ <?php
 	defined('BASEPATH') or exit('No direct script access allowed');
 	define('FINANCIAL_MAX_ITERATIONS', 128);
 	define('FINANCIAL_PRECISION', 1.0e-08);

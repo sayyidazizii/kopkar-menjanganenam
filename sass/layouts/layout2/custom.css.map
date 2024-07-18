@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAAA,uEAAuE",
-    "sources": [
-        "custom.scss"
-    ],
-    "names": [],
-    "file": "custom.css"
-}
+{"version":3,"sources":["custom.scss"],"names":[],"mappings":"AAAA,sEAAA","file":"custom.css"}

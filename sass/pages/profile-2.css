@@ -5,7 +5,6 @@ Profile Page
 .profile {
   position: relative;
 }
-
 .page-container-bg-solid .profile {
   background: #ffffff;
   padding: 20px;
@@ -43,8 +42,7 @@ Profile Page
   font-size: 11px;
   background: #000;
   position: absolute;
-  filter: alpha(opacity=60);
-  /*for ie*/
+  filter: alpha(opacity=60); /*for ie*/
 }
 
 .profile-classic .profile-image img {
@@ -76,7 +74,6 @@ Profile Page
 .profile ul.profile-nav {
   margin-bottom: 30px;
 }
-
 .profile ul.profile-nav img.pic-bordered {
   border: 1px solid #e1e7ee;
 }
@@ -113,8 +110,7 @@ Profile Page
   font-size: 12px;
   background: #000;
   position: absolute;
-  filter: alpha(opacity=60);
-  /*for ie*/
+  filter: alpha(opacity=60); /*for ie*/
 }
 
 .profile ul.profile-nav li a.profile-edit:hover {
@@ -331,5 +327,4 @@ Profile Page
 .profile-settings .controls > .checkbox {
   font-size: 12px;
   margin-top: 2px !important;
-}
-/*# sourceMappingURL=profile-2.css.map */
+}/*# sourceMappingURL=profile-2.css.map */

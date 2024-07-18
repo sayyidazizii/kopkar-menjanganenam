@@ -6,7 +6,6 @@ Login page
 .login {
   background-color: #5c97bd;
 }
-
 .login a {
   color: #edf4f8 !important;
 }
@@ -64,20 +63,16 @@ Login page
   height: 43px;
   color: #d9ecf9;
 }
-
 .login .content .form-control:focus, .login .content .form-control:active {
   border: 1px solid #83b8db;
 }
-
 .login .content .form-control::-moz-placeholder {
   color: #d9ecf9;
   opacity: 1;
 }
-
 .login .content .form-control:-ms-input-placeholder {
   color: #d9ecf9;
 }
-
 .login .content .form-control::-webkit-input-placeholder {
   color: #d9ecf9;
 }
@@ -170,7 +165,6 @@ Login page
   font-weight: 600;
   padding: 10px 25px !important;
 }
-
 .login .btn:hover {
   border: 1px solid #90bbd7;
   background-color: #5995bb;
@@ -184,7 +178,6 @@ Login page
   font-weight: 600;
   padding: 10px 25px !important;
 }
-
 .login .btn-default:hover {
   border: 1px solid #90bbd7;
   background-color: #5995bb;
@@ -238,7 +231,6 @@ Login page
     margin-top: 100px;
   }
 }
-
 @media (max-width: 480px) {
   /***
   Login page
@@ -256,5 +248,4 @@ Login page
   .login .checkbox {
     font-size: 13px;
   }
-}
-/*# sourceMappingURL=login-2.css.map */
+}/*# sourceMappingURL=login-2.css.map */

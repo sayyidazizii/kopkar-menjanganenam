@@ -5,7 +5,6 @@ Invoice page
 .invoice {
   margin: 0;
 }
-
 .invoice table {
   margin: 30px 0 30px 0;
 }
@@ -41,5 +40,4 @@ Invoice page
 .invoice .invoice-block .amounts {
   margin-top: 20px;
   font-size: 14px;
-}
-/*# sourceMappingURL=invoice.css.map */
+}/*# sourceMappingURL=invoice.css.map */

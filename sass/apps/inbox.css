@@ -5,92 +5,75 @@ Inbox Page
 .inbox {
   margin-bottom: 20px;
 }
-
 .inbox .compose-btn {
   padding: 8px 14px;
 }
-
 .inbox .inbox-content {
   min-height: 400px;
 }
-
 .inbox .inbox-nav {
   margin: 30px 0;
   padding: 0;
   list-style: none;
 }
-
 .inbox .inbox-nav > li {
   padding: 0;
   margin: 0;
 }
-
 .inbox .inbox-nav > li > a {
   text-decoration: none !important;
   display: block;
   padding: 8px 16px;
   border-left: 4px solid transparent;
 }
-
 .inbox .inbox-nav > li > a:hover {
   background: #f1f4f7;
 }
-
 .inbox .inbox-nav > li > a .badge {
   float: right;
   margin-top: 1px;
 }
-
 .inbox .inbox-nav > li.active > a {
   border-left: 4px solid #ed6b75;
 }
-
 .inbox .inbox-nav > li.divider {
   padding: 0;
   margin: 4px 16px;
   border-top: 1px solid #eef1f5;
 }
-
 .inbox .inbox-contacts {
   margin: 0 0 30px 0;
   padding: 0;
   list-style: none;
 }
-
 .inbox .inbox-contacts > li {
   padding: 0;
   margin: 0;
 }
-
 .inbox .inbox-contacts > li.divider {
   padding: 0;
   margin: 4px 16px;
   border-top: 1px solid #eef1f5;
 }
-
 .inbox .inbox-contacts > li > a {
   position: relative;
   display: block;
   padding: 8px 16px;
   color: #3f444a;
 }
-
 .inbox .inbox-contacts > li > a:hover {
   background: #f1f4f7;
   text-decoration: none;
 }
-
 .inbox .inbox-contacts > li > a .contact-name {
   display: inline-block;
   padding-left: 5px;
 }
-
 .inbox .inbox-contacts > li > a .contact-pic {
   width: 30px;
   height: 30px;
   border-radius: 50% !important;
 }
-
 .inbox .inbox-contacts > li > a .contact-status {
   position: absolute;
   width: 10px;
@@ -99,45 +82,37 @@ Inbox Page
   left: 38px;
   top: 30px;
 }
-
 .inbox .input-actions .btn {
   margin-left: 10px;
 }
-
 .inbox .inbox-view-info {
   color: #666;
   padding: 5px 0;
   border-top: solid 1px #eee;
   border-bottom: solid 1px #eee;
 }
-
 .inbox .inbox-view-info .inbox-author {
   border-radius: 50% !important;
   margin-right: 10px;
 }
-
 .inbox .inbox-view-info .inbox-info-btn .btn-group {
   float: right;
   margin-top: 5px;
 }
-
 .inbox .inbox-sidebar {
   padding: 20px;
   border: 1px solid #e7ecf1;
   border-radius: 4px;
 }
-
 .inbox .inbox-body {
   padding: 20px;
   border: 1px solid #e7ecf1;
   border-radius: 4px;
 }
-
 .page-container-bg-solid .inbox .inbox-sidebar {
   background: #ffffff;
   border: 0;
 }
-
 .page-container-bg-solid .inbox .inbox-body {
   background: #ffffff;
   border: 0;
@@ -465,7 +440,6 @@ Inbox Page
   background: #fff !important;
   border-color: #fff !important;
 }
-
 .inbox-compose .wysihtml5-toolbar > li > a:hover,
 .inbox-compose .wysihtml5-toolbar > li > div > a:hover {
   background: #f1f1f1 !important;
@@ -482,5 +456,4 @@ ul.wysihtml5-toolbar a.btn.wysihtml5-command-active {
   .inbox-compose .inbox-form-group > label {
     margin-top: 7px;
   }
-}
-/*# sourceMappingURL=inbox.css.map */
+}/*# sourceMappingURL=inbox.css.map */
