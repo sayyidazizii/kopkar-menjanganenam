@@ -683,6 +683,66 @@
 			return $this->db->get()->result_array();
 		}
 
+		//report
+		public function getAcctSavingsProfitSharingTempReport($branch_id){
+			$this->db->select('acct_savings_profit_sharing_temp.savings_account_id,acct_savings_profit_sharing_temp.savings_id,,acct_savings_account.savings_account_no, acct_savings_profit_sharing_temp.member_id, core_member.member_name, core_member.member_address, acct_savings_profit_sharing_temp.savings_profit_sharing_temp_amount, acct_savings_profit_sharing_temp.savings_account_last_balance, acct_savings_profit_sharing_temp.savings_profit_sharing_temp_period, acct_savings_profit_sharing_temp.savings_interest_temp_amount, acct_savings_profit_sharing_temp.savings_tax_temp_amount');
+			$this->db->from('acct_savings_profit_sharing_temp');
+			$this->db->join('acct_savings_account','acct_savings_profit_sharing_temp.savings_account_id = acct_savings_account.savings_account_id');
+			$this->db->join('core_member', 'acct_savings_profit_sharing_temp.member_id = core_member.member_id');
+			// $this->db->where('acct_savings_profit_sharing_temp.branch_id', $branch_id);
+			return $this->db->get()->result_array();
+		}
+
+
+		public function getCombinedProfitSharingReport($branch_id, $start_date, $end_date) {
+			$sql = "
+				SELECT 
+					cm.member_id,
+					cm.member_no,
+					cm.member_name,
+					cm.member_address,
+					sa.savings_account_no,
+					sa.savings_account_last_balance,
+					sps.savings_profit_sharing_temp_amount,
+					s.savings_name,
+					d.deposito_name,
+					da.deposito_account_no,
+					dps.deposito_profit_sharing_amount,
+					dps.deposito_profit_sharing_tax,
+					dps.deposito_account_last_balance
+				FROM 
+					acct_savings_profit_sharing_temp AS sps
+				JOIN 
+					core_member AS cm ON sps.member_id = cm.member_id
+				JOIN 
+					acct_deposito_profit_sharing AS dps ON dps.member_id = cm.member_id
+				JOIN 
+					acct_deposito_account AS da ON dps.deposito_account_id = da.deposito_account_id
+				JOIN 
+					acct_deposito AS d ON dps.deposito_id = d.deposito_id
+				JOIN 
+					acct_savings_account AS sa ON dps.savings_account_id = sa.savings_account_id
+				JOIN 
+					acct_savings AS s ON sa.savings_id = s.savings_id
+				WHERE 
+					sps.branch_id = ?
+					AND dps.deposito_profit_sharing_due_date >= ?
+					AND dps.deposito_profit_sharing_due_date <= ?
+			";
+		
+			// Jalankan query dengan parameter yang sesuai
+			$query = $this->db->query($sql, array($branch_id, $start_date, $end_date));
+		
+			// Periksa apakah query berhasil dieksekusi
+			if ($query->num_rows() > 0) {
+				return $query->result_array();
+			} else {
+				return false; // Atau tangani secara khusus jika query gagal
+			}
+		}
+		
+		
+
 		public function getAcctSavingsProfitSharingTotalTemp($branch_id){
 			$this->db->select('acct_savings_profit_sharing_total_temp.savings_account_id, acct_savings_profit_sharing_total_temp.member_id, core_member.member_name,  core_member.member_no, core_member.member_address, acct_savings_profit_sharing_total_temp.savings_profit_sharing_temp_amount, acct_savings_profit_sharing_total_temp.savings_account_last_balance, acct_savings_profit_sharing_total_temp.savings_profit_sharing_temp_period, acct_savings_profit_sharing_total_temp.savings_interest_temp_amount, acct_savings_profit_sharing_total_temp.savings_tax_temp_amount');
 			$this->db->from('acct_savings_profit_sharing_total_temp');

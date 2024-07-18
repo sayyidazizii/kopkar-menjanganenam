@@ -29,7 +29,10 @@
 
 		public function viewport() {
             $sesi = array (
-				"view"				=> $this->input->post('view',true),
+				"start_date" 	=> tgltodb($this->input->post('start_date',true)),
+				"end_date"		=> tgltodb($this->input->post('end_date', true)),
+				"branch_id"		=> $this->input->post('branch_id',true),
+				"view"			=> $this->input->post('view',true),
 			);
 
 			if($sesi['view'] == 'pdf'){
@@ -40,187 +43,146 @@
         }
 
         public function processPrinting($sesi) {
-            $auth = $this->session->userdata('auth'); 
-        
+            $auth = $this->session->userdata('auth');
+            
+            // Determine branch_id based on branch_status
             if ($auth['branch_status'] == 1) {
-                $branch_id = $sesi['branch_id'] ?: '';
+                $branch_id = !empty($sesi['branch_id']) ? $sesi['branch_id'] : '';
             } else {
                 $branch_id = $auth['branch_id'];
             }
-        
-            $acctsavingsprofitsharing = $this->AcctSavingsProfitSharingNew_model->getAcctSavingsProfitSharingTemp($auth['branch_id']);
-            $acctdepositoprofitsharing = $this->AcctDepositoProfitSharingReport_model->getAcctDepositoProfitSharingAll($sesi['start_date'], $sesi['end_date'], $branch_id);
-            $preference = $this->AcctDepositoProfitSharingReport_model->getPreferenceCompany();
-        
-            // Group by member_id
-            $groupedData = [];
-            foreach ($acctsavingsprofitsharing as $saving) {
-                $member_id = $saving['member_id'];
-                if (!isset($groupedData[$member_id])) {
-                    $groupedData[$member_id] = [
-                        'savings_account_no' => $saving['savings_account_no'],
-                        'member_no' => $saving['member_no'],
-                        'member_name' => $saving['member_name'],
-                        'savings' => [],
-                    ];
-                }
-                $groupedData[$member_id]['savings'][] = [
-                    'last_balance' => $saving['savings_account_last_balance'],
-                    'profit_sharing_amount' => $saving['savings_profit_sharing_temp_amount'],
-                ];
-            }
-        
-            // Create Savings Report
-            $this->generateSavingsReport($groupedData, $preference);
-        
-            // Create Deposits Report
-            $this->generateDepositsReport($acctdepositoprofitsharing, $preference);
-        }
-        
-        private function generateSavingsReport($groupedData, $preference) {
+            
+            // Retrieve data from model
+            $acctsavingsprofitsharing = $this->AcctSavingsProfitSharingNew_model->getCombinedProfitSharingReport($branch_id, $sesi['start_date'], $sesi['end_date']);
+            $preference = $this->AcctSavingsProfitSharingReport_model->getPreferenceCompany();
+            
+            // Include TCPDF library
             require_once('tcpdf/config/tcpdf_config.php');
             require_once('tcpdf/tcpdf.php');
-        
-            $pdf = new tcpdf('L', PDF_UNIT, 'A4', true, 'UTF-8', false);
-            $pdf->SetPrintHeader(false);
-            $pdf->SetPrintFooter(false);
-            $pdf->SetMargins(7, 7, 7, 7);
-            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-        
-            $pdf->SetFont('helvetica', 'B', 20);
-            $pdf->AddPage();
+            
+            // Create new TCPDF object
+            $pdf = new TCPDF('L', PDF_UNIT, 'A4', true, 'UTF-8', false);
+            
+            // Set document information
+            $pdf->SetCreator(PDF_CREATOR);
+            $pdf->SetAuthor('Your Name');
+            $pdf->SetTitle('DAFTAR BUNGA TABUNGAN BULANAN');
+            $pdf->SetSubject('DAFTAR BUNGA TABUNGAN BULANAN');
+            $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+            
+            // Set margins
+            $pdf->SetMargins(7, 7, 7, true);
+            
+            // Remove header and footer
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            
+            // Set auto page breaks
+            $pdf->SetAutoPageBreak(true, 7);
+            
+            // Set font
             $pdf->SetFont('helvetica', '', 9);
-        
+            
+            // Add a page
+            $pdf->AddPage();
+            
+            // Logo and title
             $base_url = base_url();
-            $img = "<img src=\"" . $base_url . "assets/layouts/layout/img/" . $preference['logo_koperasi'] . "\" alt=\"\" width=\"50%\" height=\"50%\"/>";
-        
-            $tbl = "
-            <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\">
+            $img = "<img src=\"" . $base_url . "assets/layouts/layout/img/" . $preference['logo_koperasi'] . "\" alt=\"\" width=\"100\" height=\"50\"/>";
+            $html = '
+            <table cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                    <td rowspan=\"2\" width=\"10%\">" . $img . "</td>
+                    <td rowspan="2">' . $img . '</td>
+                </tr>
+                <tr></tr>
+            </table>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <table cellspacing="0" cellpadding="1" border="0">
+                <tr>
+                    <td width="100%"><div style="text-align: left; font-size:14px; font-weight:bold">DAFTAR BUNGA TABUNGAN BULANAN</div></td>
                 </tr>
             </table>
-            <br/><br/><br/><br/>
-            <table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">
-                <tr>
-                    <td><div style=\"text-align: left;font-size:12;\">DAFTAR BUNGA SIMPANAN BULAN INI</div></td>               
-                </tr>                        
-            </table>";
+            ';
+            
+            // Output logo and title
+            $pdf->writeHTML($html, true, false, false, false, '');
+            
+            // Menghitung jumlah baris untuk setiap member_id
+            $rowspan_data = [];
+            foreach ($acctsavingsprofitsharing as $data) {
+                if (!isset($rowspan_data[$data['member_id']])) {
+                    $rowspan_data[$data['member_id']] = 0;
+                }
+                $rowspan_data[$data['member_id']]++;
+                if (!empty($data['deposito_account_no'])) {
+                    $rowspan_data[$data['member_id']]++;
+                }
+            }
         
-            $pdf->writeHTML($tbl, true, false, false, false, '');
-        
-            $tbl1 = "
+            // Table header
+            $html = '
             <br>
-            <table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">
-                <tr>
-                    <th width=\"5%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: left;font-size:10;\">No.</div></th>
-                    <th width=\"15%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">No. Rekening</div></th>
-                    <th width=\"15%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">No. Anggota</div></th>
-                    <th width=\"20%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">Nama</div></th>
-                    <th width=\"15%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">Saldo</div></th>
-                    <th width=\"15%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">Bunga</div></th>
-                </tr>                
-            </table>";
-        
-            $tbl2 = "<table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">";
-            $no = 1;
-        
-            foreach ($groupedData as $member_id => $data) {
-                foreach ($data['savings'] as $saving) {
-                    $tbl2 .= "
+            <table border="1" cellpadding="3" cellspacing="0" width="100%">
+                <thead>
                     <tr>
-                        <td width=\"5%\"><div style=\"text-align: left;\">" . $no . "</div></td>
-                        <td width=\"15%\"><div style=\"text-align: left;\">" . $data['savings_account_no'] . "</div></td>
-                        <td width=\"15%\"><div style=\"text-align: left;\">" . $data['member_no'] . "</div></td>
-                        <td width=\"20%\"><div style=\"text-align: left;\">" . $data['member_name'] . "</div></td>
-                        <td width=\"15%\"><div style=\"text-align: right;\">" . number_format($saving['last_balance'], 2) . "</div></td>
-                        <td width=\"15%\"><div style=\"text-align: right;\">" . number_format($saving['profit_sharing_amount'], 2) . "</div></td>
-                    </tr>";
-                    $no++;
+                        <th>No. Anggota</th>
+                        <th>Nama Anggota</th>
+                        <th>Alamat Anggota</th>
+                        <th>Jenis</th>
+                        <th>Nomor Simpanan</th>
+                        <th>Bunga</th>
+                    </tr>
+                </thead>
+                <tbody>
+            ';
+            
+            // Data rows
+            $previous_member_id = null;
+            foreach ($acctsavingsprofitsharing as $data) {
+                $html .= '<tr>';
+                if ($data['member_id'] != $previous_member_id) {
+                    $html .= '
+                        <td rowspan="' . $rowspan_data[$data['member_id']] . '">' . $data['member_no'] . '</td>
+                        <td rowspan="' . $rowspan_data[$data['member_id']] . '">' . $data['member_name'] . '</td>
+                        <td rowspan="' . $rowspan_data[$data['member_id']] . '">' . $data['member_address'] . '</td>
+                    ';
+                    $previous_member_id = $data['member_id'];
                 }
-            }
-        
-            $tbl2 .= "</table>";
-        
-            $pdf->writeHTML($tbl1 . $tbl2, true, false, false, false, '');
-        
-            ob_clean();
-            
-            $pdf->Output('DAFTAR BUNGA SIMPANAN BULAN INI.pdf', 'I');
-        }
-        
-        private function generateDepositsReport($acctdepositoprofitsharing, $preference) {
-            require_once('tcpdf/config/tcpdf_config.php');
-            require_once('tcpdf/tcpdf.php');
-        
-            $pdf = new tcpdf('L', PDF_UNIT, 'A4', true, 'UTF-8', false);
-            $pdf->SetPrintHeader(false);
-            $pdf->SetPrintFooter(false);
-            $pdf->SetMargins(7, 7, 7, 7);
-            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-        
-            $pdf->SetFont('helvetica', 'B', 20);
-            $pdf->AddPage();
-            $pdf->SetFont('helvetica', '', 9);
-        
-            $base_url = base_url();
-            $img = "<img src=\"" . $base_url . "assets/layouts/layout/img/" . $preference['logo_koperasi'] . "\" alt=\"\" width=\"50%\" height=\"50%\"/>";
-        
-            $tbl = "
-            <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\">
-                <tr>
-                    <td rowspan=\"2\" width=\"10%\">" . $img . "</td>
-                </tr>
-            </table>
-            <br/><br/><br/><br/>
-            <table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">
-                <tr>
-                    <td><div style=\"text-align: left;font-size:12;\">DAFTAR BUNGA DEPOSITO BULAN INI</div></td>               
-                </tr>                        
-            </table>";
-        
-            $pdf->writeHTML($tbl, true, false, false, false, '');
-        
-            $tbl1 = "
-            <br>
-            <table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">
-                <tr>
-                    <th width=\"5%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: left;font-size:10;\">No.</div></th>
-                    <th width=\"15%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">No. Anggota</div></th>
-                    <th width=\"20%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">Nama</div></th>
-                    <th width=\"15%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">Saldo</div></th>
-                    <th width=\"15%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">Bunga</div></th>
-                    <th width=\"15%\" style=\"border-bottom: 1px solid black;border-top: 1px solid black\"><div style=\"text-align: center;font-size:10;\">No. Deposito</div></th>
-                </tr>                
-            </table>";
-        
-            $tbl2 = "<table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">";
-            $no = 1;
-        
-            foreach ($acctdepositoprofitsharing as $deposit) {
-                $tbl2 .= "
-                <tr>
-                    <td width=\"5%\"><div style=\"text-align: left;\">" . $no . "</div></td>
-                    <td width=\"15%\"><div style=\"text-align: left;\">" . $deposit['member_no'] . "</div></td>
-                    <td width=\"20%\"><div style=\"text-align: left;\">" . $deposit['member_name'] . "</div></td>
-                    <td width=\"15%\"><div style=\"text-align: right;\">" . number_format($deposit['deposito_account_last_balance'], 2) . "</div></td>
-                    <td width=\"15%\"><div style=\"text-align: right;\">" . number_format($deposit['deposito_profit_sharing_amount'], 2) . "</div></td>
-                    <td width=\"15%\"><div style=\"text-align: left;\">" . $deposit['deposito_account_no'] . "</div></td>
-                </tr>";
-                $no++;
-            }
-        
-            $tbl2 .= "</table>";
-        
-            $pdf->writeHTML($tbl1 . $tbl2, true, false, false, false, '');
-        
-            ob_clean();
-            
-            $pdf->Output('DAFTAR BUNGA DEPOSITO BULAN INI.pdf', 'I');
-        }
-        
-        
+                
+                $html .= '
+                    <td>' . $data['savings_name'] . '</td>
+                    <td>' . $data['savings_account_no'] . '</td>
+                    <td>' . number_format($data['savings_profit_sharing_temp_amount'], 2) . '</td>
+                ';
+                $html .= '</tr>';
 
-		
+                
+                // if (!empty($data['deposito_account_no'])) {
+                    $html .= '<tr>';
+                    $html .= '
+                        <td>' . $data['deposito_name'] . '</td>
+                        <td>' . $data['deposito_account_no'] . '</td>
+                        <td>' . number_format($data['deposito_profit_sharing_amount'], 2) . '</td>
+                    ';
+                    $html .= '</tr>';
+                // }
+            }
+            
+            // Close table
+            $html .= '
+                </tbody>
+            </table>
+            ';
+            
+            // Write the HTML content to PDF
+            $pdf->writeHTML($html, true, false, true, false, '');
+            
+            // Close and output PDF document
+            $pdf->Output('laporan.pdf', 'I');
+        }
+    
 	}	
 ?>
