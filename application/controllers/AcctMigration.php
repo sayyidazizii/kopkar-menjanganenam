@@ -20,6 +20,7 @@ class AcctMigration extends CI_Controller
         $this->load->model('AcctCreditAccount_model');
         $this->load->model('Core_source_fund_model');
         $this->load->model('AcctDepositoAccount_model');
+        $this->load->model('AcctCreditsAccountMigration_model');
         $this->load->model('CoreMember_model');
         $this->load->helper('sistem');
         $this->load->helper('url');
@@ -928,6 +929,225 @@ class AcctMigration extends CI_Controller
 
     //** hapus data migrasi deposit lama */
     public function processtruncateMigrasiDeposito() {
+        $auth = $this->session->userdata('auth');
+       
+        if($this->AcctDepositoAccountMigration_model->truncateAcctDepositoMigration() == true) {
+            $msg = "<div class='alert alert-success alert-dismissable'>  
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
+                    Proses hapus Berhasil
+                    </div>";
+        } else {
+            $msg = "<div class='alert alert-danger alert-dismissable'>  
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
+                    Proses hapus Gagal
+                    </div>";
+        }
+    
+        $this->session->set_userdata('message', $msg);
+        redirect('migration/add-deposito-account');
+    }
+
+    //** form add Credits */
+    public function addCreditsAccountMigration()
+    {
+        $auth = $this->session->userdata('auth');
+        $unique = $this->session->userdata('unique');
+        $token = $this->session->userdata('acctcreditsaccountmigrationtoken-' . $unique['unique']);
+
+        if (empty($token)) {
+            $token = md5(date('Y-m-d H:i:s'));
+            $this->session->set_userdata('acctcreditsaccountmigrationtoken-' . $unique['unique'], $token);
+            $this->session->unset_userdata('addcreditsaccountmigration-' . $unique['unique']);
+        }
+        // Define monthlist
+        $monthlist = array(
+            '01' => 'January',
+            '02' => 'February',
+            '03' => 'March',
+            '04' => 'April',
+            '05' => 'May',
+            '06' => 'June',
+            '07' => 'July',
+            '08' => 'August',
+            '09' => 'September',
+            '10' => 'October',
+            '11' => 'November',
+            '12' => 'December',
+        );
+
+        // Define yearlist (e.g., from 2000 to current year)
+        $yearlist = array();
+        $current_year = date('Y');
+        for ($year = 2000; $year <= $current_year; $year++) {
+            $yearlist[$year] = $year;
+        }
+
+        $data['main_view']['monthlist'] = $monthlist;
+        $data['main_view']['yearlist'] = $yearlist;    
+        $data['main_view']['creditsaccount'] = $this->AcctCreditsAccountMigration_model->getdataCredits();
+        $data['main_view']['content'] = 'AcctMigration/FormAddAcctCreditsAccountMigration_view';
+        $this->load->view('MainPage_view', $data);
+    }
+
+    //** Add Array Credits Excel To Db*/
+    public function addArrayCreditsAccountMigration()
+    {
+        $auth = $this->session->userdata('auth');
+
+        $this->AcctCreditsAccountMigration_model->truncateAcctCreditsMigration();
+
+        $fileName = $_FILES['excel_file']['name'];
+        $fileSize = $_FILES['excel_file']['size'];
+        $fileError = $_FILES['excel_file']['error'];
+        $fileType = $_FILES['excel_file']['type'];
+
+        $config['upload_path'] = './assets/';
+        $config['file_name'] = $fileName;
+        $config['allowed_types'] = 'xls|xlsx';
+        $config['max_size'] = 10000;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('excel_file')) {
+            $msg = "<div class='alert alert-danger alert-dismissable'>" . $this->upload->display_errors('', '') . "</div> ";
+            $this->session->set_userdata('message', $msg);
+            redirect('migration/add-credits-account');
+        } else {
+            $media = $this->upload->data();
+            $inputFileName = './assets/' . $media['file_name'];
+
+            try {
+                $inputFileType = IOFactory::identify($inputFileName);
+                $objReader = IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileName);
+            } catch (Exception $e) {
+                die('Error loading file "' . pathinfo($inputFileName, PATHINFO_BASENAME) . '": ' . $e->getMessage());
+            }
+
+            $sheet = $objPHPExcel->getSheet(0);
+            $highestRow = $sheet->getHighestRow();
+            $highestColumn = $sheet->getHighestColumn();
+
+            for ($row = 2; $row <= $highestRow; $row++) {
+                $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, null, true, false);
+
+                // Debugging: echo data to check
+                // echo '<pre>';
+                // print_r($rowData);
+                // echo '</pre>';
+
+                // Menggunakan data dari Excel dan mengkonversi ke format PHP date
+                $tgl_trkhir_angsur = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($rowData[0][17]));
+                $tgl_angsur_brktny = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($rowData[0][18]));
+
+                // Menghitung selisih bulan
+                $jumlah_angsuran = $rowData[0][15];
+                $tanggal_jatuh_tempo = new DateTime($tgl_trkhir_angsur);
+                $tanggal_angsuran_berikutnya = new DateTime($tgl_angsur_brktny);
+
+                // Menghitung tanggal angsuran pertama
+                $interval = new DateInterval('P' . ($jumlah_angsuran - 1) . 'M');
+                $tanggal_angsuran_pertama = clone $tanggal_jatuh_tempo;
+                $tanggal_angsuran_pertama->sub($interval);
+
+                // Menghitung tanggal buka (satu bulan sebelum tanggal angsuran pertama)
+                $tanggal_buka = clone $tanggal_angsuran_pertama;
+                $tanggal_buka->sub(new DateInterval('P1M'));
+
+                // Data dari Excel
+                $pokok_perbulan = $rowData[0][10];
+                $jasa_perbulan = $rowData[0][11];
+                $jk_waktu = $rowData[0][6]; // Jangka waktu dalam bulan
+
+                // Data untuk disimpan
+                $data = [
+                    'no_pinjaman' => $rowData[0][0],
+                    'no_agt' => $rowData[0][1],
+                    'member_id' => $rowData[0][2],
+                    'nama' => $rowData[0][3],
+                    'jns_pinjm' => $rowData[0][4],
+                    'credits_id' => $rowData[0][5],
+                    'jk_waktu' => $rowData[0][6],
+                    'tgl_pinjm' => $tanggal_buka,
+                    'jt_tempo' => $tanggal_jatuh_tempo,
+                    'plafon' => $rowData[0][10] * $rowData[0][6],
+                    'pokok_perbulan' => $rowData[0][10],
+                    'jasa_perbulan' => $rowData[0][11],
+                    'total_perbulan' => $rowData[0][10] + $rowData[0][11],
+                    'sk_bg' =>  $rowData[0][13],
+                    'sld_pokok' => $rowData[0][16] * $rowData[0][10],
+                    'total_angsur' => $rowData[0][15],
+                    'sisa_angsuran' => $rowData[0][16],
+                    'tgl_trkhir_angsur' => $rowData[0][17],
+                    'tgl_angsur_brktny' => $rowData[0][18],
+                    'preferensi_angsuran' => $rowData[0][19],
+                    'payment_preference_id' => $rowData[0][20],
+                ];
+
+                // Debugging: echo data array before inserting into database
+                // echo '<pre>';
+                // print_r($data);
+                // echo '</pre>';
+
+                $this->AcctCreditsAccountMigration_model->insertAcctCreditsMigration($data);
+            }
+
+            // Update member
+            $memberid = $this->AcctCreditsAccountMigration_model->updateMemberId();
+            // Update credit id
+            if ($memberid) {
+                $credits = $this->AcctCreditsAccountMigration_model->updateCreditsId();
+                if ($credits) {
+                    $this->AcctCreditsAccountMigration_model->updatePaymentPeference();
+                }
+            }
+
+            error_log('updateMemberId result: ' . print_r($memberid, true));
+
+            if ($memberid) {
+                unlink($inputFileName);
+                $msg = "<div class='alert alert-success'>Import Data Pinjaman Excel berhasil</div> ";
+                $this->session->set_userdata('message', $msg);
+                redirect('migration/add-credits-account');
+            } else {
+                unlink($inputFileName);
+                $msg = "<div class='alert alert-danger'>Import Data Pinjaman Excel gagal</div> ";
+                $this->session->set_userdata('message', $msg);
+                redirect('migration/add-credits-account');
+            }
+        }
+    }
+
+    //** Save Credits */
+    public function processAddCreditsAccountMigration() {
+        $auth = $this->session->userdata('auth');
+        if($this->AcctDepositoAccountMigration_model->insertDepositoAmount() == true) {
+
+            $depositoNo = $this->AcctDepositoAccountMigration_model->updateDepositoAccount();
+
+            if($depositoNo){
+                $this->AcctDepositoAccountMigration_model->validateDepositoAccount();
+                
+                $this->AcctDepositoAccountMigration_model->truncateAcctDepositoMigration();
+            }
+
+            $msg = "<div class='alert alert-success alert-dismissable'>  
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
+                    Proses Migrasi Berhasil
+                    </div>";
+        } else {
+            $msg = "<div class='alert alert-danger alert-dismissable'>  
+                    <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
+                    Proses Migrasi Gagal
+                    </div>";
+        }
+    
+        $this->session->set_userdata('message', $msg);
+        redirect('migration/add-deposito-account');
+    }
+
+    //** hapus data migrasi Credits lama */
+    public function processtruncateMigrasiCredits() {
         $auth = $this->session->userdata('auth');
        
         if($this->AcctDepositoAccountMigration_model->truncateAcctDepositoMigration() == true) {

@@ -117,6 +117,16 @@ $token = $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique']);
 						<div class="col-md-4">
 							<div class="card mb-4 ">
 								<div class="card-body">
+									<h5 class="card-title">Data Migrasi Credits</h5>
+									<p class="card-text">terakhir migrasi :
+								</p>
+									<a href="<?php echo base_url() ?>migration/add-credits-account"  class="btn green-jungle" title="Simpan Data"><i class="fa fa-check"> update</i></a>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="card mb-4 ">
+								<div class="card-body">
 									<h5 class="card-title">Generate Deposito</h5>
 									<p class="card-text">terakhir migrasi :
 								</p>

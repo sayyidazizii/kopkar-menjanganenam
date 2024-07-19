@@ -694,38 +694,72 @@
 		}
 
 
-		public function getCombinedProfitSharingReport($branch_id, $start_date, $end_date) {
+		public function getSavingsProfitSharingReport($branch_id, $start_date, $end_date) {
+			$sql = "
+				 SELECT 
+				cm.member_id,
+				cm.member_no,
+				cm.member_name,
+				cm.member_address,
+				sa.savings_account_no,
+				sa.savings_account_last_balance,
+				sps.savings_profit_sharing_temp_amount AS savings_profit_sharing_temp_amount,
+				s.savings_name,
+				NULL AS deposito_name,
+				NULL AS deposito_account_no,
+				NULL AS deposito_profit_sharing_amount,
+				NULL AS deposito_profit_sharing_tax,
+				NULL AS deposito_account_last_balance
+			FROM 
+				acct_savings_profit_sharing_temp AS sps
+			JOIN 
+				core_member AS cm ON sps.member_id = cm.member_id
+			JOIN 
+				acct_savings_account AS sa ON sps.savings_account_id = sa.savings_account_id
+			JOIN 
+				acct_savings AS s ON sa.savings_id = s.savings_id
+			WHERE 
+				sps.branch_id = 2
+				AND sps.savings_profit_sharing_temp_amount IS NOT NULL
+			";
+		
+			// Jalankan query dengan parameter yang sesuai
+			$query = $this->db->query($sql, array($branch_id, $start_date, $end_date));
+		
+			// Periksa apakah query berhasil dieksekusi
+			if ($query->num_rows() > 0) {
+				return $query->result_array();
+			} else {
+				return false; // Atau tangani secara khusus jika query gagal
+			}
+		}
+		
+		public function getDepositoProfitSharingReport($branch_id, $start_date, $end_date) {
 			$sql = "
 				SELECT 
 					cm.member_id,
 					cm.member_no,
 					cm.member_name,
 					cm.member_address,
-					sa.savings_account_no,
-					sa.savings_account_last_balance,
-					sps.savings_profit_sharing_temp_amount,
-					s.savings_name,
+					NULL AS savings_account_no,
+					NULL AS savings_account_last_balance,
+					NULL AS savings_profit_sharing_temp_amount,
+					NULL AS savings_name,
 					d.deposito_name,
 					da.deposito_account_no,
 					dps.deposito_profit_sharing_amount,
 					dps.deposito_profit_sharing_tax,
 					dps.deposito_account_last_balance
 				FROM 
-					acct_savings_profit_sharing_temp AS sps
+					acct_deposito_profit_sharing AS dps
 				JOIN 
-					core_member AS cm ON sps.member_id = cm.member_id
-				JOIN 
-					acct_deposito_profit_sharing AS dps ON dps.member_id = cm.member_id
+					core_member AS cm ON dps.member_id = cm.member_id
 				JOIN 
 					acct_deposito_account AS da ON dps.deposito_account_id = da.deposito_account_id
 				JOIN 
-					acct_deposito AS d ON dps.deposito_id = d.deposito_id
-				JOIN 
-					acct_savings_account AS sa ON dps.savings_account_id = sa.savings_account_id
-				JOIN 
-					acct_savings AS s ON sa.savings_id = s.savings_id
+					acct_deposito AS d ON da.deposito_id = d.deposito_id
 				WHERE 
-					sps.branch_id = ?
+					dps.branch_id = ?
 					AND dps.deposito_profit_sharing_due_date >= ?
 					AND dps.deposito_profit_sharing_due_date <= ?
 			";
@@ -740,7 +774,6 @@
 				return false; // Atau tangani secara khusus jika query gagal
 			}
 		}
-		
 		
 
 		public function getAcctSavingsProfitSharingTotalTemp($branch_id){

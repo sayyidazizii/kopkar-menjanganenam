@@ -23,7 +23,7 @@
             </li>
             <li>
                 <a href="<?php echo base_url(); ?>AcctDepositoProfitSharingReport">
-                    Rekap Jasa Simpanan Temporary
+                    Rekap Jasa Simpanan Bulanan
                 </a>
                 <i class="fa fa-angle-right"></i>
             </li>
@@ -31,7 +31,7 @@
     </div>
 
     <h3 class="page-title">
-        Rekap Jasa Simpanan Temporary
+        Rekap Jasa Simpanan Bulanan
     </h3>
     <div class="row">
         <div class="col-md-12">

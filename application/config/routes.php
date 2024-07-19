@@ -1252,6 +1252,13 @@ $route['migration/add-deposito-account-array']                      = 'AcctMigra
 $route['migration/delete-deposito-account-old']                     = 'AcctMigration/processtruncateMigrasiDeposito';
 $route['migration/update-deposito-account-amount']                  = 'AcctMigration/processAddDepositoAccountMigration';
 
+//migrasi credits
+$route['migration/add-credits-account']                            = 'AcctMigration/addCreditsAccountMigration';
+$route['migration/add-credits-account-array']                      = 'AcctMigration/addArrayCreditsAccountMigration';
+$route['migration/delete-credits-account-old']                     = 'AcctMigration/processtruncateMigrasiCredits';
+$route['migration/update-credits-account-amount']                  = 'AcctMigration/processAddCreditsAccountMigration';
+
+
 
 //AcctSavingsProfitSharingNew  Total
 $route['savings-profit-sharing-acumulation-report'] 			     = 'AcctSavingsProfitSharingTotalReport';
