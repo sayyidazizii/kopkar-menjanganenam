@@ -101,6 +101,7 @@
 			return $result['last_balance'];
 		}
 
+
 		public function updateAcctSavingsAccountDetail($data){
 			$this->db->set('savings_account_last_balance', $data['last_balance']);
 			$this->db->where('savings_account_id', $data['savings_account_id']);
@@ -196,5 +197,61 @@
 			$this->db->where('core_member.member_id', $member_id);
 			return $this->db->get()->row_array();
 		}
+
+
+
+		// ======================= balance update =======================
+
+		
+		public function getAcctSavingsAccountDetailFirst($savings_account_id,$start_date, $end_date){
+			$this->db->select('
+				acct_savings_account_detail.savings_account_id'
+			);
+			$this->db->from('acct_savings_account_detail');
+			$this->db->join('acct_savings_account', 'acct_savings_account_detail.savings_account_id = acct_savings_account.savings_account_id');
+			$this->db->join('migrasi_tabungan', 'acct_savings_account.savings_account_no = migrasi_tabungan.no_rek');
+			$this->db->where('acct_savings_account_detail.savings_account_id =', $savings_account_id);
+			$this->db->where('acct_savings_account_detail.today_transaction_date >=', $start_date);
+			$this->db->where('acct_savings_account_detail.today_transaction_date <=', $end_date);
+			$this->db->order_by('acct_savings_account_detail.savings_account_id', 'ASC');
+			$this->db->order_by('acct_savings_account_detail.savings_account_detail_id', 'ASC');
+			$result = $this->db->get()->result_array();
+			return $result;
+		}
+
+
+		//get all
+		public function getAcctSavingsAccountDetailAll($start_date, $end_date){
+			$this->db->select('
+				*'
+			);
+			$this->db->from('acct_savings_account_detail');
+			$this->db->join('acct_savings_account', 'acct_savings_account_detail.savings_account_id = acct_savings_account.savings_account_id');
+			$this->db->join('migrasi_tabungan', 'acct_savings_account.savings_account_no = migrasi_tabungan.no_rek');
+			$this->db->where('acct_savings_account_detail.today_transaction_date >=', $start_date);
+			$this->db->where('acct_savings_account_detail.today_transaction_date <=', $end_date);
+			$this->db->order_by('acct_savings_account_detail.savings_account_id', 'ASC');
+			$this->db->order_by('acct_savings_account_detail.savings_account_detail_id', 'ASC');
+			$result = $this->db->get()->result_array();
+			return $result;
+		}
+
+
+		public function updateOpeningBalance($data){
+			$this->db->set('savings_account_last_balance', $data['last_balance']);
+			$this->db->where('savings_account_id', $data['savings_account_id']);
+			if($this->db->update('acct_savings_account')){
+				$this->db->where('savings_account_detail_id', $data['savings_account_detail_id']);
+				if($this->db->update('acct_savings_account_detail', $data)){
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+			
+		}
+		
 	}
 ?>

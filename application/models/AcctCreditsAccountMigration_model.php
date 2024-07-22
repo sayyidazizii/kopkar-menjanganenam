@@ -25,8 +25,11 @@
             $this->db->query('SET @DISABLE_TRIGGERS = TRUE;');
 
             // Query for account_code1
-            $sql = "INSERT INTO acct_deposito_account (branch_id, office_id, deposito_account_no, member_id, savings_account_id, deposito_account_period, deposito_account_date, deposito_account_due_date, deposito_account_amount, deposito_id,deposito_account_serial_no)
-                    SELECT '2', '6', no_berjangka, member_id, savings_account_id, jangka_waktu, tanggal_buka, jatuh_tempo, saldo, deposito_id,no_berjangka
+            $sql = "INSERT INTO acct_credits_account (branch_id, office_id, source_fund_id, member_id, credits_id, credits_account_period, credits_account_date, credits_account_due_date, 
+                    credits_account_amount, credits_account_principal_amount, credits_account_interest_amount, credits_account_payment_amount, 
+                    credits_account_interest, credits_account_last_balance, credits_account_payment_to, credits_account_last_payment_date, credits_account_payment_date, payment_preference_id, created_on, created_id, credits_account_serial)
+                    SELECT '2', '6', '5', member_id, credits_id, jk_waktu, tgl_pinjm, jt_tempo, plafon, pokok_perbulan, jasa_perbulan, total_perbulan, sk_bng, sld_pokok, 
+                    total_angsur, tgl_trkhir_angsur, tgl_angsur_brktny, payment_preference_id, tgl_pinjm, '37', no_pinjaman
                     FROM migrasi_pinjaman";
 
             // Execute the query
@@ -91,11 +94,13 @@
 
         public function updatePaymentPeference()
         {
-            $query1 = "UPDATE migrasi_pinjaman_elektro
-                    SET preferensi_angsuran = 3
+            $query1 = "UPDATE migrasi_pinjaman
+                    SET preferensi_angsuran = 3,
+                    payment_preference_id = 3
                     WHERE preferensi_angsuran = 'POTONG GAJI'";
-            $query2 = "UPDATE migrasi_pinjaman_elektro
-                     SET preferensi_angsuran = 1
+            $query2 = "UPDATE migrasi_pinjaman
+                     SET preferensi_angsuran = 1,
+                     payment_preference_id = 1
                      WHERE preferensi_angsuran = 'MANUAL'";
             $result1 = $this->db->query($query1);
             $result2 = $this->db->query($query2);

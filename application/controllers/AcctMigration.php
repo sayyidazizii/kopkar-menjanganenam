@@ -1040,24 +1040,31 @@ class AcctMigration extends CI_Controller
                 $tgl_trkhir_angsur = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($rowData[0][17]));
                 $tgl_angsur_brktny = date('Y-m-d', PHPExcel_Shared_Date::ExcelToPHP($rowData[0][18]));
 
-                // Menghitung selisih bulan
                 $jumlah_angsuran = $rowData[0][15];
                 $tanggal_jatuh_tempo = new DateTime($tgl_trkhir_angsur);
                 $tanggal_angsuran_berikutnya = new DateTime($tgl_angsur_brktny);
 
-                // Menghitung tanggal angsuran pertama
-                $interval = new DateInterval('P' . ($jumlah_angsuran - 1) . 'M');
-                $tanggal_angsuran_pertama = clone $tanggal_jatuh_tempo;
-                $tanggal_angsuran_pertama->sub($interval);
+                if ($jumlah_angsuran > 0) {
+                    // Menghitung tanggal angsuran pertama
+                    $interval = new DateInterval('P' . ($jumlah_angsuran - 1) . 'M');
+                    $tanggal_angsuran_pertama = clone $tanggal_jatuh_tempo;
+                    $tanggal_angsuran_pertama->sub($interval);
 
-                // Menghitung tanggal buka (satu bulan sebelum tanggal angsuran pertama)
-                $tanggal_buka = clone $tanggal_angsuran_pertama;
-                $tanggal_buka->sub(new DateInterval('P1M'));
+                    // Menghitung tanggal buka (satu bulan sebelum tanggal angsuran pertama)
+                    $tanggal_buka = clone $tanggal_angsuran_pertama;
+                    $tanggal_buka->sub(new DateInterval('P1M'));
+                } else {
+                    // Jika jumlah angsuran adalah 0, set tanggal_angsuran_pertama dan tanggal_buka sebagai tanggal default atau nilai yang sesuai
+                    $tanggal_angsuran_pertama = clone $tanggal_jatuh_tempo;
+                    $tanggal_buka = clone $tanggal_jatuh_tempo;
+                    $tanggal_buka->sub(new DateInterval('P1M'));
+                }
 
-                // Data dari Excel
-                $pokok_perbulan = $rowData[0][10];
-                $jasa_perbulan = $rowData[0][11];
-                $jk_waktu = $rowData[0][6]; // Jangka waktu dalam bulan
+                // Mengubah format tanggal kembali ke string untuk penyimpanan
+                $tanggal_buka_str = $tanggal_buka->format('Y-m-d');
+                $tanggal_angsuran_pertama_str = $tanggal_angsuran_pertama->format('Y-m-d');
+                $tanggal_jatuh_tempo_str = $tanggal_jatuh_tempo->format('Y-m-d');
+                $tanggal_angsuran_berikutnya_str = $tanggal_angsuran_berikutnya->format('Y-m-d');
 
                 // Data untuk disimpan
                 $data = [
@@ -1068,25 +1075,27 @@ class AcctMigration extends CI_Controller
                     'jns_pinjm' => $rowData[0][4],
                     'credits_id' => $rowData[0][5],
                     'jk_waktu' => $rowData[0][6],
-                    'tgl_pinjm' => $tanggal_buka,
-                    'jt_tempo' => $tanggal_jatuh_tempo,
+                    'tgl_pinjm' => $tanggal_buka_str,
+                    'jt_tempo' => $tanggal_jatuh_tempo_str,
                     'plafon' => $rowData[0][10] * $rowData[0][6],
                     'pokok_perbulan' => $rowData[0][10],
                     'jasa_perbulan' => $rowData[0][11],
                     'total_perbulan' => $rowData[0][10] + $rowData[0][11],
-                    'sk_bg' =>  $rowData[0][13],
+                    'sk_bng' => $rowData[0][13],
                     'sld_pokok' => $rowData[0][16] * $rowData[0][10],
                     'total_angsur' => $rowData[0][15],
                     'sisa_angsuran' => $rowData[0][16],
-                    'tgl_trkhir_angsur' => $rowData[0][17],
-                    'tgl_angsur_brktny' => $rowData[0][18],
+                    'tgl_trkhir_angsur' => $tanggal_jatuh_tempo_str,
+                    'tgl_angsur_brktny' => $tanggal_angsuran_berikutnya_str,
                     'preferensi_angsuran' => $rowData[0][19],
                     'payment_preference_id' => $rowData[0][20],
                 ];
 
+                
+
                 // Debugging: echo data array before inserting into database
                 // echo '<pre>';
-                // print_r($data);
+                // echo json_encode($data);
                 // echo '</pre>';
 
                 $this->AcctCreditsAccountMigration_model->insertAcctCreditsMigration($data);
@@ -1094,6 +1103,9 @@ class AcctMigration extends CI_Controller
 
             // Update member
             $memberid = $this->AcctCreditsAccountMigration_model->updateMemberId();
+            // echo json_encode($memberid);
+            // exit;
+
             // Update credit id
             if ($memberid) {
                 $credits = $this->AcctCreditsAccountMigration_model->updateCreditsId();
@@ -1102,7 +1114,7 @@ class AcctMigration extends CI_Controller
                 }
             }
 
-            error_log('updateMemberId result: ' . print_r($memberid, true));
+            // error_log('updateMemberId result: ' . print_r($memberid, true));
 
             if ($memberid) {
                 unlink($inputFileName);
@@ -1121,15 +1133,10 @@ class AcctMigration extends CI_Controller
     //** Save Credits */
     public function processAddCreditsAccountMigration() {
         $auth = $this->session->userdata('auth');
-        if($this->AcctDepositoAccountMigration_model->insertDepositoAmount() == true) {
-
-            $depositoNo = $this->AcctDepositoAccountMigration_model->updateDepositoAccount();
-
-            if($depositoNo){
-                $this->AcctDepositoAccountMigration_model->validateDepositoAccount();
+        $this->AcctCreditsAccountMigration_model->insertCreditsAmount();
+        if($this->AcctCreditsAccountMigration_model->insertCreditsAmount() == true) {
                 
-                $this->AcctDepositoAccountMigration_model->truncateAcctDepositoMigration();
-            }
+                $this->AcctCreditsAccountMigration_model->truncateAcctCreditsMigration();
 
             $msg = "<div class='alert alert-success alert-dismissable'>  
                     <button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>                     
@@ -1143,7 +1150,7 @@ class AcctMigration extends CI_Controller
         }
     
         $this->session->set_userdata('message', $msg);
-        redirect('migration/add-deposito-account');
+        redirect('migration/add-credits-account');
     }
 
     //** hapus data migrasi Credits lama */

@@ -131,7 +131,7 @@ $token 	= $this->session->userdata('acctcreditsaccountmigrationtoken-' . $sesi['
 									<th width="15%">plafon</th>
 									<th width="15%">pokok_perbulan</th>
 									<th width="15%">total_perbulan</th>
-									<th width="15%">sk_bg</th>
+									<th width="15%">sk_bng</th>
 									<th width="15%">sld_pokok</th>
 									<th width="15%">total_angsur</th>
 									<th width="15%">sisa_angsuran</th>
@@ -161,7 +161,7 @@ $token 	= $this->session->userdata('acctcreditsaccountmigrationtoken-' . $sesi['
 											<td width="25%" style="text-align: left;"><?php echo $val['plafon']?></td>
 											<td width="25%" style="text-align: left;"><?php echo $val['pokok_perbulan']?></td>
 											<td width="25%" style="text-align: left;"><?php echo $val['total_perbulan']?></td>
-											<td width="25%" style="text-align: left;"><?php echo $val['sk_bg']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['sk_bng']?></td>
 											<td width="25%" style="text-align: left;"><?php echo $val['sld_pokok']?></td>
 											<td width="25%" style="text-align: left;"><?php echo $val['total_angsur']?></td>
 											<td width="25%" style="text-align: left;"><?php echo $val['sisa_angsuran']?></td>
