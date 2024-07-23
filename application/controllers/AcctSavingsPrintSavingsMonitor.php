@@ -339,45 +339,46 @@
 		public function OpeningBalance(){
 			$auth = $this->session->userdata('auth');
 			
-			$sesi['start_date'] = '2024-07-15';
+			$sesi['start_date'] = '2024-07-08';
 			$sesi['end_date'] = '2024-07-22';
-			$sesi['savings_account_id'] = '';
 			
-			$acctsavingsaccountdetailAll = $this->AcctSavingsPrintSavingsMonitor_model->getAcctSavingsAccountDetailAll($sesi['start_date'], $sesi['end_date']);
+			// Dapatkan semua ID rekening tabungan yang perlu diproses
+			$savings_account_ids = $this->AcctSavingsPrintSavingsMonitor_model->getAllSavingsAccountIds($sesi['start_date'], $sesi['end_date']);
 			
-			foreach ($acctsavingsaccountdetailAll as $key => $val) {
-				$acctsavingsaccountdetail = $this->AcctSavingsPrintSavingsMonitor_model->getAcctSavingsAccountDetailFirst($val['savings_account_id'], $sesi['start_date'], $sesi['end_date']);
+			foreach ($savings_account_ids as $savings_account_id) {
+				$acctsavingsaccountdetailAll = $this->AcctSavingsPrintSavingsMonitor_model->getAcctSavingsAccountDetailAll($savings_account_id, $sesi['start_date'], $sesi['end_date']);
 				
-				// Debugging the fetched details for each savings account
-				echo '<pre>';
-				print_r($acctsavingsaccountdetail);
-				echo '</pre>';
-				
-				// Calculate opening and last balance (dummy logic)
-				$opening_balance = isset($acctsavingsaccountdetail['opening_balance']) ? $acctsavingsaccountdetail['opening_balance'] : 0;
-				$last_balance = ($opening_balance + $val['mutation_in']) - $val['mutation_out'];
+				// Inisialisasi saldo awal untuk record pertama
+				$initialDetail = $this->AcctSavingsPrintSavingsMonitor_model->getAcctSavingsAccountDetailFirst($savings_account_id, $sesi['start_date'], $sesi['end_date']);
+				$opening_balance = isset($initialDetail['opening_balance']) ? $initialDetail['opening_balance'] : 0;
 
-				// Prepare data for updating the opening balance
-				$newdata = array(
-					'savings_account_detail_id' => $val['savings_account_detail_id'],
-					'savings_account_id' => $val['savings_account_id'],
-					'opening_balance' => $opening_balance,
-					'last_balance' => $last_balance,
-				);
-				
-				// Debugging the data to be updated
-				echo '<pre>';
-				print_r($newdata);
-				echo '</pre>';
-				
-				// Uncomment the following lines to perform the actual update
-				// $updateOpening = $this->AcctSavingsPrintSavingsMonitor_model->updateOpeningBalance($newdata);
-				// $this->AcctSavingsPrintSavingsMonitor_model->updateAcctSavingsAccountDetail($newdata);
-				
-				// Update opening balance for the next iteration
-				$opening_balance = $last_balance;
+				foreach ($acctsavingsaccountdetailAll as $key => $val) {
+					// Hitung saldo terakhir untuk iterasi saat ini
+					$last_balance = ($opening_balance + $val['mutation_in']) - $val['mutation_out'];
+
+					// Siapkan data untuk memperbarui saldo pembukaan
+					$newdata = array(
+						'savings_account_detail_id' => $val['savings_account_detail_id'],
+						'savings_account_id' => $val['savings_account_id'],
+						'opening_balance' => $opening_balance,
+						'last_balance' => $last_balance,
+					);
+					
+					// Uncomment untuk melakukan update
+					// $updateOpening = $this->AcctSavingsPrintSavingsMonitor_model->updateOpeningBalance($newdata);
+					$this->AcctSavingsPrintSavingsMonitor_model->updateAcctSavingsAccountDetail($newdata);
+					
+					// Update saldo awal untuk iterasi berikutnya
+					$opening_balance = $last_balance;
+				}
+
+				// Update rata-rata harian setelah proses update saldo
+				$this->AcctSavingsPrintSavingsMonitor_model->updateDailyAverageBalance($savings_account_id, $sesi['start_date'], $sesi['end_date']);
 			}
 		}
+
+
+
 
 	
 	}

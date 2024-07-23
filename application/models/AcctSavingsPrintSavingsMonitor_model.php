@@ -201,12 +201,19 @@
 
 
 		// ======================= balance update =======================
-
 		
-		public function getAcctSavingsAccountDetailFirst($savings_account_id,$start_date, $end_date){
-			$this->db->select('
-				acct_savings_account_detail.savings_account_id'
-			);
+		public function getAllSavingsAccountIds($start_date, $end_date) {
+			$this->db->distinct();
+			$this->db->select('savings_account_id');
+			$this->db->from('acct_savings_account_detail');
+			$this->db->where('today_transaction_date >=', $start_date);
+			$this->db->where('today_transaction_date <=', $end_date);
+			$result = $this->db->get()->result_array();
+			return array_column($result, 'savings_account_id');
+		}
+
+		public function getAcctSavingsAccountDetailFirst($savings_account_id, $start_date, $end_date) {
+			$this->db->select('*');
 			$this->db->from('acct_savings_account_detail');
 			$this->db->join('acct_savings_account', 'acct_savings_account_detail.savings_account_id = acct_savings_account.savings_account_id');
 			$this->db->join('migrasi_tabungan', 'acct_savings_account.savings_account_no = migrasi_tabungan.no_rek');
@@ -215,19 +222,17 @@
 			$this->db->where('acct_savings_account_detail.today_transaction_date <=', $end_date);
 			$this->db->order_by('acct_savings_account_detail.savings_account_id', 'ASC');
 			$this->db->order_by('acct_savings_account_detail.savings_account_detail_id', 'ASC');
-			$result = $this->db->get()->result_array();
+			$this->db->limit(1);
+			$result = $this->db->get()->row_array();
 			return $result;
 		}
 
-
-		//get all
-		public function getAcctSavingsAccountDetailAll($start_date, $end_date){
-			$this->db->select('
-				*'
-			);
+		public function getAcctSavingsAccountDetailAll($savings_account_id, $start_date, $end_date) {
+			$this->db->select('*');
 			$this->db->from('acct_savings_account_detail');
 			$this->db->join('acct_savings_account', 'acct_savings_account_detail.savings_account_id = acct_savings_account.savings_account_id');
 			$this->db->join('migrasi_tabungan', 'acct_savings_account.savings_account_no = migrasi_tabungan.no_rek');
+			$this->db->where('acct_savings_account_detail.savings_account_id =', $savings_account_id);
 			$this->db->where('acct_savings_account_detail.today_transaction_date >=', $start_date);
 			$this->db->where('acct_savings_account_detail.today_transaction_date <=', $end_date);
 			$this->db->order_by('acct_savings_account_detail.savings_account_id', 'ASC');
@@ -253,5 +258,38 @@
 			
 		}
 		
+		public function updateDailyAverageBalance($savings_account_id, $start_date, $end_date) {
+			// Ambil semua detail transaksi untuk rekening tabungan tertentu dalam rentang tanggal
+			$this->db->select('*');
+			$this->db->from('acct_savings_account_detail');
+			$this->db->where('savings_account_id', $savings_account_id);
+			$this->db->where('today_transaction_date >=', $start_date);
+			$this->db->where('today_transaction_date <=', $end_date);
+			$details = $this->db->get()->result_array();
+
+			// Hitung total saldo harian dan jumlah hari unik
+			$total_balance = 0;
+			$days_count = 0;
+			$previous_date = '';
+
+			foreach ($details as $detail) {
+				// Asumsikan saldo hari ini adalah last_balance
+				$total_balance += $detail['last_balance'];
+
+				// Menghitung jumlah hari unik
+				if ($previous_date != $detail['today_transaction_date']) {
+					$days_count++;
+					$previous_date = $detail['today_transaction_date'];
+				}
+
+				// Update setiap baris dengan nilai rata-rata harian
+				$daily_average = $days_count > 0 ? ($total_balance / $days_count) : 0;
+				$this->db->set('daily_average_balance', $daily_average);
+				$this->db->where('savings_account_detail_id', $detail['savings_account_detail_id']);
+				$this->db->update('acct_savings_account_detail');
+			}
+		}
+
+
 	}
 ?>
