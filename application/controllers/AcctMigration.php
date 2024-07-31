@@ -1133,7 +1133,7 @@ class AcctMigration extends CI_Controller
     //** Save Credits */
     public function processAddCreditsAccountMigration() {
         $auth = $this->session->userdata('auth');
-        $this->AcctCreditsAccountMigration_model->insertCreditsAmount();
+        // $this->AcctCreditsAccountMigration_model->insertCreditsAmount();
         if($this->AcctCreditsAccountMigration_model->insertCreditsAmount() == true) {
                 
                 $this->AcctCreditsAccountMigration_model->truncateAcctCreditsMigration();

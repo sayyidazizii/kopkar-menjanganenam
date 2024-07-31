@@ -44,7 +44,7 @@
 		return confirm('Are you sure you want to reset the data? This action cannot be undone.');
 	}
 </script>
-<?php echo form_open_multipart('migration/add-savings-account-array', array('id' => 'myform', 'class' => 'horizontal-form')); ?>
+<?php echo form_open_multipart('migration/add-sicantik-array', array('id' => 'myform', 'class' => 'horizontal-form')); ?>
 <?php
 $sesi 	= $this->session->userdata('unique');
 $data 	= $this->session->userdata('addcreditaccount-' . $sesi['unique']);
@@ -124,6 +124,7 @@ $token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique'])
 									<th width="15%">member id</th>
 									<th width="15%">Nama</th>
 									<th width="15%">Saldo Akhir</th>
+									<th width="15%">Setor Awal</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -139,6 +140,7 @@ $token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique'])
 											<td width="25%" style="text-align: left;"><?php echo $val['member_id']?></td>
                                             <td width="25%" style="text-align: left;"><?php echo $val['nama']?></td>
 											<td width="25%" style="text-align: left;"><?php echo $val['saldo_akhr']?></td>
+											<td width="25%" style="text-align: left;"><?php echo $val['setoran_awal']?></td>
 										</tr>
 								<?php 
 										$no++;

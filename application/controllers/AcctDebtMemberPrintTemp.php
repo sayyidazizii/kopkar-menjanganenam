@@ -46,13 +46,14 @@
 			require_once('tcpdf/config/tcpdf_config.php');
 			require_once('tcpdf/tcpdf.php');
 			
-			$pdf = new TCPDF('L', PDF_UNIT, 'F4', true, 'UTF-8', false);
-
+			// Ukuran matte paper adalah 8.5 x 11 inci
+			$pdf = new TCPDF('P', PDF_UNIT, array(8.5 * 25.4, 11 * 25.4), true, 'UTF-8', false);
+		
 			$pdf->SetPrintHeader(false);
 			$pdf->SetPrintFooter(false);
 			$pdf->setFontSubsetting(false);
-
-			$pdf->SetMargins(7, 4, 7, 7);
+		
+			$pdf->SetMargins(3, 3, 3, 3	);
 			$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 			if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
@@ -60,9 +61,9 @@
 				$pdf->setLanguageArray($l);
 			}
 
-			$pdf->SetFont('helvetica', 'B', 20);
+			$pdf->SetFont('helvetica', 'B', 15);
 			$pdf->AddPage();
-			$pdf->SetFont('helvetica', '', 9);
+			$pdf->SetFont('helvetica', '', 7);
 
 			$tbl = '';
 
@@ -176,10 +177,7 @@
 					</tr>
 				</table>
 				<br/>
-				<br/>
-				<br/>
-				<br/>
-				<br>
+				
 				<table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">
 					<tr>
 						<td width=\"100%\"><hr/></td>
@@ -193,7 +191,7 @@
 						<td width=\"50%\" style=\"border-right: 1px solid black;\"><div style=\"text-align: center;\">PERINCIAN POTONGAN TANGGAL : ".$date."</div></td>
 					</tr>
 					<tr>
-						<td height=\"10px\"></td>
+						<td height=\"1px\"></td>
 					</tr>
 					<tr>
 						<td width=\"50%\"><hr/></td>
@@ -216,7 +214,7 @@
 						<td width=\"35%\" style=\"border-right: 1px solid black;\"><div style=\"text-align: left;\">: ".$this->CoreMember_model->getCorePartNameFromId($val['part_id'])."</div></td>
 					</tr>	
 					<tr>
-						<td height=\"10px\"></td>
+						<td height=\"1px\"></td>
 					</tr>
 					<tr>
 						<td width=\"50%\"><hr/></td>
@@ -338,7 +336,7 @@
 						<td width=\"50%\"><div style=\"text-align: center;\">Semarang, ".date('d-m-Y')."</div></td>
 					</tr>
 					<tr>
-						<td height=\"70px\"></td>
+						<td height=\"10px\"></td>
 					</tr>
 					<tr>
 						<td width=\"50%\"></td>

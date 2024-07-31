@@ -27,9 +27,9 @@
             // Query for account_code1
             $sql = "INSERT INTO acct_credits_account (branch_id, office_id, source_fund_id, member_id, credits_id, credits_account_period, credits_account_date, credits_account_due_date, 
                     credits_account_amount, credits_account_principal_amount, credits_account_interest_amount, credits_account_payment_amount, 
-                    credits_account_interest, credits_account_last_balance, credits_account_payment_to, credits_account_last_payment_date, credits_account_payment_date, payment_preference_id, created_on, created_id, credits_account_serial)
+                    credits_account_interest, credits_account_last_balance, credits_account_payment_to, credits_account_last_payment_date, credits_account_payment_date, payment_preference_id, created_on, created_id, credits_account_serial,credits_approve_status)
                     SELECT '2', '6', '5', member_id, credits_id, jk_waktu, tgl_pinjm, jt_tempo, plafon, pokok_perbulan, jasa_perbulan, total_perbulan, sk_bng, sld_pokok, 
-                    total_angsur, tgl_trkhir_angsur, tgl_angsur_brktny, payment_preference_id, tgl_pinjm, '37', no_pinjaman
+                    total_angsur, tgl_trkhir_angsur, tgl_angsur_brktny, payment_preference_id, tgl_pinjm, '37', no_pinjaman,1
                     FROM migrasi_pinjaman";
 
             // Execute the query
