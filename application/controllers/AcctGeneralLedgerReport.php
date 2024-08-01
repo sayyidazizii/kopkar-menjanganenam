@@ -816,5 +816,88 @@
 				echo "Maaf data yang di eksport tidak ada !";
 			}
 		}
+
+		//update balance
+		public function updateBalance(){
+			$auth = $this->session->userdata('auth');
+			
+			$month = '07';
+			$next_month = '08';
+			$year  = '2024';
+
+			$data = array (
+				"branch_id" 		=> 2,
+				"month_period" 	    => $month,
+				"year_period" 		=> $year,
+			);
+
+			$sesi['start_date'] = '2024-07-01';
+			$sesi['end_date'] = '2024-07-31';
+			
+			// Dapatkan semua ID rekening tabungan yang perlu diproses
+			$account_ids = $this->AcctGeneralLedgerReport_model->getAllAccountIds($sesi['start_date'], $sesi['end_date']);
+			
+			foreach ($account_ids as $account_id) {
+				$acctsavingsaccountdetailAll = $this->AcctGeneralLedgerReport_model->getAcctAccountDetailAll($account_id, $sesi['start_date'], $sesi['end_date']);
+
+
+				// Inisialisasi saldo awal untuk record pertama
+				$initialDetail = $this->AcctGeneralLedgerReport_model->getAcctAccountDetailFirst($account_id, $sesi['start_date'], $sesi['end_date']);
+				$opening_balance = isset($initialDetail['opening_balance']) ? $initialDetail['opening_balance'] : 0;
+
+				foreach ($acctsavingsaccountdetailAll as $key => $val) {
+					// Hitung saldo terakhir untuk iterasi saat ini
+					$last_balance = ($opening_balance + $val['account_in']) - $val['account_out'];
+
+					//get total mutation
+					$total_mutation_in 		= $this->AcctGeneralLedgerReport_model->getTotalAccountIn($val['account_id'], $data);
+					$total_mutation_out 	= $this->AcctGeneralLedgerReport_model->getTotalAccountOut($val['account_id'], $data);
+
+					// Siapkan data untuk memperbarui saldo pembukaan
+					$newdata = array(
+						'account_balance_detail_id' => $val['account_balance_detail_id'],
+						'account_id' => $val['account_id'],
+						'account_in'	=>  $val['account_in'],
+						'account_out'	=> $val['account_out'],
+						'opening_balance' => $opening_balance,
+						'last_balance' => $last_balance,
+					);
+
+					// $acct_opening = array(
+					// 	'account_id' => $val['account_id'],
+					// 	'opening_balance' => $opening_balance + $last_balance,
+					// 	'next_month' => $next_month,
+					// 	'year' => $year,
+					// );
+
+					// $acct_mutation = array(
+					// 	'account_id' => $val['account_id'],
+					// 	'mutation_in_amount'	=> $total_mutation_in,
+					// 	'mutation_out_amount'	=> $total_mutation_out,
+					// 	'last_balance' => $last_balance,
+					// 	'month' => $month,
+					// 	'year' => $year,
+					// );
+					
+					// Uncomment untuk melakukan update
+					// $updateOpening = $this->AcctGeneralLedgerReport_model->updateOpeningBalance($newdata);
+					$this->AcctGeneralLedgerReport_model->updatelastBalance($newdata);
+
+				
+					
+					// Update saldo awal untuk iterasi berikutnya
+					$opening_balance = $last_balance;
+				}
+
+				// $this->AcctGeneralLedgerReport_model->updateOpeningBalance($acct_opening);
+
+				// $this->AcctGeneralLedgerReport_model->updateMutation($acct_mutation);
+
+				// Update rata-rata harian setelah proses update saldo
+				
+			}
+		}
+
+
 	}
 ?>

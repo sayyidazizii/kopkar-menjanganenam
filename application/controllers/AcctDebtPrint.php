@@ -3145,16 +3145,33 @@ class AcctDebtPrint extends CI_Controller
 
 					if($data['mutation_id'] == $preferencecompany['cash_deposit_id'] || $data['mutation_id'] == 14){
 
-						$account_id_default_status 			= $this->AcctSavingsSalaryMutation_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
+						//hardcode
+						if($val['member_division_name'] == 'PABRIK' or $val['member_division_name'] == 'MARKETING' or $val['member_division_name'] == 'MARKETING STAFF'){
+							
+							$account_id_default_status_debit    = $this->AcctSavingsSalaryMutation_model->getAccountIDDefaultStatus(27);
+							$account_preference 				= 27;
+						
+						}else if($val['member_division_name'] == 'APOTIK DAN PBF ME' or $val['member_division_name'] == 'KOPERASI'){
+							
+							$account_id_default_status_debit 	= $this->AcctSavingsSalaryMutation_model->getAccountIDDefaultStatus(9);
+							$account_preference 				= 9;
+						}else{
+							
+							$account_id_default_status_debit 	= $this->AcctSavingsSalaryMutation_model->getAccountIDDefaultStatus(9);
+							$account_preference 				= 9;
+						}
+
+						// $account_id_default_status 			= $this->AcctSavingsSalaryMutation_model->getAccountIDDefaultStatus($preferencecompany['account_salary_payment_id']);
 
 
 						$data_debet = array (
 							'journal_voucher_id'			=> $journal_voucher_id,
-							'account_id'					=> $preferencecompany['account_salary_payment_id'],
+							'account_id'					=> $account_preference,
+							// 'account_id'					=> $preferencecompany['account_salary_payment_id'],
 							'journal_voucher_description'	=> 'SETORAN POTONG GAJI '.$acctsavingscash_last['member_name'],
 							'journal_voucher_amount'		=> $data['savings_cash_mutation_amount'],
 							'journal_voucher_debit_amount'	=> $data['savings_cash_mutation_amount'],
-							'account_id_default_status'		=> $account_id_default_status,
+							'account_id_default_status'		=> $account_id_default_status_debit,
 							'account_id_status'				=> 0,
 							'journal_voucher_item_token'	=> $data['savings_cash_mutation_token'].$preferencecompany['account_salary_payment_id'],
 							'created_id' 					=> $auth['user_id']

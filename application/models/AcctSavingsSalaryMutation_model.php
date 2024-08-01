@@ -416,7 +416,8 @@
 
 		public function getSavingsSalaryMutationTemp()
 	{
-		$this->db->select('acct_savings_cash_mutation_temp.*, core_member.member_name, core_member.member_no, acct_savings.savings_name, core_division.division_name,acct_savings_account.savings_account_no');
+		$this->db->select('acct_savings_cash_mutation_temp.*, core_member.member_name, core_member.member_no, 
+		 core_member.member_division_name,acct_savings.savings_name, core_division.division_name,acct_savings_account.savings_account_no');
 		$this->db->from('acct_savings_cash_mutation_temp');
 		$this->db->join('acct_savings_account', 'acct_savings_cash_mutation_temp.savings_account_id = acct_savings_account.savings_account_id');
 		$this->db->join('core_member', 'acct_savings_cash_mutation_temp.member_id = core_member.member_id');

@@ -218,5 +218,113 @@
 			return $result['journal_voucher_no'];
 		}
 
+
+    // ======================= balance update =======================
+		
+		public function getAllAccountIds($start_date, $end_date) {
+			$this->db->distinct();
+			$this->db->select('account_id');
+			$this->db->from('acct_account_balance_detail');
+			$this->db->where('transaction_date >=', $start_date);
+			$this->db->where('transaction_date <=', $end_date);
+			$result = $this->db->get()->result_array();
+			return array_column($result, 'account_id');
+		}
+
+		public function getAcctAccountDetailFirst($account_id, $start_date, $end_date) {
+			$this->db->select('*');
+			$this->db->from('acct_account_balance_detail');
+			$this->db->where('acct_account_balance_detail.account_id =', $account_id);
+			$this->db->where('acct_account_balance_detail.transaction_date >=', $start_date);
+			$this->db->where('acct_account_balance_detail.transaction_date <=', $end_date);
+			$this->db->order_by('acct_account_balance_detail.account_id', 'ASC');
+			$this->db->order_by('acct_account_balance_detail.account_balance_detail_id', 'ASC');
+			$this->db->limit(1);
+			$result = $this->db->get()->row_array();
+			return $result;
+		}
+
+		public function getAcctAccountDetailAll($account_id, $start_date, $end_date) {
+			$this->db->select('*');
+			$this->db->from('acct_account_balance_detail');
+			$this->db->where('acct_account_balance_detail.account_id =', $account_id);
+			$this->db->where('acct_account_balance_detail.transaction_date >=', $start_date);
+			$this->db->where('acct_account_balance_detail.transaction_date <=', $end_date);
+			$this->db->order_by('acct_account_balance_detail.account_id', 'ASC');
+			$this->db->order_by('acct_account_balance_detail.account_balance_detail_id', 'ASC');
+			$result = $this->db->get()->result_array();
+			return $result;
+		}
+
+
+		public function updatelastBalance($data){
+			$this->db->set('last_balance', $data['last_balance']);
+			$this->db->where('account_id', $data['account_id']);
+			if($this->db->update('acct_account_balance')){
+				// $this->db->set('opening_balance', $data['opening_balance']);
+				$this->db->set('last_balance', $data['last_balance']);
+				$this->db->where('account_balance_detail_id', $data['account_balance_detail_id']);
+				$this->db->where('account_id', $data['account_id']);
+				if($this->db->update('acct_account_balance_detail', $data)){
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+			
+		}
+
+		public function getTotalAccountIn($account_id, $data){
+			$this->db->select("SUM(account_in) AS total_mutation_in");
+			$this->db->from("acct_account_balance_detail");
+			$this->db->where("account_id", $account_id);
+			$this->db->where("MONTH(transaction_date)", $data['month_period']);
+			$this->db->where("YEAR(transaction_date)", $data['year_period']);
+			$this->db->where("branch_id", $data['branch_id']);
+			$result = $this->db->get()->row_array();
+			return $result['total_mutation_in'];
+		}
+
+
+		public function getTotalAccountOut($account_id, $data){
+			$this->db->select("SUM(account_out) AS total_mutation_out");
+			$this->db->from("acct_account_balance_detail");
+			$this->db->where("account_id", $account_id);
+			$this->db->where("MONTH(transaction_date)", $data['month_period']);
+			$this->db->where("YEAR(transaction_date)", $data['year_period']);
+			$this->db->where("branch_id", $data['branch_id']);
+			$result = $this->db->get()->row_array();
+			return $result['total_mutation_out'];
+		}
+
+		
+		public function updateOpeningBalance($data) {
+			$this->db->set('opening_balance', $data['opening_balance']);
+			$this->db->where('account_id', $data['account_id']);
+			$this->db->where('month_period', $data['next_month']);
+			$this->db->where('year_period', $data['year']);
+			if($this->db->update('acct_account_opening_balance')){
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public function updateMutation($data) {
+			$this->db->set('last_balance', $data['last_balance']);
+			$this->db->set('mutation_in_amount', $data['mutation_in_amount']);
+			$this->db->set('mutation_out_amount', $data['mutation_out_amount']);
+			$this->db->where('account_id', $data['account_id']);
+			$this->db->where('month_period', $data['month']);
+			$this->db->where('year_period', $data['year']);
+			if($this->db->update('acct_account_mutation')){
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 	}
 ?>

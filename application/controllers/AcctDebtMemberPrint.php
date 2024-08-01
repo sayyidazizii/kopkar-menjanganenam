@@ -46,7 +46,9 @@
 			require_once('tcpdf/tcpdf.php');
 			
 			// Ukuran matte paper adalah 8.5 x 11 inci
-			$pdf = new TCPDF('P', PDF_UNIT, array(8.5 * 25.4, 11 * 25.4), true, 'UTF-8', false);
+			// $pdf = new TCPDF('P', PDF_UNIT, array(8.5 * 25.4, 11 * 25.4), true, 'UTF-8', false);
+
+			$pdf = new TCPDF('P', PDF_UNIT, array(9.5 * 25.4, 11 * 25.4), true, 'UTF-8', false);
 		
 			$pdf->SetPrintHeader(false);
 			$pdf->SetPrintFooter(false);
