@@ -863,38 +863,13 @@
 						'last_balance' => $last_balance,
 					);
 
-					// $acct_opening = array(
-					// 	'account_id' => $val['account_id'],
-					// 	'opening_balance' => $opening_balance + $last_balance,
-					// 	'next_month' => $next_month,
-					// 	'year' => $year,
-					// );
-
-					// $acct_mutation = array(
-					// 	'account_id' => $val['account_id'],
-					// 	'mutation_in_amount'	=> $total_mutation_in,
-					// 	'mutation_out_amount'	=> $total_mutation_out,
-					// 	'last_balance' => $last_balance,
-					// 	'month' => $month,
-					// 	'year' => $year,
-					// );
 					
-					// Uncomment untuk melakukan update
-					// $updateOpening = $this->AcctGeneralLedgerReport_model->updateOpeningBalance($newdata);
 					$this->AcctGeneralLedgerReport_model->updatelastBalance($newdata);
-
-				
 					
 					// Update saldo awal untuk iterasi berikutnya
 					$opening_balance = $last_balance;
 				}
 
-				// $this->AcctGeneralLedgerReport_model->updateOpeningBalance($acct_opening);
-
-				// $this->AcctGeneralLedgerReport_model->updateMutation($acct_mutation);
-
-				// Update rata-rata harian setelah proses update saldo
-				
 			}
 		}
 

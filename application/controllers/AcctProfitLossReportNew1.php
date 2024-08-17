@@ -1575,5 +1575,91 @@
 
 				echo $shu;
 		}
+
+
+		//update mutation
+		
+		public function updateMutationAmount() {
+			$auth = $this->session->userdata('auth');
+			
+			$month = '06';
+			$next_month = '07';
+			$year  = '2024';
+
+			$data = array (
+				"branch_id" => 2,
+				"month_period" => $month,
+				"year_period" => $year,
+			);
+
+			// Dapatkan semua ID rekening tabungan yang perlu diproses
+			$account_ids = $this->AcctProfitLossReportNew1_model->getAllAccountIds($month, $year);
+
+			// Debug: Tampilkan semua account_ids yang diambil
+			echo "<pre>";
+			print_r($account_ids);
+			echo "</pre>";
+
+			foreach ($account_ids as $account_id) {
+				// Ambil saldo akhir bulan sebelumnya
+				$previous_last_balance = $this->AcctProfitLossReportNew1_model->getLastBalanceFromPreviousMonth($account_id, $month, $year);
+				
+				// Debug: Tampilkan saldo akhir bulan sebelumnya
+				echo "<pre>";
+				echo "Previous Last Balance for Account ID $account_id: " . $previous_last_balance;
+				echo "</pre>";
+
+				$mutation_in_amount = isset($previous_last_balance) ? $previous_last_balance : 0;
+
+				// Dapatkan detail semua rekening tabungan untuk bulan berikutnya
+				$acctsavingsaccountdetailAll = $this->AcctProfitLossReportNew1_model->getAcctAccountDetailAll($account_id, $next_month, $year);
+
+				// Debug: Tampilkan data yang diambil dari getAcctAccountDetailAll
+				echo "<pre>";
+				echo "Data retrieved for Account ID $account_id for month $next_month and year $year:";
+				print_r($acctsavingsaccountdetailAll);
+				echo "</pre>";
+
+				foreach ($acctsavingsaccountdetailAll as $key => $val) {
+					// Hitung saldo terakhir untuk iterasi saat ini
+					$last_balance = ($mutation_in_amount + $val['last_balance']);
+
+					// Hanya update jika last_balance lebih dari 0.00 (baik positif maupun negatif)
+					if ($val['mutation_in_amount'] != 0.00 && $val['mutation_in_amount'] != 0.00) {
+						// Debug: Tampilkan data yang akan di-update
+						echo "<pre>";
+						echo "Data to be updated for Account ID $val[account_id]:";
+						print_r([
+							'account_id' => $val['account_id'],
+							'last_balance' => $last_balance,
+							'month_period' => $next_month,
+							'year_period' => $year
+						]);
+						echo "</pre>";
+
+						// Siapkan data untuk memperbarui saldo pembukaan dan mutasi
+						$newdata = array(
+							'account_id' => $val['account_id'],
+							'last_balance' => $last_balance,
+							'month_period' => $next_month,
+							'year_period' => $year,
+						);
+
+						// Debug: Tampilkan data update sebelum melakukan update ke database
+						echo "<pre>";
+						echo "New data prepared for update:";
+						print_r($newdata);
+						echo "</pre>";
+
+						// Perbarui saldo terakhir
+						$this->AcctProfitLossReportNew1_model->updateMutation($newdata);
+
+						// Update saldo awal untuk iterasi berikutnya
+						$mutation_in_amount = $last_balance;
+					}
+				}
+			}
+		}
+
 	}
 ?>

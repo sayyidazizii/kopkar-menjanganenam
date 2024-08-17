@@ -159,5 +159,62 @@
 			$result = $this->db->get()->row_array();
 			return $result;
 		}
+
+
+
+//========update balance
+		public function getAllAccountIds($month, $year) {
+			$this->db->distinct();
+			$this->db->select('account_id');
+			$this->db->from('acct_account_mutation');
+			$this->db->where('month_period', $month);
+			$this->db->where('year_period', $year);
+			$result = $this->db->get()->result_array();
+			return array_column($result, 'account_id');
+		}
+
+		// Ambil last_balance bulan sebelumnya
+		public function getLastBalanceFromPreviousMonth($account_id, $month, $year) {
+			$this->db->select('last_balance');
+			$this->db->from('acct_account_mutation');
+			$this->db->where('account_id', $account_id);
+			$this->db->where('month_period', $month);
+			$this->db->where('year_period', $year);
+			$this->db->limit(1);
+			$result = $this->db->get()->row_array();
+			
+			return $result['last_balance'];
+		}
+
+		//get all data bulan 07
+		public function getAcctAccountDetailAll($account_id, $month, $year) {
+			$this->db->select('*');
+			$this->db->from('acct_account_mutation');
+			$this->db->where('acct_account_mutation.account_id', $account_id);
+			$this->db->where('acct_account_mutation.month_period', $month);
+			$this->db->where('acct_account_mutation.year_period', $year);
+			$this->db->order_by('acct_account_mutation.account_id', 'ASC');
+			$this->db->order_by('acct_account_mutation.account_mutation_id', 'ASC');
+			$result = $this->db->get()->result_array();
+			return $result;
+		}
+
+
+		// updateMutation bulan ke 07
+		public function updateMutation($data){
+			// $this->db->set('mutation_in_amount', $data['mutation_in_amount']);
+			// $this->db->set('mutation_out_amount', $data['mutation_out_amount']);
+			$this->db->set('last_balance', $data['last_balance']);
+			$this->db->where('account_id', $data['account_id']);
+			$this->db->where('month_period', $data['month_period']);
+			$this->db->where('year_period', $data['year_period']);
+			
+			if($this->db->update('acct_account_mutation')){
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 	}
 ?>
