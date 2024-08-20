@@ -73,6 +73,7 @@
 			return $result['opening_balance'];
 		}
 
+
 		public function getSHUTahunBerjalan($account_id, $branch_id, $month, $year){
 			$this->db->select('acct_account_mutation.mutation_in_amount, acct_account_mutation.mutation_out_amount');
 			$this->db->from('acct_account_mutation');
@@ -88,7 +89,7 @@
 			$this->db->select('SUM(acct_profit_loss.profit_loss_amount) AS profit_loss_amount');
 			$this->db->from('acct_profit_loss');
 			$this->db->where('acct_profit_loss.branch_id', $branch_id);
-			$this->db->where('acct_profit_loss.month_period <=', $month);
+			$this->db->where('acct_profit_loss.month_period', $month);
 			$this->db->where('acct_profit_loss.year_period', $year);
 			$this->db->limit(1);
 			$result = $this->db->get()->row_array();

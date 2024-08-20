@@ -1178,7 +1178,7 @@ ob_start();?>
 			$auth 	= $this->session->userdata('auth');
 
 			$data = $this->session->userdata('filter-AcctBalanceSheetReportNew1');
-			// echo json_encode($data);
+
 			if(!is_array($data)){
 				$data['month_period']				= date('m');
 				$data['year_period']				= date('Y');
@@ -1190,107 +1190,6 @@ ob_start();?>
 			$acctprofitlossreport_top		= $this->AcctProfitLossReportNew1_model->getAcctProfitLossReportNew1_Top($data['profit_loss_report_format']);
 			$acctprofitlossreport_bottom	= $this->AcctProfitLossReportNew1_model->getAcctProfitLossReportNew1_Bottom($data['profit_loss_report_format']);
 			$branch_name 					= $this->AcctProfitLossReportNew1_model->getBranchName($data['branch_id']);
-
-			switch ($data['month_period_start']) {
-				case '01':
-					$month_name1 = "Januari";
-					break;
-				case '02':
-					$month_name1 = "Februari";
-					break;
-				case '03':
-					$month_name1 = "Maret";
-					break;
-				case '04':
-					$month_name1 = "April";
-					break;
-				case '05':
-					$month_name1 = "Mei";
-					break;
-				case '06':
-					$month_name1 = "Juni";
-					break;
-				case '07':
-					$month_name1 = "Juli";
-					break;
-				case '08':
-					$month_name1 = "Agustus";
-					break;
-				case '09':
-					$month_name1 = "September";
-					break;
-				case '10':
-					$month_name1 = "Oktober";
-					break;
-				case '11':
-					$month_name1 = "November";
-					break;
-				case '12':
-					$month_name1 = "Desember";
-					break;
-				
-				default:
-					# code...
-					break;
-			}
-
-			switch ($data['month_period_end']) {
-				case '01':
-					$month_name2 = "Januari";
-					break;
-				case '02':
-					$month_name2 = "Februari";
-					break;
-				case '03':
-					$month_name2 = "Maret";
-					break;
-				case '04':
-					$month_name2 = "April";
-					break;
-				case '05':
-					$month_name2 = "Mei";
-					break;
-				case '06':
-					$month_name2 = "Juni";
-					break;
-				case '07':
-					$month_name2 = "Juli";
-					break;
-				case '08':
-					$month_name2 = "Agustus";
-					break;
-				case '09':
-					$month_name2 = "September";
-					break;
-				case '10':
-					$month_name2 = "Oktober";
-					break;
-				case '11':
-					$month_name2 = "November";
-					break;
-				case '12':
-					$month_name2 = "Desember";
-					break;
-				
-				default:
-					# code...
-					break;
-			}
-
-			if ($data['profit_loss_report_type'] == 1){
-				$period = $month_name1."-".$month_name2." ".$data['year_period'];
-			} else {
-				$period = $data['year_period'];
-			}
-
-			$minus_month= mktime(0, 0, 0, date($data['month_period'])-1);
-			$month = date('m', $minus_month);
-
-			if($month == 12){
-				$year = $data['year_period'] - 1;
-			} else {
-				$year = $data['year_period'];
-			}
 
 			$grand_total_all = 0;
 			$shu_sebelum_lain_lain = 0;
@@ -1325,17 +1224,9 @@ ob_start();?>
 													}
 												}
 											}
-											$tblitem_top4 = "
-												<tr>
-													<td><div style='font-weight:".$report_bold."'>".$report_tab."".$valTop['account_name']."</div></td>
-													<td style=\"text-align:right;\"><div style='font-weight:".$report_bold."'>".number_format($total_account_amount, 2)."</div></td>
-												</tr>";
-										} else {
-											$tblitem_top4 = "";
-										}
-									} else {
-										$tblitem_top4 = "";
-									}
+											
+										} 
+									} 
 
 									if($valTop['report_type'] == 5){
 										if(!empty($valTop['report_formula']) && !empty($valTop['report_operator'])){
@@ -1358,7 +1249,6 @@ ob_start();?>
 													}
 												}
 											}
-									
 										} 
 									} 
 
@@ -1416,12 +1306,10 @@ ob_start();?>
 									} 
 								}
 
+			$shu = $shu_sebelum_lain_lain + $pendapatan_biaya_lain;
 
-				$shu = $shu_sebelum_lain_lain + $pendapatan_biaya_lain;
-
-				return $shu;
+			return $shu;
 		}
-
 	}
 ?>
 

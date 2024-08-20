@@ -91,15 +91,18 @@
 				$this->db->where('acct_account_mutation.year_period', $year);
 				$result = $this->db->get()->row_array();
 				return $result['last_balance'];
-			} else if ($profit_loss_report_type == 2){
+			} else if ($profit_loss_report_type == 2) {
 				$this->db->select('SUM(acct_account_mutation.last_balance) AS last_balance');
 				$this->db->from('acct_account_mutation');
 				$this->db->where('acct_account_mutation.account_id', $account_id);
 				$this->db->where('acct_account_mutation.branch_id', $branch_id);
 				$this->db->where('acct_account_mutation.year_period', $year);
+				$this->db->where('acct_account_mutation.month_period >=', 1); // Bulan awal
+				$this->db->where('acct_account_mutation.month_period <=', $month_end); // Bulan akhir
 				$result = $this->db->get()->row_array();
 				return $result['last_balance'];
 			}
+
 			
 		}
 

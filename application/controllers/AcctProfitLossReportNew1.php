@@ -1576,9 +1576,7 @@
 				echo $shu;
 		}
 
-
 		//update mutation
-		
 		public function updateMutationAmount() {
 			$auth = $this->session->userdata('auth');
 			
