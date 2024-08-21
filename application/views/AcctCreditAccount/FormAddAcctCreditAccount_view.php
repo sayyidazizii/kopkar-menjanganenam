@@ -29,14 +29,14 @@
 </style>
 
 <script>
-	var loopkomisi 		= 1;
-	var loopadm 		= 1;
-	var loopdiscount	= 1;
-	var loopnot 		= 1;
-	var loopins 		= 1;
-	var loop_principal 	= 1;
-	var loop_margin 	= 1;
-	var loop_payment 	= 1;
+	var loopkomisi = 1;
+	var loopadm = 1;
+	var loopdiscount = 1;
+	var loopnot = 1;
+	var loopins = 1;
+	var loop_principal = 1;
+	var loop_margin = 1;
+	var loop_payment = 1;
 
 	function function_elements_add(name, value) {
 		$.ajax({
@@ -46,19 +46,19 @@
 				'name': name,
 				'value': value
 			},
-			success: function(msg) {}
+			success: function (msg) { }
 		});
 	}
 
 	function change_method(name, value) {
 		console.log(value);
 
-		if(value == 2){
+		if (value == 2) {
 			document.getElementById("bank_container").style.display = "contents";
-		}else{
+		} else {
 			document.getElementById("bank_container").style.display = "none";
 		}
-		
+
 		function_elements_add(name, value);
 	}
 
@@ -172,7 +172,7 @@
 						'vlrparc': totangsuran,
 						'vp': pembiayaan
 					},
-					success: function(rate) {
+					success: function (rate) {
 						var angsuranbunga2 = pembiayaan * rate;
 						var angsuranpokok = totangsuran - angsuranbunga2;
 						var totalangsuran = angsuranbunga2 + angsuranpokok;
@@ -282,9 +282,9 @@
 	}
 
 	function receivedamount() {
-		var pinjaman 	= document.getElementById("credits_account_last_balance_principal").value;
-		var insurance 	= document.getElementById("credits_account_insurance").value;
-		var adm		 	= document.getElementById("credits_account_adm_cost").value;
+		var pinjaman = document.getElementById("credits_account_last_balance_principal").value;
+		var insurance = document.getElementById("credits_account_insurance").value;
+		var adm = document.getElementById("credits_account_adm_cost").value;
 
 		if (insurance == '') {
 			insurance = 0;
@@ -334,10 +334,10 @@
 		function_elements_add(name3, angsuranbunga);
 		function_elements_add(name4, toRp(angsuranbunga));
 
-		if(credit_id == 1 || credit_id == 3){
-			function_elements_add(name5, bungafix*0.65);
-			function_elements_add(name6, bungafix*0.35);
-		}else{
+		if (credit_id == 1 || credit_id == 3) {
+			function_elements_add(name5, bungafix * 0.65);
+			function_elements_add(name6, bungafix * 0.35);
+		} else {
 			function_elements_add(name5, bungafix);
 			function_elements_add(name6, 0);
 		}
@@ -373,11 +373,11 @@
 		function_elements_add(name2, bungafix);
 		function_elements_add(name3, angsuranbunga);
 		function_elements_add(name4, toRp(angsuranbunga));
-		
-		if(credit_id == 1 || credit_id == 3){
-			function_elements_add(name5, bungafix*0.65);
-			function_elements_add(name6, bungafix*0.35);
-		}else{
+
+		if (credit_id == 1 || credit_id == 3) {
+			function_elements_add(name5, bungafix * 0.65);
+			function_elements_add(name6, bungafix * 0.35);
+		} else {
 			function_elements_add(name5, bungafix);
 			function_elements_add(name6, 0);
 		}
@@ -385,39 +385,39 @@
 
 	base_url = '<?php echo base_url(); ?>';
 
-	$(document).ready(function() {
-		var method_id  = document.getElementById("method_id").value;
+	$(document).ready(function () {
+		var method_id = document.getElementById("method_id").value;
 		var credits_id = document.getElementById("credit_id").value;
-		
-		if(method_id == 2){
+
+		if (method_id == 2) {
 			document.getElementById("bank_container").style.display = "contents";
-		}else{
+		} else {
 			document.getElementById("bank_container").style.display = "none";
 		}
-		
-		if(credits_id == 20){
+
+		if (credits_id == 20) {
 			document.getElementById("discount_container").style.display = "contents";
-		}else{
+		} else {
 			document.getElementById("discount_container").style.display = "none";
 		}
 
 		$('#credit_id').combobox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'credits_id';
 				var credits_id = +document.getElementById("credit_id").value;
-		
-				if(credits_id == 20){
+
+				if (credits_id == 20) {
 					document.getElementById("discount_container").style.display = "contents";
-				}else{
+				} else {
 					document.getElementById("discount_container").style.display = "none";
 				}
 
 				function_elements_add(name, value);
 
 				$.post(base_url + 'credit-account/get-credits-account-serial', {
-						credits_id: credits_id
-					},
-					function(data) {
+					credits_id: credits_id
+				},
+					function (data) {
 						var obj = $.parseJSON(data)
 					},
 				)
@@ -425,13 +425,13 @@
 		})
 	});
 
-	$(document).ready(function() {
-		$("#member_id").change(function() {
+	$(document).ready(function () {
+		$("#member_id").change(function () {
 			var member_id = $("#member_id").val();
 			$.post(base_url + 'deposito-account/get-core-member-detail', {
-					member_id: member_id
-				},
-				function(data) {
+				member_id: member_id
+			},
+				function (data) {
 					$("#member_no").val(data.member_no);
 					$("#member_date_of_birth").val(data.member_date_of_birth);
 					$("#member_gender").val(data.member_gender);
@@ -448,9 +448,9 @@
 		});
 	});
 
-	$(document).ready(function() {
+	$(document).ready(function () {
 		$('#payment_type_id').combobox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'payment_type_id';
 
 				function_elements_add(name, value);
@@ -468,7 +468,7 @@
 		});
 
 		$('#credit_account_date').datebox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'credit_account_date';
 
 				function_elements_add(name, value);
@@ -477,7 +477,7 @@
 		});
 
 		$('#credit_account_period').textbox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'credit_account_period';
 				var credit_id = +document.getElementById("credit_id").value;
 				var payment_type_id = +document.getElementById("payment_type_id").value;
@@ -498,11 +498,11 @@
 		});
 
 		$('#credits_account_last_balance_principal_view').textbox({
-			onChange: function(value) {
-				var name 			= 'credits_account_last_balance_principal';
-				var name2 			= 'credits_account_last_balance_principal_view';
+			onChange: function (value) {
+				var name = 'credits_account_last_balance_principal';
+				var name2 = 'credits_account_last_balance_principal_view';
 				var payment_type_id = +document.getElementById("payment_type_id").value;
-				var credit_id 		= document.getElementById("credit_id").value;
+				var credit_id = document.getElementById("credit_id").value;
 
 				if (loop_principal == 0) {
 					loop_principal = 1;
@@ -537,11 +537,11 @@
 		});
 
 		$('#credit_account_payment_amount_view').textbox({
-			onChange: function(value) {
-				var name 			= 'credit_account_payment_amount';
-				var name2 			= 'credit_account_payment_amount_view';
+			onChange: function (value) {
+				var name = 'credit_account_payment_amount';
+				var name2 = 'credit_account_payment_amount_view';
 				var payment_type_id = +document.getElementById("payment_type_id").value;
-				var interest 		= +document.getElementById("credits_account_interest_amount").value;
+				var interest = +document.getElementById("credits_account_interest_amount").value;
 
 				if (loop_payment == 0) {
 					loop_payment = 1;
@@ -574,9 +574,9 @@
 		});
 
 		$('#credit_account_interest_view').textbox({
-			onChange: function(value) {
-				var name 			= 'credit_account_interest';
-				var name2 			= 'credit_account_interest_view';
+			onChange: function (value) {
+				var name = 'credit_account_interest';
+				var name2 = 'credit_account_interest_view';
 				var payment_type_id = +document.getElementById("payment_type_id").value;
 
 				if (loop_margin == 0) {
@@ -610,9 +610,9 @@
 		});
 
 		$('#credits_account_insurance_view').textbox({
-			onChange: function(value) {
-				var name 	= 'credits_account_insurance';
-				var name2 	= 'credits_account_insurance_view';
+			onChange: function (value) {
+				var name = 'credits_account_insurance';
+				var name2 = 'credits_account_insurance_view';
 
 				if (loopins == 0) {
 					loopins = 1;
@@ -636,7 +636,7 @@
 		});
 
 		$('#credits_account_remark').textbox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'credits_account_remark';
 
 				function_elements_add(name, value);
@@ -644,7 +644,7 @@
 		});
 
 		$('#credits_account_bank_name').textbox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'credits_account_bank_name';
 
 				function_elements_add(name, value);
@@ -652,7 +652,7 @@
 		});
 
 		$('#credits_account_bank_account').textbox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'credits_account_bank_account';
 
 				function_elements_add(name, value);
@@ -660,7 +660,7 @@
 		});
 
 		$('#credits_account_bank_owner').textbox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'credits_account_bank_owner';
 
 				function_elements_add(name, value);
@@ -668,9 +668,9 @@
 		});
 
 		$('#credits_account_adm_cost_view').textbox({
-			onChange: function(value) {
-				var name 	= 'credits_account_adm_cost';
-				var name2 	= 'credits_account_adm_cost_view';
+			onChange: function (value) {
+				var name = 'credits_account_adm_cost';
+				var name2 = 'credits_account_adm_cost_view';
 
 				if (loopadm == 0) {
 					loopadm = 1;
@@ -694,9 +694,9 @@
 		});
 
 		$('#credits_account_discount_view').textbox({
-			onChange: function(value) {
-				var name 	= 'credits_account_discount';
-				var name2 	= 'credits_account_discount_view';
+			onChange: function (value) {
+				var name = 'credits_account_discount';
+				var name2 = 'credits_account_discount_view';
 
 				if (loopdiscount == 0) {
 					loopdiscount = 1;
@@ -718,7 +718,7 @@
 		});
 
 		$('#payment_period').combobox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'payment_period';
 
 				function_elements_add(name, value);
@@ -726,7 +726,7 @@
 		});
 
 		$('#sumberdana').combobox({
-			onChange: function(value) {
+			onChange: function (value) {
 				var name = 'sumberdana';
 
 				function_elements_add(name, value);
@@ -736,9 +736,9 @@
 </script>
 <?php echo form_open('credit-account/add', array('id' => 'myform', 'class' => 'horizontal-form')); ?>
 <?php
-$sesi 	= $this->session->userdata('unique');
-$data 	= $this->session->userdata('addcreditaccount-' . $sesi['unique']);
-$token 	= $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique']);
+$sesi = $this->session->userdata('unique');
+$data = $this->session->userdata('addcreditaccount-' . $sesi['unique']);
+$token = $this->session->userdata('acctcreditsaccounttoken-' . $sesi['unique']);
 
 if (empty($data['credits_id'])) {
 	$data['credits_id'] = 9;
@@ -878,17 +878,17 @@ if (empty($data['payment_type_id'])) {
 }
 
 if (empty($coremember)) {
-	$coremember['member_id']			= '';
-	$coremember['member_no']			= '';
-	$coremember['member_name']			= '';
-	$coremember['member_gender'] 		= 0 ;
-	$coremember['member_date_of_birth']	= '';
-	$coremember['member_phone'] 		= '';
-	$coremember['member_mother']		= '';
-	$coremember['member_address']		= '';
-	$coremember['city_name']			= '';
-	$coremember['kecamatan_name']		= '';
-	$coremember['member_identity_no']	= '';
+	$coremember['member_id'] = '';
+	$coremember['member_no'] = '';
+	$coremember['member_name'] = '';
+	$coremember['member_gender'] = 0;
+	$coremember['member_date_of_birth'] = '';
+	$coremember['member_phone'] = '';
+	$coremember['member_mother'] = '';
+	$coremember['member_address'] = '';
+	$coremember['city_name'] = '';
+	$coremember['kecamatan_name'] = '';
+	$coremember['member_identity_no'] = '';
 }
 
 ?>
@@ -896,19 +896,19 @@ if (empty($coremember)) {
 <?php
 echo $this->session->userdata('message');
 $this->session->unset_userdata('message');
-if($coremember['member_active_status'] == 1){
-?>
-<div class='alert alert-danger alert-dismissable'>
-<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>					
-	Anggota Tidak Aktif
-</div>
-<?php } 
-if(count($memberacctcreditsaccount)!=0){
-?>
-<div class='alert alert-danger alert-dismissable'>
-<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>					
-	Anggota Sudah Memiliki Pinjaman Aktif
-</div>
+if (($coremember['member_active_status'] ?? 0) == 1) {
+	?>
+	<div class='alert alert-danger alert-dismissable'>
+		<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+		Anggota Tidak Aktif
+	</div>
+<?php }
+if (count($memberacctcreditsaccount) != 0) {
+	?>
+	<div class='alert alert-danger alert-dismissable'>
+		<button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>
+		Anggota Sudah Memiliki Pinjaman Aktif
+	</div>
 <?php } ?>
 <div class="row">
 	<div class="col-md-12">
@@ -935,53 +935,75 @@ if(count($memberacctcreditsaccount)!=0){
 								<tr>
 									<td>No. Anggota <span class="required" style="color : red">*</span></td>
 									<td>:</td>
-									<td><input type="text" class="form-control" name="member_no" id="member_no" autocomplete="off" readonly value="<?php echo $coremember['member_no']; ?>" tabindex="-1" />
-										<input type="hidden" class="form-control" name="member_id" id="member_id" autocomplete="off" readonly value="<?php echo $coremember['member_id']; ?>" />
+									<td><input type="text" class="form-control" name="member_no" id="member_no"
+											autocomplete="off" readonly value="<?php echo $coremember['member_no']; ?>"
+											tabindex="-1" />
+										<input type="hidden" class="form-control" name="member_id" id="member_id"
+											autocomplete="off" readonly
+											value="<?php echo $coremember['member_id']; ?>" />
 									</td>
-									<td><a href="#" role="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#memberlist">Select Member</a></td>
+									<td><a href="#" role="button" class="btn btn-info btn-sm" data-toggle="modal"
+											data-target="#memberlist">Select Member</a></td>
 								</tr>
 								<tr>
 									<td>Nama Anggota</td>
 									<td>:</td>
-									<td><input type="text" class="form-control" name="member_nama" id="member_nama" autocomplete="off" readonly value="<?php echo $coremember['member_name']; ?>" tabindex="-1" /></td>
+									<td><input type="text" class="form-control" name="member_nama" id="member_nama"
+											autocomplete="off" readonly
+											value="<?php echo $coremember['member_name']; ?>" tabindex="-1" /></td>
 									<td></td>
 								</tr>
 								<tr>
 									<td>Tanggal Lahir</td>
 									<td>:</td>
-									<td><input type="text" tabindex="-1" class="form-control" name="member_date_of_birth" id="member_date_of_birth" autocomplete="off" readonly value="<?php echo tgltoview($coremember['member_date_of_birth']); ?>" /></td>
+									<td><input type="text" tabindex="-1" class="form-control"
+											name="member_date_of_birth" id="member_date_of_birth" autocomplete="off"
+											readonly
+											value="<?php echo tgltoview($coremember['member_date_of_birth']); ?>" />
+									</td>
 									<td></td>
 								</tr>
 								<tr>
 									<td>Jenis Kelamin</td>
 									<td>:</td>
 									<td>
-										<input type="text" tabindex="-1" class="form-control" name="member_gender" id="member_gender" autocomplete="off" readonly value="<?php echo $membergender[$coremember['member_gender']]; ?>" />
+										<input type="text" tabindex="-1" class="form-control" name="member_gender"
+											id="member_gender" autocomplete="off" readonly
+											value="<?php echo $membergender[$coremember['member_gender']]; ?>" />
 									</td>
 									<td></td>
 								</tr>
 								<tr>
 									<td>No. Telp</td>
 									<td>:</td>
-									<td><input type="text" tabindex="-1" class="form-control" name="member_phone1" id="member_phone1" autocomplete="off" readonly value="<?php echo $coremember['member_phone']; ?>" /></td>
+									<td><input type="text" tabindex="-1" class="form-control" name="member_phone1"
+											id="member_phone1" autocomplete="off" readonly
+											value="<?php echo $coremember['member_phone']; ?>" /></td>
 									<td></td>
 								</tr>
 								<tr>
 									<td>Alamat</td>
 									<td>:</td>
-									<td><textarea class="form-control" tabindex="-1" rows="3" id="comment" readonly><?php echo $coremember['city_name']; ?>, <?php echo $coremember['kecamatan_name']; ?>, <?php echo $coremember['member_address']; ?></textarea></td>
+									<td><textarea class="form-control" tabindex="-1" rows="3" id="comment"
+											readonly><?php echo $coremember['city_name']; ?>, <?php echo $coremember['kecamatan_name']; ?>, <?php echo $coremember['member_address']; ?></textarea>
+									</td>
 									<td></td>
 								</tr>
 								<tr>
 									<td>Nama Ibu</td>
 									<td>:</td>
-									<td><input type="text" class="form-control" name="member_mother" id="member_mother" autocomplete="off" readonly value="<?php echo $coremember['member_mother'];?>" tabindex="-1" /></td>
+									<td><input type="text" class="form-control" name="member_mother" id="member_mother"
+											autocomplete="off" readonly
+											value="<?php echo $coremember['member_mother']; ?>" tabindex="-1" /></td>
 									<td></td>
 								</tr>
 								<tr>
 									<td>No. Identitas</td>
 									<td>:</td>
-									<td><input type="text" class="form-control" name="member_identity_no" id="member_identity_no" autocomplete="off" readonly value="<?php echo $coremember['member_identity_no']; ?>" tabindex="-1" /></td>
+									<td><input type="text" class="form-control" name="member_identity_no"
+											id="member_identity_no" autocomplete="off" readonly
+											value="<?php echo $coremember['member_identity_no']; ?>" tabindex="-1" />
+									</td>
 									<td></td>
 								</tr>
 							</tbody>
@@ -994,9 +1016,9 @@ if(count($memberacctcreditsaccount)!=0){
 									<td>Jenis Pinjaman <span class="required" style="color : red">*</span></td>
 									<td>:</td>
 									<td><?php
-										$isi = $this->uri->segment(3);
-										echo form_dropdown('credit_id', $creditid, set_value('credit_id', $data['credits_id']), 'id="credit_id" class="easyui-combobox"');
-										?>
+									$isi = $this->uri->segment(3);
+									echo form_dropdown('credit_id', $creditid, set_value('credit_id', $data['credits_id']), 'id="credit_id" class="easyui-combobox"');
+									?>
 									</td>
 									<td>Sumber Dana <span class="required" style="color : red">*</span></td>
 									<td>:</td>
@@ -1028,7 +1050,11 @@ if(count($memberacctcreditsaccount)!=0){
 								<tr>
 									<td>Tanggal Realisasi</td>
 									<td>:</td>
-									<td> <input type="text" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser" name="credit_account_date" id="credit_account_date" autocomplete="off" readonly onChange="duedatecalc(this);" value="<?php echo tgltoview($data['credit_account_date']); ?>" />
+									<td> <input type="text" class="easyui-datebox"
+											data-options="formatter:myformatter,parser:myparser"
+											name="credit_account_date" id="credit_account_date" autocomplete="off"
+											readonly onChange="duedatecalc(this);"
+											value="<?php echo tgltoview($data['credit_account_date']); ?>" />
 									</td>
 									<td>Preferensi Angsuran <span class="required" style="color : red">*</span></td>
 									<td>:</td>
@@ -1041,129 +1067,202 @@ if(count($memberacctcreditsaccount)!=0){
 								<tr>
 									<td>Tanggal Angsuran I</td>
 									<td>:</td>
-									<td><input type="text" class="easyui-textbox" name="credit_account_payment_to" id="credit_account_payment_to" autocomplete="off" data-options="formatter:myformatter,parser:myparser" value="<?php echo tgltoview($data['credit_account_payment_to']); ?>" readonly />
+									<td><input type="text" class="easyui-textbox" name="credit_account_payment_to"
+											id="credit_account_payment_to" autocomplete="off"
+											data-options="formatter:myformatter,parser:myparser"
+											value="<?php echo tgltoview($data['credit_account_payment_to']); ?>"
+											readonly />
 									</td>
 									<td>Jangka waktu <span class="required" style="color : red">*</span></td>
 									<td>:</td>
-									<td><input type="text" class="easyui-textbox" name="credit_account_period" id="credit_account_period" autocomplete="off" value="<?php echo $data['credit_account_period']; ?>" onChange="duedatecalc(this);" />
+									<td><input type="text" class="easyui-textbox" name="credit_account_period"
+											id="credit_account_period" autocomplete="off"
+											value="<?php echo $data['credit_account_period']; ?>"
+											onChange="duedatecalc(this);" />
 									</td>
 								</tr>
 								<tr>
 									<td>Agunan</td>
 									<td>:</td>
-									<td> <a href="#" role="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#agunan">Input Agunan</a></td>
+									<td> <a href="#" role="button" class="btn btn-info btn-sm" data-toggle="modal"
+											data-target="#agunan">Input Agunan</a></td>
 									<td>Jatuh Tempo</td>
 									<td>:</td>
-									<td><input type="text" class="easyui-textbox" name="credit_account_due_date" id="credit_account_due_date" autocomplete="off" data-options="formatter:myformatter,parser:myparser" value="<?php echo tgltoview($data['credit_account_due_date']); ?>" readonly /></td>
+									<td><input type="text" class="easyui-textbox" name="credit_account_due_date"
+											id="credit_account_due_date" autocomplete="off"
+											data-options="formatter:myformatter,parser:myparser"
+											value="<?php echo tgltoview($data['credit_account_due_date']); ?>"
+											readonly /></td>
 								</tr>
 								<tr>
 									<td>Business Office (BO) <span class="required" style="color : red">*</span></td>
 									<td>:</td>
-									<td><?php echo form_dropdown('office_id', $coreoffice, set_value('office_id', $data['office_id']), 'id="office_id" class="form-control select2me" onChange="function_elements_add(this.name, this.value);" '); ?></td>
+									<td><?php echo form_dropdown('office_id', $coreoffice, set_value('office_id', $data['office_id']), 'id="office_id" class="form-control select2me" onChange="function_elements_add(this.name, this.value);" '); ?>
+									</td>
 									<td>Metode <span class="required" style="color : red">*</span></td>
 									<td>:</td>
-									<td><?php echo form_dropdown('method_id', $methods, set_value('method_id', $data['method_id']), 'id="method_id" class="form-control select2me" onChange="change_method(this.name, this.value);" '); ?></td>
-									<td id="bank_container" name="bank_container" style="display:none;"><?php echo form_dropdown('bank_account_id', $acctbankaccount, set_value('bank_account_id', $data['bank_account_id']), 'id="bank_account_id" class="form-control select2me" onChange="function_elements_add(this.name, this.value);" readonly'); ?></td>
+									<td><?php echo form_dropdown('method_id', $methods, set_value('method_id', ($data['method_id'] ?? null)), 'id="method_id" class="form-control select2me" onChange="change_method(this.name, this.value);" '); ?>
+									</td>
+									<td id="bank_container" name="bank_container" style="display:none;">
+										<?php echo form_dropdown('bank_account_id', $acctbankaccount, set_value('bank_account_id', $data['bank_account_id']), 'id="bank_account_id" class="form-control select2me" onChange="function_elements_add(this.name, this.value);" readonly'); ?>
+									</td>
 								</tr>
 								<tr>
 									<td>Plafon Pinjaman <span class="required" style="color : red">*</span></td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credits_account_last_balance_principal_view" id="credits_account_last_balance_principal_view" autocomplete="off" value="<?php echo $data['credits_account_last_balance_principal_view']; ?>" />
-										<input type="hidden" class="easyui-textbox" name="credits_account_last_balance_principal" id="credits_account_last_balance_principal" autocomplete="off" value="<?php echo $data['credits_account_last_balance_principal']; ?>" />
+										<input type="text" class="easyui-textbox"
+											name="credits_account_last_balance_principal_view"
+											id="credits_account_last_balance_principal_view" autocomplete="off"
+											value="<?php echo $data['credits_account_last_balance_principal_view']; ?>" />
+										<input type="hidden" class="easyui-textbox"
+											name="credits_account_last_balance_principal"
+											id="credits_account_last_balance_principal" autocomplete="off"
+											value="<?php echo $data['credits_account_last_balance_principal']; ?>" />
 									</td>
 									<td>Bunga (%) <span class="required" style="color : red">*</span></td>
 									<td>:</td>
-									<td><input type="text" class="easyui-textbox" name="credit_account_interest_view" id="credit_account_interest_view" autocomplete="off" value="<?php echo $data['credit_account_interest_view']; ?>" />
-										<input type="hidden" class="easyui-textbox" name="credit_account_interest" id="credit_account_interest" autocomplete="off" value="<?php echo $data['credit_account_interest']; ?>" />
+									<td><input type="text" class="easyui-textbox" name="credit_account_interest_view"
+											id="credit_account_interest_view" autocomplete="off"
+											value="<?php echo $data['credit_account_interest_view']; ?>" />
+										<input type="hidden" class="easyui-textbox" name="credit_account_interest"
+											id="credit_account_interest" autocomplete="off"
+											value="<?php echo $data['credit_account_interest']; ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>Angsuran Pokok</td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credits_account_principal_amount_view" id="credits_account_principal_amount_view" autocomplete="off" value="<?php echo $data['credits_account_principal_amount_view']; ?>" readonly />
-										<input type="hidden" class="easyui-textbox" name="credits_account_principal_amount" id="credits_account_principal_amount" autocomplete="off" value="<?php echo $data['credits_account_principal_amount']; ?>" />
+										<input type="text" class="easyui-textbox"
+											name="credits_account_principal_amount_view"
+											id="credits_account_principal_amount_view" autocomplete="off"
+											value="<?php echo $data['credits_account_principal_amount_view']; ?>"
+											readonly />
+										<input type="hidden" class="easyui-textbox"
+											name="credits_account_principal_amount"
+											id="credits_account_principal_amount" autocomplete="off"
+											value="<?php echo $data['credits_account_principal_amount']; ?>" />
 									</td>
 									<td>Angsuran Bunga</td>
 									<td>:</td>
-									<td><input type="text" class="easyui-textbox" name="credits_account_interest_amount_view" id="credits_account_interest_amount_view" autocomplete="off" value="<?php echo $data['credits_account_interest_amount_view']; ?>" readonly />
-										<input type="hidden" class="easyui-textbox" name="credits_account_interest_amount" id="credits_account_interest_amount" autocomplete="off" value="<?php echo $data['credits_account_interest_amount']; ?>" />
+									<td><input type="text" class="easyui-textbox"
+											name="credits_account_interest_amount_view"
+											id="credits_account_interest_amount_view" autocomplete="off"
+											value="<?php echo $data['credits_account_interest_amount_view']; ?>"
+											readonly />
+										<input type="hidden" class="easyui-textbox"
+											name="credits_account_interest_amount" id="credits_account_interest_amount"
+											autocomplete="off"
+											value="<?php echo $data['credits_account_interest_amount']; ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>Biaya Asuransi</td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credits_account_insurance_view" id="credits_account_insurance_view" autocomplete="off" value="<?php echo $data['credits_account_insurance_view']; ?>"/>
-										<input type="hidden" class="easyui-textbox" name="credits_account_insurance" id="credits_account_insurance" autocomplete="off" value="<?php echo $data['credits_account_insurance']; ?>" />
+										<input type="text" class="easyui-textbox" name="credits_account_insurance_view"
+											id="credits_account_insurance_view" autocomplete="off"
+											value="<?php echo $data['credits_account_insurance_view']; ?>" />
+										<input type="hidden" class="easyui-textbox" name="credits_account_insurance"
+											id="credits_account_insurance" autocomplete="off"
+											value="<?php echo $data['credits_account_insurance']; ?>" />
 									</td>
 									<td>Biaya Administrasi</td>
 									<td>:</td>
-									<td><input type="text" class="easyui-textbox" name="credits_account_adm_cost_view" id="credits_account_adm_cost_view" autocomplete="off" value="<?php echo $data['credits_account_adm_cost_view']; ?>"/>
-										<input type="hidden" class="easyui-textbox" name="credits_account_adm_cost" id="credits_account_adm_cost" autocomplete="off" value="<?php echo $data['credits_account_adm_cost']; ?>" />
+									<td><input type="text" class="easyui-textbox" name="credits_account_adm_cost_view"
+											id="credits_account_adm_cost_view" autocomplete="off"
+											value="<?php echo $data['credits_account_adm_cost_view']; ?>" />
+										<input type="hidden" class="easyui-textbox" name="credits_account_adm_cost"
+											id="credits_account_adm_cost" autocomplete="off"
+											value="<?php echo $data['credits_account_adm_cost']; ?>" />
 									</td>
 								</tr>
 								<tr style="display:none;" id="discount_container" name="discount_container">
 									<td>Diskon</td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credits_account_discount_view" id="credits_account_discount_view" autocomplete="off" value="<?php echo $data['credits_account_discount_view']; ?>" style="width:160px"/>
-										<input type="hidden" class="easyui-textbox" name="credits_account_discount" id="credits_account_discount" autocomplete="off" value="<?php echo $data['credits_account_discount']; ?>" />
+										<input type="text" class="easyui-textbox" name="credits_account_discount_view"
+											id="credits_account_discount_view" autocomplete="off"
+											value="<?php echo $data['credits_account_discount_view']; ?>"
+											style="width:160px" />
+										<input type="hidden" class="easyui-textbox" name="credits_account_discount"
+											id="credits_account_discount" autocomplete="off"
+											value="<?php echo $data['credits_account_discount']; ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>Nama Bank</td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credits_account_bank_name" id="credits_account_bank_name" autocomplete="off" value="<?php echo $data['credits_account_bank_name']; ?>"/>
+										<input type="text" class="easyui-textbox" name="credits_account_bank_name"
+											id="credits_account_bank_name" autocomplete="off"
+											value="<?= ($data['credits_account_bank_name'] ?? '') ?>" />
 									</td>
 									<td>No Rekening Bank</td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credits_account_bank_account" id="credits_account_bank_account" autocomplete="off" value="<?php echo $data['credits_account_bank_account']; ?>"/>
+										<input type="text" class="easyui-textbox" name="credits_account_bank_account"
+											id="credits_account_bank_account" autocomplete="off"
+											value="<?= ($data['credits_account_bank_account'] ?? '') ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>a.n. Rekening Bank</td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credits_account_bank_owner" id="credits_account_bank_owner" autocomplete="off" value="<?php echo $data['credits_account_bank_owner']; ?>"/>
+										<input type="text" class="easyui-textbox" name="credits_account_bank_owner"
+											id="credits_account_bank_owner" autocomplete="off"
+											value="<?= ($data['credits_account_bank_owner'] ?? '') ?>" />
 									</td>
 									<td>Keterangan</td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credits_account_remark" id="credits_account_remark" autocomplete="off" value="<?php echo $data['credits_account_remark']; ?>"/>
+										<input type="text" class="easyui-textbox" name="credits_account_remark"
+											id="credits_account_remark" autocomplete="off"
+											value="<?= ($data['credits_account_remark'] ?? '') ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>Jumlah Angsuran</td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credit_account_payment_amount_view" id="credit_account_payment_amount_view" autocomplete="off" value="<?php echo $data['credit_account_payment_amount_view']; ?>" />
-										<input type="hidden" class="easyui-textbox" name="credit_account_payment_amount" id="credit_account_payment_amount" autocomplete="off" value="<?php echo $data['credit_account_payment_amount']; ?>" />
+										<input type="text" class="easyui-textbox"
+											name="credit_account_payment_amount_view"
+											id="credit_account_payment_amount_view" autocomplete="off"
+											value="<?= ($data['credit_account_payment_amount_view'] ?? '') ?>" />
+										<input type="hidden" class="easyui-textbox" name="credit_account_payment_amount"
+											id="credit_account_payment_amount" autocomplete="off"
+											value="<?= ($data['credit_account_payment_amount'] ?? '') ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>Terima Bersih</td>
 									<td>:</td>
 									<td>
-										<input type="text" class="easyui-textbox" name="credit_account_amount_received_view" id="credit_account_amount_received_view" autocomplete="off" value="<?php echo set_value('credit_account_amount_received_view', $data['credit_account_amount_received_view']); ?>" />
-										<input type="hidden" class="easyui-textbox" name="credit_account_amount_received" id="credit_account_amount_received" autocomplete="off" value="<?php echo set_value('credit_account_amount_received', $data['credit_account_amount_received']); ?>" />
+										<input type="text" class="easyui-textbox"
+											name="credit_account_amount_received_view"
+											id="credit_account_amount_received_view" autocomplete="off"
+											value="<?= set_value('credit_account_amount_received_view', $data['credit_account_amount_received_view']); ?>" />
+										<input type="hidden" class="easyui-textbox"
+											name="credit_account_amount_received" id="credit_account_amount_received"
+											autocomplete="off"
+											value="<?= set_value('credit_account_amount_received', $data['credit_account_amount_received']); ?>" />
 									</td>
 									<td>No Simpanan</td>
 									<td>:</td>
-									<td><?php echo form_dropdown('savings_account_id', $acctsavingsaccount, set_value('savings_account_id', $data['savings_account_id']), 'id="savings_account_id" class="form-control select2me" onChange="function_elements_add(this.name, this.value);"'); ?>
+									<td><?= form_dropdown('savings_account_id', $acctsavingsaccount, set_value('savings_account_id', $data['savings_account_id']), 'id="savings_account_id" class="form-control select2me" onChange="function_elements_add(this.name, this.value);"'); ?>
 									</td>
 								</tr>
-								<input type="hidden" class="easyui-textbox" name="credits_account_token" id="credits_account_token" autocomplete="off" value="<?php echo $token; ?>" />
+								<input type="hidden" class="easyui-textbox" name="credits_account_token"
+									id="credits_account_token" autocomplete="off" value="<?php echo $token; ?>" />
 							</tbody>
 						</table>
 					</div>
 					<div class="row">
 						<div class="col-md-12" style='text-align:right'>
 							<button type="reset" name="Reset" value="Reset" class="btn btn-danger" onClick="reset_data();"><i class="fa fa-times"> Batal</i></button>
-						<?php if($coremember['member_active_status'] == 1){ ?>
+						<?php if(($coremember['member_active_status']??1) == 1){ ?>
 							<button type="submit" name="Save" value="Save" id="Save" class="btn green-jungle" title="Simpan Data" disabled><i class="fa fa-check"> Simpan</i></button>
 						<?php } else{ ?> 
 							<button type="submit" name="Save" value="Save" id="Save" class="btn green-jungle" title="Simpan Data"><i class="fa fa-check"> Simpan</i></button>
@@ -1224,7 +1323,7 @@ if(count($memberacctcreditsaccount)!=0){
 <script type="text/javascript">
 	var table;
 
-	$(document).ready(function() {
+	$(document).ready(function () {
 		table = $('#myDataTable2').DataTable({
 			"processing": true,
 			"serverSide": true,
@@ -1237,7 +1336,7 @@ if(count($memberacctcreditsaccount)!=0){
 			"columnDefs": [{
 				"targets": [0],
 				"orderable": false,
-			}, ],
+			},],
 		});
 	});
 </script>

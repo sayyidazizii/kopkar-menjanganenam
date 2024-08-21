@@ -12,6 +12,7 @@
 			$this->load->model('Core_source_fund_model');
 			$this->load->model('AcctDepositoAccount_model');
 			$this->load->model('AcctCredit_model');
+			$this->load->model('SalesInvoice_model');
 			$this->load->model('AcctCreditAccount_model');
 			$this->load->helper('sistem');
 			$this->load->helper('url');
@@ -181,6 +182,36 @@
 			$data['main_view']['coremember']				= $this->CoreMember_model->getCoreMember_Detail($this->uri->segment(3));
 			$data['main_view']['memberacctcreditsaccount']	= $this->AcctCreditAccount_model->getMemberAcctCreditsAccount($this->uri->segment(3));
 			$data['main_view']['content']					= 'AcctCreditAccount/FormAddAcctCreditAccount_view';
+			$this->load->view('MainPage_view',$data);
+		}
+		public function addformsales(){
+			$auth 	= $this->session->userdata('auth');
+			$unique = $this->session->userdata('unique');
+			$token 	= $this->session->userdata('acctcreditsaccounttoken-'.$unique['unique']);
+
+			if(empty($token)){
+				$token = md5(date('Y-m-d H:i:s'));
+				$this->session->set_userdata('acctcreditsaccounttoken-'.$unique['unique'], $token);
+				$this->session->unset_userdata('addcreditaccount-' . $unique['unique']);
+			}
+
+			$data['main_view']['memberidentity']			= $this->configuration->MemberIdentity();
+			$data['main_view']['membergender']				= $this->configuration->MemberGender();
+			$data['main_view']['paymentperiod']				= $this->configuration->CreditsPaymentPeriod();
+			$data['main_view']['methods']					= $this->configuration->AcquittanceMethodReal();
+			$data['main_view']['paymentpreference']			= $this->configuration->PaymentPreference();
+			$data['main_view']['paymenttype']				= $this->configuration->PaymentType();
+			$data['main_view']['coreoffice']				= create_double($this->AcctCreditAccount_model->getCoreOffice(),'office_id', 'office_name');
+			$data['main_view']['sumberdana']				= create_double($this->Core_source_fund_model->getData(),'source_fund_id', 'source_fund_name');
+			$data['main_view']['acctsavingsaccount']		= create_double($this->AcctDepositoAccount_model->getAcctSavingsAccount($auth['branch_id']),'savings_account_id', 'savings_account_no');
+			$data['main_view']['creditid']					= create_double($this->AcctCreditAccount_model->getAcctCredits(),'credits_id', 'credits_name');
+			$data['main_view']['acctbankaccount']			= create_double($this->AcctCreditAccount_model->getBankAccount(),'bank_account_id', 'bank_account_name');
+			$data['main_view']['coremember']				= $this->CoreMember_model->getCoreMember_Detail($this->uri->segment(3));
+			$data['main_view']['salesinvoice']				= $this->SalesInvoice_model->getSalesMember($this->uri->segment(3));
+			$data['main_view']['memberacctcreditsaccount']	= $this->AcctCreditAccount_model->getMemberAcctCreditsAccount($this->uri->segment(3));
+			// print_r($data['main_view']['salesinvoice']);
+			// return 0;
+			$data['main_view']['content']					= 'AcctCreditAccount/FormAddAcctCreditAccountSales_view';
 			$this->load->view('MainPage_view',$data);
 		}
 
@@ -461,6 +492,31 @@
 			);
 			echo json_encode($output);
 		}
+		public function memberlistsales(){
+			$auth 	= $this->session->userdata('auth');
+			$list 	= $this->CoreMember_model->get_datatables_status($auth['branch_id']);
+			$data 	= array();
+			$no 	= $_POST['start'];
+
+			foreach ($list as $customers) {
+					$no++;
+					$row = array();
+					$row[] = $no;
+					$row[] = $customers->member_no;
+					$row[] = $customers->member_name;
+					$row[] = $customers->member_address;
+					$row[] = '<a href="'.base_url().'credit-account/add-from-sales/'.$customers->member_id.'" class="btn btn-info" role="button"><span class="glyphicon glyphicon-ok"></span> Select</a>';
+					$data[] = $row;
+			}
+	
+			$output = array(
+				"draw" => $_POST['draw'],
+				"recordsTotal" => $this->CoreMember_model->count_all_status($auth['branch_id']),
+				"recordsFiltered" => $this->CoreMember_model->count_filtered_status($auth['branch_id']),
+				"data" => $data,
+			);
+			echo json_encode($output);
+		}
 
 		public function processAddArrayAgunan(){
 			$date = date('Ymdhis');
@@ -505,7 +561,6 @@
 			if(empty($member_id)){
 				$member_id 	= $this->uri->segment(3);
 			}
-		
 			$data = array (
 				"credits_account_date" 				=> tgltodb($this->input->post('credit_account_date',true)),
 				"member_id"							=> $this->input->post('member_id',true),
@@ -610,6 +665,14 @@
 					$msg = validation_errors("<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'></button>", '</div>');
 					$this->session->set_userdata('message',$msg);
 					redirect('credit-account/add-form/'.$data['member_id']);
+				}
+				if($this->input->post('sales_invoice')){
+					echo json_encode($this->input->post('sales_invoice'));
+					foreach($this->input->post('sales_invoice')as$v){
+						if(($v['add']??false)){
+							$this->SalesInvoice_model->markSalesAsCredit($v['sales_invoice_id']);
+						}
+					}
 				}
 			}else{
 				$this->session->set_userdata('addcreditaccount',$data);
