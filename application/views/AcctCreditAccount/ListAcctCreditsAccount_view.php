@@ -62,6 +62,12 @@
 						Daftar Pinjaman
 					</div>
 					<div class="actions">
+						<a href="<?php echo base_url(); ?>credit-account/add-from-sales" class="btn btn-default btn-sm">
+							<i class="fa fa-plus"></i>
+							<span class="hidden-480">
+								Tambah Pinjaman Toko
+							</span>
+						</a>
 						<a href="<?php echo base_url(); ?>credit-account/add-multiple" class="btn btn-default btn-sm">
 							<i class="fa fa-plus"></i>
 							<span class="hidden-480">
